@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.text-shadow-bottom {
+    transition: text-shadow 0.1s ease; 
+  }
+  
+  .text-shadow-bottom:hover {
+    text-shadow: 0px 0px 3px rgba(238, 226, 226, 0.5); }
+
+    .bg-custom-svg {
+      background-image: url('/storage/app/public/images/hola.svg'); 
+      background-size: cover; 
+      background-position: center;
+  }
+
+  #solutions div div{
+    view-timeline-name: --image;
+    view-timeline-axis: block;
+
+    animation-timeline: --image;
+    animation-name: show;
+
+  }
+
+  @keyframes show{
+    from {
+      scale: 50%;
+    }
+
+    to {
+      scale: 100%;
+    }
+  }
+  
