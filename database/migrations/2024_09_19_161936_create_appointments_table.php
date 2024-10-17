@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('appointment', function (Blueprint $table) {
+        Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')
             ->constrained('users')
             ->onDelete('cascade');
             $table->foreignId('service_id')
-            ->constrained('service')
+            ->constrained('services')
             ->onDelete('cascade');
-            $table->foreignId('barbershop_id')
-            ->constrained('barbershops')
+            $table->foreignId('hairdresser_id')
+            ->constrained('hairdressers')
             ->onDelete('cascade');
             $table->dateTime('date');
             $table->enum('status', ['pendiente', 'confirmado', 'cancelado']);
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('appointment');
+        Schema::dropIfExists('appointments');
     }
 };

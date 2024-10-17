@@ -10,7 +10,7 @@
                 <x-log_in />
 
             </div>
-            <div class="hidden xl:flex m-4 justify-center items-center">
+            <div class="hidden xl:flex m-4 justify-center items-center skew-y-12">
                 <img class="h-full w-4/5" src="storage/images/peine.png" alt="mascota">
             </div>
         </section>
