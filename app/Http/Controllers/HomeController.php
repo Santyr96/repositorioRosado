@@ -20,4 +20,6 @@ class HomeController extends Controller
     public function aboutSantiago(){
         return view('aboutSantiago');  //Retorna la vista aboutSantiago.
     }
+
+   
 }

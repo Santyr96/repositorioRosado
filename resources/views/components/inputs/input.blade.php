@@ -1,0 +1,1 @@
+<input class="w-full border-b-4 h-12 border-black text-sm pl-1 mr-1 focus:outline-none {{$class}}" type={{$type}} name={{$name}} placeholder={{$placeholder}}>

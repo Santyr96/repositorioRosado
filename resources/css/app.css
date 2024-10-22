@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+
+/* Elimina el color del autocompletado en los inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+    -webkit-text-fill-color: inherit !important;
+}
+
 .text-shadow-bottom {
     transition: text-shadow 0.1s ease; 
   }
@@ -14,6 +25,8 @@
       background-size: cover; 
       background-position: center;
   }
+
+ 
 
   #solutions div div{
     view-timeline-name: --image;

@@ -11,6 +11,9 @@ export default {
                 noto: ["Noto Sans JP", "sans-serif"],
                 work: ["Work Sans", "sans-serif"],
             },
+            transitionProperty: {
+                'height': 'height',
+              },
         },
     },
     plugins: [

@@ -9,7 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet">
     <script src="https://kit.fontawesome.com/09f844330b.js" crossorigin="anonymous"></script>
     @vite('resources/js/components/flyout_menu.js')
     <title>HairBooker</title>
@@ -17,12 +18,14 @@
 
 <body>
 
-    <header class="fixed bg-gradient-to-r from-yellow-400 to-red-600 rounded-b-lg shadow-md h-20 w-full z-10 ">
+    <header class="fixed bg-gradient-to-r from-yellow-400 to-red-600 rounded-b-lg shadow-md h-20 w-full z-40 ">
         <nav class=" h-full mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex">
                 <figure class="container mx-auto">
-                    <a href="{{ route('index') }}"><img class="h-52 w-auto pb-2 hover:animate-rotate-y animate-once animate-ease-in animate-fill-bot"
-                        src="storage/images/logo2.png" alt="logo"></a>
+                    <a href="{{ route('index') }}"><img
+                            class="w-2/4 pt-1 hover:animate-rotate-y animate-once animate-ease-in animate-fill-bot"
+                            src="{{ asset('storage/images/logo3.png') }}" alt="logo">
+                    </a>
                 </figure>
             </div>
 
@@ -116,8 +119,8 @@
                     <div class="-my-6 divide-y divide-gray-500/10">
                         <div class="space-y-2 py-6">
                             <a href="{{ route('index') }}"
-                            class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Inicio</a>
-                            <a href="{{route('aboutSantiago')}}"
+                                class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Inicio</a>
+                            <a href="{{ route('aboutSantiago') }}"
                                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Sobre
                                 mí</a>
                             <a href="#solutions"
@@ -125,7 +128,8 @@
                         </div>
                         <div class="py-6">
                             <a href="#"
-                                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Iniciar Sesión
+                                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Iniciar
+                                Sesión
                             </a>
                             <a href="#"
                                 class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Registro</a>

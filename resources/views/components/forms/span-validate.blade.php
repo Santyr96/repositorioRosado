@@ -1,0 +1,4 @@
+
+    <span {{$class}}>
+        {{$message}}
+    </span>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone');
             $table->foreignId('owner_id')->constrained('users')
             ->onDelete('cascade');
+            $table->point('location')->nullable();
             $table->timestamps();
         });
     }
