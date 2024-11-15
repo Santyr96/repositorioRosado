@@ -1,16 +1,21 @@
 <x-app-layout>
+    <x-slot:title>
+        Inicio
+    </x-slot>
 
-    <main class="">
-        <section class="grid grid-rows-1  xl:grid-cols-[40%,60%]  lg:ml-8  w-full xl:pt-12">
+    <main">
+        <section class="grid grid-rows-1  xl:grid-cols-[40%,60%]  max-lg:lg:ml-8  w-full xl:pt-12">
             <div class="mensaje flex flex-col gap-10 items-center py-20 font-noto font-bold">
                 <h1 class="text-center text-5xl/relaxed md:text-6xl/loose md:p-11 lg:text-6xl/relaxed">
                     Bienvenidos a <span class="text-purple-600">HairBooker</span>: la agenda digital para peluquerías
                 </h1>
 
-                <x-log_in />
+                <x-buttons.dynamic-button href="{{ route('users.login') }}" message="Iniciar Sesión" class="w-52 md:w-64 md:text-2xl">
+
+                </x-buttons.dynamic-button>
 
             </div>
-            <div class="hidden xl:flex m-4 justify-center items-center skew-y-12">
+            <div class="hidden xl:flex m-4 justify-center items-center">
                 <img class="h-full w-4/5" src="storage/images/peine.png" alt="mascota">
             </div>
         </section>

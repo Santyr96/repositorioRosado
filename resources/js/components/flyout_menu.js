@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+
     //Manejo del evento click para mostrar u ocultar el menú lateral en pantallas pequeñas.
     botonDesplegable.addEventListener("click", function () {
         if (menuLateral.classList.contains("hidden")) {

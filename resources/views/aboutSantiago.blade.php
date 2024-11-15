@@ -1,5 +1,8 @@
 <x-app-layout>
-    <main>
+    <x-slot:title>
+        Sobre Mi
+    </x-slot>
+    <main class="pt-24">
         <section id="aboutMe" class="flex flex-col items-center font-noto pt-4 pb-8">
             <header class="pl-4 pr-4">
                 <h1 class="text-4xl/loose text-center font-bold">Santiago
@@ -11,8 +14,8 @@
 
                 <div class="lg:w-[70%]">
                     <figure class="flex justify-center">
-                        <x-imageRounded src="storage/images/pixelart.jpg" alt="Imagen pixelada"
-                            class=" border-solid border-2 border-black w-80 min-h-80 md:min-w-80 md:min-h-80 lg:min-w-96 lg:min-h-96  lg:ml-4">
+                        <x-imageRounded src="storage/images/cv_image.png" alt="Imagen curriculum"
+                            class=" md:w-3/4 xl:w-1/2 ">
                         </x-imageRounded>
                     </figure>
                 </div>

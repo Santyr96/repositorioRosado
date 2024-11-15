@@ -2,20 +2,21 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.forms.fForm;
+    let isValid = false;
 
     // Agregar listeners a todos los inputs relevantes.
     form.email.addEventListener("change", () => validateEmail(form.email));
     form.password.addEventListener("change", () =>
         validatePassword(form.password)
     );
-    form.password_confirmation.addEventListener("input", () =>
+    form.password_confirmation.addEventListener("change", () =>
         validateConfirmPassword(form.password_confirmation, form.password)
     );
     form.dni.addEventListener("change", () => validateDNI(form.dni));
     form.name.addEventListener("change", () => validateName(form.name));
     form.phone.addEventListener("change", () => validatePhone(form.phone));
 
-    form.addEventListener("submit", loginUser);
+  
 });
 
 function showFeedBack(input, valid, message) {
@@ -35,11 +36,13 @@ function validateEmail(input) {
         showFeedBack(input, false, "Introduce un email válido");
     } else {
         showFeedBack(input, true, "Correcto");
+        isValid = true;
     }
 }
 
 // Validación para la contraseña.
 function validatePassword(input) {
+    console.log(input.value);
     const passwordRegex =
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+]).{8,}$/;
     if (input.value === "") {
@@ -52,13 +55,16 @@ function validatePassword(input) {
         );
     } else {
         showFeedBack(input, true, "Correcto");
+        isValid = true;
     }
 }
 
 //Validación confirmación de contraseña.
 
 function validateConfirmPassword(input, password) {
-    if ((input.value = "")) {
+    console.log(input.value);
+    console.log(password.value);
+    if ((input.value === "")) {
         showFeedBack(
             input,
             false,
@@ -68,6 +74,7 @@ function validateConfirmPassword(input, password) {
         showFeedBack(input, false, "Las contraseñas no coinciden.");
     } else {
         showFeedBack(input, true, "Correcto");
+        isValid = true;
     }
 }
 
@@ -84,6 +91,7 @@ function validateDNI(input) {
         );
     } else {
         showFeedBack(input, true, "Correcto");
+        isValid = true;
     }
 }
 
@@ -106,5 +114,6 @@ function validatePhone(input) {
         );
     } else {
         showFeedBack(input, true, "Correcto");
+        isValid = true;
     }
 }

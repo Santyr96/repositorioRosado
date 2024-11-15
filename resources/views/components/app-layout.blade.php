@@ -13,13 +13,13 @@
         rel="stylesheet">
     <script src="https://kit.fontawesome.com/09f844330b.js" crossorigin="anonymous"></script>
     @vite('resources/js/components/flyout_menu.js')
-    <title>HairBooker</title>
+    <title>{{$title}}</title>
 </head>
 
 <body>
 
-    <header class="fixed bg-gradient-to-r from-yellow-400 to-red-600 rounded-b-lg shadow-md h-20 w-full z-40 ">
-        <nav class=" h-full mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+    <header class="flex justify-center fixed bg-gradient-to-r from-yellow-400 to-red-600 rounded-b-lg shadow-md h-20 w-full z-40 ">
+        <nav class=" h-full flex w-full items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex">
                 <figure class="container mx-auto">
                     <a href="{{ route('index') }}"><img
@@ -30,7 +30,7 @@
             </div>
 
             <div
-                class="container w-4/5 mx-none hidden md:grid md:w-3/5 lg:w-2/4 grid-cols-4 justify-items-center items-center text-center ">
+                class="container w-[40%] mx-none hidden lg:grid lg:w-2/4 grid-cols-4 justify-items-center items-center text-center ">
                 <a href="{{ route('index') }}"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-bold leading-7
                      text-white text-shadow-bottom hover:text-purple-600">
@@ -44,33 +44,33 @@
                 </a>
 
 
-                <a href="#solutions"
+                <a href="{{ url('/') . '#solutions' }}"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-bold leading-7
                      text-white text-shadow-bottom hover:text-purple-600">
                     Aplicación
                 </a>
 
                 <div class="w-full -m-0 flex items-center justify-center ">
-                    <div class="w-16 flex items-center flex-col">
+                    <div class="flex items-center flex-col">
                         <a id="registro" href="#"
                             class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-bold leading-7
                          text-white text-shadow-bottom hover:text-purple-600">
-                            Registro
+                            Iniciar Sesión
                         </a>
 
                         <div class="z-10 hidden flex-col absolute justify-center
                          mt-14 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 animate-fade-down animate-once"
                             role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
                             <div class="py-1" role="none">
-                                <a href="#"
+                                <a href="{{ route('users.login') }}"
                                     class="text-gray-700 block px-4 py-2 font-noto font-bold text-sm hover:bg-gray-100"
-                                    role="menuitem">Log-in</a>
+                                    role="menuitem">Iniciar Sesión</a>
                             </div>
 
                             <div class="py-1" role="none">
-                                <a href="#"
+                                <a href="{{route('users.create')}}"
                                     class="text-gray-700 block px-4 py-2 font-noto font-bold text-sm hover:bg-gray-100"
-                                    role="menuitem">Sign-up</a>
+                                    role="menuitem">Registrarse</a>
                             </div>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
 
             </div>
 
-            <div id="botonDespegable" class="md:hidden flex">
+            <div id="botonDespegable" class="lg:hidden flex">
                 <button type="button"
                     class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-100">
                     <span class="sr-only">Open main menu</span>
@@ -101,7 +101,7 @@
         </nav>
 
 
-        <div class=" hidden lg:hidden" role="dialog" aria-modal="true">
+        <div class="hidden lg:hidden" role="dialog" aria-modal="true">
 
             <div class="fixed inset-0 z-10"></div>
             <div
@@ -127,12 +127,12 @@
                                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Aplicación</a>
                         </div>
                         <div class="py-6">
-                            <a href="#"
+                            <a href="{{ route('users.login') }}"
                                 class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Iniciar
                                 Sesión
                             </a>
-                            <a href="#"
-                                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Registro</a>
+                            <a href="{{route('users.create')}}"
+                                class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Registrarse</a>
                         </div>
                     </div>
                 </div>

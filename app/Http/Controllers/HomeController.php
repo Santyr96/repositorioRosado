@@ -21,5 +21,9 @@ class HomeController extends Controller
         return view('aboutSantiago');  //Retorna la vista aboutSantiago.
     }
 
+    public function dashboard(){
+        return view('dashboards.customer');  //Retorna la vista dashboard.
+    }
+
    
 }

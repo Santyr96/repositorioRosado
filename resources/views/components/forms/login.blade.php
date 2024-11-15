@@ -1,9 +1,14 @@
 @vite('resources/js/components/input_extend.js')
-@vite('resources/js/auth/auth.js');
 
 
 
-<section class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center pb-12 mb-10 md:mb-0  h-screen xl:pb-0"
+@error('general')
+    <x-modals.error-modal modalTitle='Error al iniciar sesión'
+        modalMessage='Las credenciales introducidas no son correctas. Por favor, vuelve a introducirlas.'></x-modals.error-modal>
+@enderror
+
+<section
+    class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center pb-12 mb-10 md:mb-0  h-screen xl:pb-0"
     id="login">
     <div class="hidden xl:flex flex-col font-work  text-center xl:px-6">
 
@@ -21,8 +26,8 @@
             class="font-work border-black border-2 shadow-md shadow-black h-auto p-4 w-full  xl:w-7/12 xl:bg-white">
 
             <form name="fForm" id="form" class="flex flex-col gap-3  md:h-full 
-        " action=""
-                method="post" novalidate>
+        " action="{{route('users.loginUser')}}" method="post" novalidate>
+        @csrf
                 <div class="text-center">
                     <h1
                         class=" text-[1.25rem] md:text-3xl font-work font-bold underline decoration-4 underline-offset-8 pb-4 ">
@@ -32,7 +37,8 @@
                 <div>
                     <label class="pl-1 font-semibold md:text-2xl" for="E-mail">E-mail</label>
                     <div class="flex w-full pt-1 gap-x-3">
-                        <x-inputs.input type="email" name="email" placeholder="E-mail..." class="md:text-lg" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
+                        <x-inputs.input type="email" name="email" placeholder="E-mail..." class="md:text-lg"
+                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$">
                         </x-inputs.input>
 
                         <svg class="md:h-14 md:w-14" xmlns="http://www.w3.org/2000/svg" width="1.5rem" height="2rem"

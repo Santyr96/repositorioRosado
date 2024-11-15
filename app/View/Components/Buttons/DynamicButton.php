@@ -11,12 +11,14 @@ class DynamicButton extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct(public string $href, public string $class, public string $message, public ?string $download = null)
-    {
+    public function __construct(
+        public string $href,
+        public ?string $class = null, 
+        public string $message,
+    ) {
         $this->href = $href;
-        $this->class = $class;
+        $this->class = $class ?? ''; 
         $this->message = $message;
-        $this->download = $download;
     }
 
     /**

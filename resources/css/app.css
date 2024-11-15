@@ -46,4 +46,34 @@ input:-webkit-autofill:active {
       scale: 100%;
     }
   }
+
+  /* Estilos para estilizar nuestro calendario. */
+
+  .fc-toolbar{
+    @apply gap-4 text-center;
+  }
+
+  .fc-toolbar-title{
+    @apply font-semibold;
+  }
+
+  .fc-toolbar-chunk{
+    @apply flex flex-col justify-items-center gap-1;
+  }
+
+  .fc-direction-ltr .fc-toolbar .fc-button-group{
+    @apply ml-0;
+  }
+
+  .fc .fc-daygrid-day.fc-day-today{
+    @apply bg-gray-200 w-full;
+  }
+
+  .fc {
+    @apply overflow-hidden;
+}
+
+  #calendar table{
+    @apply bg-white;
+  }
   

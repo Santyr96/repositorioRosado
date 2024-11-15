@@ -1,16 +1,22 @@
 @vite('resources/js/components/input_extend.js')
-@vite('resources/js/auth/auth.js');
+@vite('resources/js/auth/auth.js')
+
+
+
+@error('general')
+<x-modals.error-modal modalId='errorModal' modalTitle='Error en el registro' modalMessage={{$message}}></x-modals.error-modal>
+@enderror
 
 <section class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center  pb-12 h-auto xl:pb-0"
     id="login">
     <div class="hidden xl:flex flex-col font-work  text-center xl:px-6">
 
         <h1 class="text-7xl/relaxed font-bold ">
-            ¡Bienvenido de vuelta!
+            ¿Preparado para sacar el máximo rendimiento a tus citas?
         </h1>
         <br>
         <h2 class="font-semibold text-5xl/relaxed italic">
-            Organiza tu agenda y aprovecha al máximo cada cita
+            Registrate y aprovecha todas las ventajas que te ofrece HairBooker
         </h2>
     </div>
 
@@ -19,7 +25,7 @@
             class="font-work border-black border-2 shadow-md shadow-black h-auto p-2 md:p-12 w-full  xl:w-4/5 xl:mt-10 xl:mb-10 xl:bg-white">
 
             <form class="flex flex-col gap-5 md:h-full
-        " name="fForm" action={{ route('users.store') }} method="post">
+        " name="fForm" action="{{ route('users.store') }}" method="post">
                 @csrf
                 <div class="text-center">
                     <h1
@@ -182,7 +188,7 @@
                         </label>
 
                         <div class="flex w-full pt-1 gap-x-3">
-                            <x-inputs.input type="password" name="password_confirmation" class="md:text-lg">
+                            <x-inputs.input type="password" name="password_confirmation" class="md:text-lg" placeholder="">
                             </x-inputs.input>
 
 
