@@ -6,6 +6,12 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\TestEmailVerification;
+use GuzzleHttp\Psr7\Message;
+use Illuminate\Auth\Events\Registered;
+
 
 class UserController extends Controller
 {
@@ -49,7 +55,9 @@ class UserController extends Controller
             ])->onlyInput('email');
         }
     } catch (\Exception $e) {
-        return back()->withErrors(['general' => 'Hubo un problema al iniciar sesión el usuario. Inténtelo de nuevo.']);
+        return back()->withErrors([
+            'general' => 'Hubo un problema al iniciar sesión. Inténtelo de nuevo. '
+        ]);
     }
 }
 
@@ -91,11 +99,18 @@ class UserController extends Controller
         //Guardamos los cambios en la base de datos.
         $user->save();
 
-        //Redirigimos a la vista de registro [MODIFICACION].
-        return to_route('users.dashboard');
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect()->route('users.dashboard');
 
     }catch(\Exception $e){
-        return back()->withErrors(['general' => 'Hubo un problema al guardar el usuario. Inténtelo de nuevo.']);
+        return back()->withErrors([
+            'general' => 'Hubo un problema al registrar el usuario. Inténtelo de nuevo. '
+        ]);
+        Log::error('Error al enviar el correo: ' . $e->getMessage());
+        Log::error('Detalles del error: ' . $e->getTraceAsString());
 }
     }
 
