@@ -3,6 +3,7 @@
 namespace App\View\Components\Inputs;
 
 use Closure;
+use Dotenv\Parser\Value;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
@@ -16,11 +17,13 @@ class input extends Component
         public string $name,
         public ?string $class = null,
         public ?string $placeholder = null,
+        public ?string $value = null
     ) {
         $this->type = $type;
         $this->name = $name;
         $this->placeholder = $placeholder;
         $this->class = $class;
+        $this->value = $value;
         
     }
 

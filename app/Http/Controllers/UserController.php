@@ -6,10 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\TestEmailVerification;
-use GuzzleHttp\Psr7\Message;
 use Illuminate\Auth\Events\Registered;
 
 
@@ -51,7 +49,7 @@ class UserController extends Controller
             return to_route('users.dashboard');
         } else {
             return back()->withErrors([
-                'email' => 'Las credenciales proporcionadas son incorrectas.',
+                'general' => 'Las credenciales proporcionadas son incorrectas.',
             ])->onlyInput('email');
         }
     } catch (\Exception $e) {

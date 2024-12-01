@@ -5,7 +5,6 @@
 
 @error('general')
 <x-modals.error-modal modalTitle="Error en el registro" modalMessage="{{ $message }}"></x-modals.error-modal>
-
 @enderror
 
 <section class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center  pb-12 h-auto xl:pb-0"
@@ -146,8 +145,6 @@
                     <div class="flex w-full pt-1 gap-x-3">
                         <x-inputs.input type="phone" name="phone" placeholder="Teléfono..." class="md:text-lg">
                         </x-inputs.input>
-
-
 
                         <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24">
                             <path fill="#9333ea"

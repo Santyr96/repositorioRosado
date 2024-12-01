@@ -1,12 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const modal = document.getElementById("modal");
+    closeModal();
+});
 
-    console.log
-
+export function closeModal(){
+    const modal = document.getElementById("errorModal");
     let closeButtons = document.querySelectorAll('[data-modal-hide]');
     closeButtons.forEach((button) => {
         button.addEventListener("click", () => {
             modal.classList.add("hidden");
         });
     });
-});
+
+}

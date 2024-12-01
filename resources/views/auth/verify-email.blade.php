@@ -23,7 +23,7 @@
             el e-mail, te proporcionaremos otro. Muchas gracias.
         </p>
         <br>
-        <form method="POST" >
+        <form method="POST" action="{{route('verification.send')}}">
             @csrf
             <x-buttons.submit-button id="submit" name="submit" message="Reenviar enlace">
                

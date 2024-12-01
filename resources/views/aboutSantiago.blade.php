@@ -14,7 +14,7 @@
 
                 <div class="lg:w-[70%]">
                     <figure class="flex justify-center">
-                        <x-imageRounded src="storage/images/cv_image.png" alt="Imagen curriculum"
+                        <x-imageRounded id="CVImage" src="storage/images/cv_image.png" alt="Imagen curriculum"
                             class=" md:w-3/4 xl:w-1/2 ">
                         </x-imageRounded>
                     </figure>

@@ -1,3 +1,4 @@
+
 <div id="adminPanel"
     class="absolute z-10 top-16 h-auto w-56 md:w-80 grid grid-rows-[auto_1fr_auto] bg-blue-950 text-white font-noto font-bold {{ $class }}">
     <header class="flex px-4 gap-10 md:items-baseline">
@@ -18,7 +19,7 @@
                 <h3 class="font-work font-medium  text-gray-500 mb-4 xl:text-2xl">Menu</h3>
                 <ul class="font-work text-sm flex flex-col gap-4 xl:text-xl ">
                     <li>
-                        <a class="hover:text-gray-500" href="">Perfil</a>
+                        <a id="profile" class="hover:text-gray-500" href="#" data-url="{{route('profile')}}">Perfil</a>
                     </li>
 
                     <li>

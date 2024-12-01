@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 
@@ -20,6 +21,9 @@ Route::middleware('guest', 'web')->group(function () {
 Route::middleware('auth', 'verified')->group(function () {
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
+    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::post('/dashboard/uploadAvatar', [DashboardController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
+    Route::post('/dashboard/updateProfile', [DashboardController::class, 'updateProfile'])->name('profile.updateProfile');
 });
 
 Route::get('/email/verify', function(){
@@ -37,5 +41,5 @@ Route::get('/email/verifiy/{id}/{hash}', function(EmailVerificationRequest $requ
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return back()->with('message', 'Enlace de verificación enviado');
+    return redirect()->route('verification.notice')->with('message', 'Enlace de verificación enviado');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');

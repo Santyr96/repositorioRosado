@@ -2,6 +2,5 @@
     <x-slot:title>
     Gestión Citas
     </x-slot>
-
     
 </x-dashboards.dashboard-layout>

@@ -11,13 +11,16 @@ class imageRounded extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct( 
-        public string $src, public string $alt, public ?string $class = null)
-    {
-          $this->src = $src;
-          $this->alt = $alt;
-          $this->class = $class;
-        
+    public function __construct(
+        public ?string $id = null,
+        public string $src,
+        public string $alt,
+        public ?string $class = null
+    ) {
+        $this->src = $src;
+        $this->alt = $alt;
+        $this->class = $class;
+        $this->id = $id;
     }
 
     /**

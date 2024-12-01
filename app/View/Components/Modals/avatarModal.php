@@ -6,17 +6,16 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class errorModal extends Component
+class AvatarModal extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct( public string $modalTitle, public string $modalMessage, public ?string $class = '')
+    public function __construct( public string $modalTitle, public string $modalMessage)
 
     {
         $this->modalTitle = $modalTitle;
         $this->modalMessage = $modalMessage; 
-        $this->class = $class;
     }
 
     /**
@@ -24,6 +23,6 @@ class errorModal extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.modals.error-modal');
+        return view('components.modals.avatar-modal');
     }
 }
