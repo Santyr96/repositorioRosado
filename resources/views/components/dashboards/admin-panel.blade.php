@@ -1,6 +1,5 @@
-
 <div id="adminPanel"
-    class="absolute z-10 top-16 h-auto w-56 md:w-80 grid grid-rows-[auto_1fr_auto] bg-blue-950 text-white font-noto font-bold {{ $class }}">
+    class="absolute z-50 top-16 h-auto w-56 md:w-80 grid grid-rows-[auto_1fr_auto] bg-blue-950 text-white font-noto font-bold {{ $class }}">
     <header class="flex px-4 gap-10 md:items-baseline">
         <h1 class="text-center mt-4 xl:text-4xl">Panel de administración</h1>
         <button class="block lg:hidden">
@@ -19,28 +18,28 @@
                 <h3 class="font-work font-medium  text-gray-500 mb-4 xl:text-2xl">Menu</h3>
                 <ul class="font-work text-sm flex flex-col gap-4 xl:text-xl ">
                     <li>
-                        <a id="profile" class="hover:text-gray-500" href="#" data-url="{{route('profile')}}">Perfil</a>
+                        <a id="profile" class="hover:text-gray-500" href="#"
+                            data-url="{{ route('profile') }}">Perfil</a>
                     </li>
 
                     <li>
-                        <a class="hover:text-gray-500" href="">Mis citas</a>
+                        <a id="appointments" class="hover:text-gray-500" href="">Mis citas</a>
                     </li>
 
                     <li>
-                        <a class="hover:text-gray-500" href="">Darse de alta en peluquería</a>
+                        <a id="register" class="hover:text-gray-500" href="">Darse de alta en peluquería</a>
                     </li>
 
                     <li>
-                        <a class="hover:text-gray-500" href="">Consultar servicios</a>
+                        <a id="services-information" class="hover:text-gray-500" href="">Consultar servicios</a>
                     </li>
 
                     @auth
                         @if (Auth::user()->role == 'propietario')
                             <li>
-                                <a class="hover:text-gray-500" href="">Dar de alta una peluquería</a>
+                                <a id="create-hairdresser" class="hover:text-gray-500" href="#" data-url="{{route('dashboard.hairdresser')}}">Crear peluquería</a>
                             </li>
-
-                            <li><a class="hover:text-gray-500" href="">Crear servicio</a></li>
+                            <li><a id="create-service" class="hover:text-gray-500" href="">Crear servicio</a></li>
                             <li><a class="hover:text-gray-500" href=""></a>Eliminar citas</li>
                         @endif
                     @endauth

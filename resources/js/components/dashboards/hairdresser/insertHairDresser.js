@@ -1,12 +1,12 @@
 "use strict";
 
-import { closeModal } from "../modals/closeModal";
+import { closeModal } from "../../modals/closeModal";
 
-export function updateProfile() {
-    const profileForm = document.forms["fForm"];
+
+export function storeHairDresser() {
+    const profileForm = document.forms["HairDresserForm"];
     const inputs = profileForm.querySelectorAll("input");
-
-    console.log(profileForm);
+    const span = document.querySelectorAll("span");
 
     //Se envía las respuestas del formulario al servidor.
     profileForm.addEventListener("submit", async function (e) {
@@ -26,7 +26,7 @@ export function updateProfile() {
 
             //Si no existe la url lo registramos en la consola para saber que existe el problema.
             if (!url) {
-                console.error("La URL para subir el avatar no está definida.");
+                console.error("La URL para insertar una peluquería en la base de datos no esta disponible.");
                 showErrorMessage("Error interno. Intenta más tarde.");
             }
 
@@ -55,13 +55,31 @@ export function updateProfile() {
 
             //Se realiza la carga dinámica de los inputs para que aparezcan los nuevos datos introducidos en el formulario.
             if (data) {
-                showSuccessfulMessage("Datos actualizados correctamente.");
+                showSuccessfulMessage("Peluquería creada correctamente.");
+                inputs.forEach((input) => {
+                    input.value = "";
+                });
+                span.forEach((span) => {
+                    span.textContent = "";
+                });
             } else {
-                showErrorMessage("Error al actualizar el perfil.");
+                showErrorMessage("Error al crear la peluquería.");
+                inputs.forEach((input) => {
+                    input.value = "";
+                });
+                span.forEach((span) => {
+                    span.textContent = "";
+                });
             }
         } catch (error) {
             console.error("Error:", error);
-            showErrorMessage("Ocurrió un error al actualizar el perfil. Intenta nuevamente.");
+            showErrorMessage("Ocurrió un error al crear la peluquería. Intentalo nuevamente.");
+            inputs.forEach((input) => {
+                input.value = "";
+            });
+            span.forEach((span) => {
+                span.textContent = "";
+            });
         }
     });
 }
@@ -85,10 +103,15 @@ function showErrorMessage(message) {
 function showSuccessfulMessage(message) {
     const modal = document.getElementById("errorModal");
     const successMessageElement = modal.querySelector('p');
+    const successTitleElement = modal.querySelector('h3');
 
     //Sí existe el elemento para añadir el mensaje, le añadimos el mensaje.
     if (successMessageElement) {
         successMessageElement.textContent = message;
+    }
+
+    if(successTitleElement){
+        successTitleElement.textContent = "¡Éxito!";
     }
     //Si el modal existe, se muestra al usuario.
     if (modal) {
@@ -97,3 +120,4 @@ function showSuccessfulMessage(message) {
     //Se llama a la función para cerrar el modal.
     closeModal();
 }
+

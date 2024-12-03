@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('phone');
             $table->foreignId('owner_id')->constrained('users')
             ->onDelete('cascade');
-            $table->point('location')->nullable();
+            $table->decimal('latitude', 10, 8);
+            $table->decimal('longitude', 11, 8);
             $table->timestamps();
         });
     }

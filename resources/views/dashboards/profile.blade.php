@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center">
         <x-image-rounded id="avatar"
             src="{{ $user->avatar ? asset($user->avatar) : asset('storage/images/default_user_avatar.webp') }}"
-            alt="Imagen de perfil" class="h-16 w-16 md:h-40 md:w-40">
+            alt="Imagen de perfil" class="h-16 w-20 md:h-40 md:w-40">
         </x-image-rounded>
         <button id="avatarUpload" class="relative bottom-3 p-1 rounded-xl bg-purple-300 hover:bg-purple-500">
             <svg class="md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" width="1rem" height="1rem"
@@ -99,7 +99,7 @@
                 Nueva Contraseña
             </label>
 
-            <div class="flex w-full pt-1 gap-x-3">
+            <div class="flex w-full  gap-x-3">
                 <x-inputs.input type="password" name="password" placeholder="Contraseña..." class="md:text-lg">
                 </x-inputs.input>
                 <div class="relative">
@@ -133,7 +133,7 @@
                     Repite la contraseña
                 </label>
 
-                <div class="flex w-full pt-1 gap-x-3">
+                <div class="flex w-full  gap-x-3">
                     <x-inputs.input type="password" name="password_confirmation" class="md:text-lg">
                     </x-inputs.input>
                     <div class="relative">

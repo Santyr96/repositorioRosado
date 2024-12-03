@@ -1,7 +1,9 @@
 "use_strict";
 
-import { initValidations } from "../../auth/validateProfile";
-import { tooglePasswordVisibility } from "../passwords/show_password";
+import { initValidationsHairDresser } from "../../../auth/validateHairDresser";
+import { initValidations } from "../../../auth/validateProfile";
+import { tooglePasswordVisibility } from "../../passwords/show_password";
+import { storeHairDresser } from "../hairdresser/insertHairDresser";
 import { updateAvatar } from "./update_avatar";
 import { updateProfile } from "./update_profile";
 
@@ -15,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             f.preventDefault();
 
             const url = this.getAttribute("data-url");
+            const id = this.id;
 
             try {
                 const response = await fetch(url);
@@ -25,10 +28,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const html = await response.text();
                 contentContainer.innerHTML = html;
-                updateAvatar();
-                initValidations();
-                tooglePasswordVisibility();
-                updateProfile();
+                switch (id) {
+                    case "profile":
+                        initValidations();
+                        updateAvatar();
+                        tooglePasswordVisibility();
+                        updateProfile();
+                        break;
+                    case "create-hairdresser":
+                        initValidationsHairDresser();
+                        storeHairDresser();
+                        break;
+                }
             } catch (error) {
                 console.error("Error al cargar el contenido", error);
                 contentContainer.innerText = "Error al cargar el contenido.";

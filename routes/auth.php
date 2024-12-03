@@ -22,6 +22,8 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::get('/dashboard/hairdresser',[DashboardController::class, 'hairdresser'])->name('dashboard.hairdresser');
+    Route::post('/dashboard/insertHairDresser',[DashboardController::class, 'storeHairDresser'])->name('dashboard.insertHairDresser');
     Route::post('/dashboard/uploadAvatar', [DashboardController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
     Route::post('/dashboard/updateProfile', [DashboardController::class, 'updateProfile'])->name('profile.updateProfile');
 });
