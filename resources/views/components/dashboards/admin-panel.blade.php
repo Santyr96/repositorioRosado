@@ -39,7 +39,7 @@
                             <li>
                                 <a id="create-hairdresser" class="hover:text-gray-500" href="#" data-url="{{route('dashboard.hairdresser')}}">Crear peluquería</a>
                             </li>
-                            <li><a id="create-service" class="hover:text-gray-500" href="">Crear servicio</a></li>
+                            <li><a id="create-service" class="hover:text-gray-500" href="#" data-url="{{route('dashboard.services')}}">Crear servicios</a></li>
                             <li><a class="hover:text-gray-500" href=""></a>Eliminar citas</li>
                         @endif
                     @endauth

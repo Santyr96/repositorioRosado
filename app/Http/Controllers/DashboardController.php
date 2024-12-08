@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hairdresser;
+use App\Models\Service;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
@@ -18,9 +19,51 @@ class DashboardController extends Controller
 
     public function hairdresser()
     {
-        return view('components.forms.insert-hairdresser');
+        return view('dashboards.insert-hairdresser');
     }
 
+    public function showServices()
+    {
+        try {
+            //Se obtiene el usuario autenticado.
+            $user = auth()->user();
+    
+            //Se verifica si el usuario esta autenticado y se registra en los logs de laravel.
+            if (!$user) {
+                Log::error("No se pudo obtener el usuario autenticado.");
+                return response()->json(['error' => 'Usuario no autenticado'], 401);
+            }
+    
+           //Se realiza una consulta a la base de datos para obtener la peluquería del usuario.
+            $hairdresser = Hairdresser::where('owner_id', $user->id)
+                ->select('id', 'name')
+                ->first();
+    
+            //Si no se encuentra la peluquería se registra en los logs.
+            if (!$hairdresser) {
+                Log::error("No se encontró la peluquería para el usuario con id: {$user->id}");
+                return response()->json(['error' => 'Peluquería no encontrada'], 404);
+            }
+    
+            //Se realiza una consulta a la base de datos para obtener los servicios asociados a la peluquería.
+            $services = Service::where('hairdresser_id', $hairdresser->id)
+                ->orderBy('id')
+                ->get();
+
+            return view('dashboards.services_view', compact('hairdresser', 'services'));
+
+        } catch (\Exception $e) {
+            
+            Log::error('Error en showServices: ' . $e->getMessage(), [
+                'exception' => $e,
+                'user_id' => auth()->id(),
+            ]);
+    
+            // Responder con un mensaje de error genérico
+            return response()->json(['error' => 'Ocurrió un error en el servidor'], 500);
+        }
+    }
+    
 
     //Función que se encarga de actualizar el avatar del usuario.
     public function uploadAvatar(Request $request)
@@ -139,6 +182,93 @@ class DashboardController extends Controller
         } catch (Exception $e) {
             //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
             Log::error('Error al añadir peluquería: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+    
+    //Función que se va a encargar de crear servicios.
+    public function createService(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:50',
+                'price' => 'required|decimal:2|min:0',
+                'description' => 'nullable|string|max:255',
+            ]);
+
+            //Se crea una nueva instancia del modelo Service para añadir datos a la tabla.
+            $service = new Service();
+
+            $service->name = $request->name;
+            $service->price = $request->price;
+            $service->description = $request->description;
+            $service->hairdresser_id = $request->idHairdresser;
+
+            //Se guardan los cambios en la base de datos.
+            $service->save();
+
+            //Se retorna una respuesta en formato JSON con un mensaje de éxito.
+            return response()->json(['success' => 'Servicio añadido correctamente'], 200);
+        } catch (Exception $e) {
+            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
+            Log::error('Error al añadir servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    //Función que se va a encargar de actualizar un servicio.
+    public function updateService(Request $request, $serviceId)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:50',
+                'price' => 'required|decimal:2|min:0',
+                'description' => 'nullable|string|max:255',
+            ]);
+
+            //Se obtiene el servicio a actualizar.
+            $service = Service::find($serviceId);
+
+            //Se actualizan los datos del servicio.
+            if($request->name != '' && $request->name != $service->name){
+                $service->name = $request->name;    
+            }
+
+            if($request->price != '' && $request->price != $service->price){
+                $service->price = $request->price;    
+            }
+            
+            if($request->description != '' && $request->description != $service->description){
+                $service->description = $request->description;    
+            }
+            
+            //Se guardan los cambios en la base de datos.
+            $service->save();
+
+            //Se retorna una respuesta en formato JSON con un mensaje de éxito.
+            return response()->json(['success' => 'Servicio actualizado correctamente'], 200);
+        } catch (Exception $e) {
+            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
+            Log::error('Error al actualizar servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    //Función que se va a encargar de eliminar un servicio.
+    public function deleteService($serviceId)
+    {
+        try {
+            //Se obtiene el servicio a eliminar.
+            $service = Service::find($serviceId);
+
+            //Se elimina el servicio.
+            $service->delete();
+
+            //Se retorna una respuesta en formato JSON con un mensaje de éxito.
+            return response()->json(['success' => 'Servicio eliminado correctamente'], 200);
+        } catch (Exception $e) {
+            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
+            Log::error('Error al eliminar servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }

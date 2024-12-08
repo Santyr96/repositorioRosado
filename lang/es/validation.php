@@ -147,4 +147,18 @@ return [
     'uppercase'            => 'El campo :attribute debe estar en mayúscula.',
     'url'                  => 'El campo :attribute debe ser una URL válida.',
     'uuid'                 => 'El campo :attribute debe ser un UUID válido.',
+    'attributes' => [
+    'name' => 'nombre',
+    'email' => 'correo electrónico',
+    'password' => 'contraseña',
+    'phone' => 'teléfono',
+    'address' => 'dirección',
+    'city' => 'ciudad',
+    'state' => 'estado',
+    'zip_code' => 'código postal',
+    'country' => 'país',
+    'date_of_birth' => 'fecha de nacimiento',
+    'service_name' => 'nombre del servicio',
+    
+    ],
 ];

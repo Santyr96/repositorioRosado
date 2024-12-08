@@ -38,7 +38,7 @@
         </x-dashboards.header>
 
         
-        <main class="content flex items-center pt-10 flex-col gap-5">
+        <main class="content flex items-center pt-10 flex-col gap-5 overflow-hidden">
             <div id="content" class="w-full">
                 @yield('content')
             </div>

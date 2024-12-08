@@ -5,13 +5,30 @@ import { tooglePasswordVisibility } from "../passwords/show_password";
 import { updateProfile } from "./profile/update_profile";
 import { storeHairDresser } from "./hairdresser/insertHairDresser";
 import { updateAvatar } from "./profile/update_avatar";
+import { servicesManage } from "./services-hair/services-manage";
 
 document.addEventListener("DOMContentLoaded", function () {
     const extendButton = document.getElementById("extendButton");
-    extendButton.setAttribute("tabindex", "0");
     const adminPanel = document.querySelector("header #adminPanel");
+    extendButton.setAttribute("tabindex", "0");
     const backButton = adminPanel.querySelector("header button");
+    extendButton.addEventListener("click", function () {
+        if (adminPanel.classList.contains("hidden")) {
+            adminPanel.classList.remove("hidden");
+            loadView();
 
+        } else {
+            adminPanel.classList.add("hidden");
+        }
+    });
+    backButton.addEventListener("click", function () {
+        adminPanel.classList.add("hidden");
+    });
+});
+
+export function loadView() {
+    const adminPanel = document.querySelector("header #adminPanel");
+    
     const setupLinks = () => {
         const links = adminPanel.querySelectorAll("a");
         const contentContainer = document.getElementById("content");
@@ -22,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 const url = this.getAttribute("data-url");
                 const id = this.id;
-    
+
                 try {
                     const response = await fetch(url);
 
@@ -44,6 +61,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             initValidationsHairDresser();
                             storeHairDresser();
                             break;
+                        case "create-service":
+                            servicesManage();
+                            break;
+
                     }
                     adminPanel.classList.add("hidden");
                 } catch (error) {
@@ -54,17 +75,5 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     };
-
-    extendButton.addEventListener("click", function () {
-        if (adminPanel.classList.contains("hidden")) {
-            adminPanel.classList.remove("hidden");
-            setupLinks();
-        } else {
-            adminPanel.classList.add("hidden");
-        }
-    });
-
-    backButton.addEventListener("click", function () {
-        adminPanel.classList.add("hidden");
-    });
-});
+    setupLinks();
+}
