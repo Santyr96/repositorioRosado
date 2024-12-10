@@ -1,5 +1,5 @@
 <div id="adminPanel"
-    class="absolute z-50 top-16 h-auto w-56 md:w-80 grid grid-rows-[auto_1fr_auto] bg-blue-950 text-white font-noto font-bold {{ $class }}">
+    class="absolute z-50 top-[4.5rem] h-auto w-56 md:w-80 grid grid-rows-[auto_1fr_auto] bg-blue-950 text-white font-noto font-bold {{ $class }}">
     <header class="flex px-4 gap-10 md:items-baseline">
         <h1 class="text-center mt-4 xl:text-4xl">Panel de administración</h1>
         <button class="block lg:hidden">
@@ -15,32 +15,37 @@
     <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear ">
         <nav class="mt-5 px-4 py-4 lg:mt-9 lg:px-6 text-2xl">
             <div>
-                <h3 class="font-work font-medium  text-gray-500 mb-4 xl:text-2xl">Menu</h3>
+                <h3 class="font-work font-medium text-center text-gray-800 bg-white mb-7 xl:text-2xl">Menu</h3>
                 <ul class="font-work text-sm flex flex-col gap-4 xl:text-xl ">
                     <li>
                         <a id="profile" class="hover:text-gray-500" href="#"
                             data-url="{{ route('profile') }}">Perfil</a>
                     </li>
 
-                    <li>
-                        <a id="appointments" class="hover:text-gray-500" href="">Mis citas</a>
-                    </li>
+                    @auth
+                        @if (Auth::user()->role == 'cliente')
+                            <li>
+                                <a id="appointments" class="hover:text-gray-500" href="">Mis citas</a>
+                            </li>
 
-                    <li>
-                        <a id="register" class="hover:text-gray-500" href="">Darse de alta en peluquería</a>
-                    </li>
+                            <li>
+                                <a id="signup" class="hover:text-gray-500" href="" data-url="{{ route('dashboard.showHairdressers') }}">Darse de alta en peluquería</a>
+                            </li>
+                        @endif
 
-                    <li>
-                        <a id="services-information" class="hover:text-gray-500" href="">Consultar servicios</a>
-                    </li>
+                    @endauth
 
                     @auth
                         @if (Auth::user()->role == 'propietario')
                             <li>
-                                <a id="create-hairdresser" class="hover:text-gray-500" href="#" data-url="{{route('dashboard.hairdresser')}}">Crear peluquería</a>
+                                <a id="create-hairdresser" class="hover:text-gray-500" href="#"
+                                    data-url="{{ route('dashboard.hairdresser') }}">Crear peluquería</a>
                             </li>
-                            <li><a id="create-service" class="hover:text-gray-500" href="#" data-url="{{route('dashboard.services')}}">Crear servicios</a></li>
-                            <li><a class="hover:text-gray-500" href=""></a>Eliminar citas</li>
+                            <li><a id="create-service" class="hover:text-gray-500" href="#"
+                                    data-url="{{ route('dashboard.services') }}">Crear servicios</a></li>
+
+                            <li><a id="manage-appointments" class="hover:text-gray-500" href="#"
+                                    data-url="{{ route('dashboard.services') }}">Gestión de citas</a></li>
                         @endif
                     @endauth
 
@@ -48,22 +53,6 @@
                 </ul>
             </div>
 
-            @auth
-                @if (Auth::user()->role == 'propietario')
-                    <div>
-                        <h3 class="font-work font-medium  text-gray-500 mb-4 mt-6 xl:text-2xl">Estadísticas</h3>
-                        <ul class="font-work text-sm flex flex-col gap-4 xl:text-xl">
-                            <li>
-                                <a class="hover:text-gray-500" href="">Clientes dados de alta en la peluquería</a>
-                            </li>
-
-                            <li>
-                                <a class="hover:text-gray-500" href="">Servicios más demandado</a>
-                            </li>
-                        </ul>
-                    </div>
-                @endif
-            @endauth
 
             <div>
                 <form action="{{ route('users.logout') }}" method="post">

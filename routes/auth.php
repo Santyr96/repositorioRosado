@@ -19,17 +19,20 @@ Route::middleware('guest', 'web')->group(function () {
 });
 
 Route::middleware('auth', 'verified')->group(function () {
-    Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/dashboard/hairdresser',[DashboardController::class, 'hairdresser'])->name('dashboard.hairdresser');
-    Route::post('/dashboard/insertHairDresser',[DashboardController::class, 'storeHairDresser'])->name('dashboard.insertHairDresser');
+    Route::get('/dashboard/signUp/hairdresser', [DashboardController::class, 'showHairdressers'])->name('dashboard.showHairdressers');
     Route::get('/dashboard/services', [DashboardController::class, 'showServices'])->name('dashboard.services');
+    Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
     Route::post('/dashboard/createService', [DashboardController::class, 'createService'])->name('dashboard.createService');
     Route::post('/dashboard/updateService/{serviceId}', [DashboardController::class, 'updateService'])->name('dashboard.updateService');
     Route::post('/dashboard/deleteService/{serviceId}', [DashboardController::class, 'deleteService'])->name('dashboard.deleteService');
     Route::post('/dashboard/uploadAvatar', [DashboardController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
     Route::post('/dashboard/updateProfile', [DashboardController::class, 'updateProfile'])->name('profile.updateProfile');
+    Route::post('/dashboard/insertHairDresser',[DashboardController::class, 'storeHairDresser'])->name('dashboard.insertHairDresser');
+    Route::post('/dashboard/signUp/hairdresser/store',[DashboardController::class, 'signupHairdresser'])->name('dashboard.signupHairdresser');
+    
 });
 
 Route::get('/email/verify', function(){

@@ -5,6 +5,7 @@ import { initValidations } from "../../../auth/validateProfile";
 import { tooglePasswordVisibility } from "../../passwords/show_password";
 import { storeHairDresser } from "../hairdresser/insertHairDresser";
 import { servicesManage } from "../services-hair/services-manage";
+import { signupHairdresser } from "../signup/signup-hairdresser";
 import { updateAvatar } from "./update_avatar";
 import { updateProfile } from "./update_profile";
 
@@ -43,7 +44,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     case "create-service":
                         servicesManage();
                         break;
-
+                    case "signup":
+                        signupHairdresser();
                 }
             } catch (error) {
                 console.error("Error al cargar el contenido", error);

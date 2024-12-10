@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hairdresser;
 use App\Models\Service;
+use App\Models\Signup;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
@@ -27,43 +28,65 @@ class DashboardController extends Controller
         try {
             //Se obtiene el usuario autenticado.
             $user = auth()->user();
-    
+
             //Se verifica si el usuario esta autenticado y se registra en los logs de laravel.
             if (!$user) {
                 Log::error("No se pudo obtener el usuario autenticado.");
                 return response()->json(['error' => 'Usuario no autenticado'], 401);
             }
-    
-           //Se realiza una consulta a la base de datos para obtener la peluquería del usuario.
+
+            //Se realiza una consulta a la base de datos para obtener la peluquería del usuario.
             $hairdresser = Hairdresser::where('owner_id', $user->id)
                 ->select('id', 'name')
                 ->first();
-    
+
             //Si no se encuentra la peluquería se registra en los logs.
             if (!$hairdresser) {
                 Log::error("No se encontró la peluquería para el usuario con id: {$user->id}");
                 return response()->json(['error' => 'Peluquería no encontrada'], 404);
             }
-    
+
             //Se realiza una consulta a la base de datos para obtener los servicios asociados a la peluquería.
             $services = Service::where('hairdresser_id', $hairdresser->id)
                 ->orderBy('id')
                 ->get();
 
             return view('dashboards.services_view', compact('hairdresser', 'services'));
-
         } catch (\Exception $e) {
-            
+
             Log::error('Error en showServices: ' . $e->getMessage(), [
                 'exception' => $e,
                 'user_id' => auth()->id(),
             ]);
-    
+
             // Responder con un mensaje de error genérico
             return response()->json(['error' => 'Ocurrió un error en el servidor'], 500);
         }
     }
-    
+
+    //Función que se encarga de mostrar la vista de peluquerías para que los clientes se den de alta.
+    public function showHairdressers()
+    {
+        //Se obtiene el usuario autenticado.
+        $user = auth()->user();
+
+        //Se obtiene todo el listado de las peluquerías registradas en nuestra base de datos.
+        $hairdressers = Hairdresser::all();
+
+        //Se obtiene la lista de las peluquerías en las que el cliente se ha dado de alta.
+        $signups = Signup::where('client_id', $user->id)
+            ->pluck('hairdresser_id'); // Esto devuelve un array de IDs
+
+        //Se obtiene las peluquerías correspondientes a los IDs de $signups.
+        $hairdressersSignedUp = Hairdresser::whereIn('id', $signups)
+            ->select('id', 'name')
+            ->get();
+
+        //Se retorna la vista con los datos obtenidos.
+        return view('dashboards.user-signup-hairdresser', compact('hairdressers', 'hairdressersSignedUp'));
+    }
+
+
 
     //Función que se encarga de actualizar el avatar del usuario.
     public function uploadAvatar(Request $request)
@@ -185,7 +208,7 @@ class DashboardController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
-    
+
     //Función que se va a encargar de crear servicios.
     public function createService(Request $request)
     {
@@ -230,18 +253,18 @@ class DashboardController extends Controller
             $service = Service::find($serviceId);
 
             //Se actualizan los datos del servicio.
-            if($request->name != '' && $request->name != $service->name){
-                $service->name = $request->name;    
+            if ($request->name != '' && $request->name != $service->name) {
+                $service->name = $request->name;
             }
 
-            if($request->price != '' && $request->price != $service->price){
-                $service->price = $request->price;    
+            if ($request->price != '' && $request->price != $service->price) {
+                $service->price = $request->price;
             }
-            
-            if($request->description != '' && $request->description != $service->description){
-                $service->description = $request->description;    
+
+            if ($request->description != '' && $request->description != $service->description) {
+                $service->description = $request->description;
             }
-            
+
             //Se guardan los cambios en la base de datos.
             $service->save();
 
@@ -269,6 +292,45 @@ class DashboardController extends Controller
         } catch (Exception $e) {
             //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
             Log::error('Error al eliminar servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
+    }
+
+    //Función que se encarga de registar una nueva alta en una peluqueria.
+    public function signupHairdresser(Request $request)
+    {
+        $signupSelect = Signup::where('client_id', auth()->user()->id)
+            ->where('hairdresser_id', $request->hairdresser_id)
+            ->first();
+
+        if ($request->hairdresser_id == '') {
+            return response()->json(['error' => 'No se ha seleccionado ninguna peluquería'], 400);
+        };
+
+        if ($request->hairdresser_id == $signupSelect->hairdresser_id) {
+            return response()->json(['error' => 'Ya te has dado de alta en la peluquería'], 400);
+        };
+        try {
+            $request->validate([
+                'hairdresser_id' => 'required|integer',
+            ]);
+
+            //Se crea una nueva instancia del modelo Signup para añadir datos a la tabla.
+            $signup = new Signup();
+
+
+            $signup->client_id = auth()->user()->id;
+            $signup->hairdresser_id = $request->hairdresser_id;
+
+            //Se guardan los cambios en la base de datos.
+            $signup->save();
+
+            //Se retorna una respuesta en formato JSON con un mensaje de éxito.
+            return response()->json(['success' => 'Se ha dado de alta correctamente'], 200);
+        } catch (Exception $e) {
+            Log::info($request);
+            Log::error('Error al realizar alta: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+            //Se retorna una respuesta en formato JSON con un mensaje de error.
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }

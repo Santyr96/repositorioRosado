@@ -105,7 +105,6 @@
                 <div class="flex justify-center text-center font-work pt-2 md:text-xl">
                     <p>¿No tienes una cuenta? <a class="underline font-bold hover:text-purple-600"
                             href="#">Regístrate</a></p>
-
                 </div>
 
 
