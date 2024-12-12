@@ -25,7 +25,7 @@
                     @auth
                         @if (Auth::user()->role == 'cliente')
                             <li>
-                                <a id="appointments" class="hover:text-gray-500" href="">Mis citas</a>
+                                <a id="appointments" class="hover:text-gray-500" href="" data-url="{{ route('dashboard.selectSignup') }}">Mis citas</a>
                             </li>
 
                             <li>

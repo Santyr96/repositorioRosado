@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
@@ -19,20 +21,39 @@ Route::middleware('guest', 'web')->group(function () {
 });
 
 Route::middleware('auth', 'verified')->group(function () {
+    //Ruta inicial que carga el dashboard.
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
-    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
-    Route::get('/dashboard/hairdresser',[DashboardController::class, 'hairdresser'])->name('dashboard.hairdresser');
-    Route::get('/dashboard/signUp/hairdresser', [DashboardController::class, 'showHairdressers'])->name('dashboard.showHairdressers');
-    Route::get('/dashboard/services', [DashboardController::class, 'showServices'])->name('dashboard.services');
+
+    //Ruta que se encarga de manejar el cierre de sesión por parte del usuario.
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
+
+    //Rutas de la vista de edición de perfil.
+    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::post('/dashboard/uploadAvatar', [DashboardController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
+    Route::post('/dashboard/updateProfile', [DashboardController::class, 'updateProfile'])->name('profile.updateProfile');
+
+    //Rutas que se encarga de la gestión de los servicios de la peluqueria.
+    Route::get('/dashboard/services', [DashboardController::class, 'showServices'])->name('dashboard.services');
     Route::post('/dashboard/createService', [DashboardController::class, 'createService'])->name('dashboard.createService');
     Route::post('/dashboard/updateService/{serviceId}', [DashboardController::class, 'updateService'])->name('dashboard.updateService');
     Route::post('/dashboard/deleteService/{serviceId}', [DashboardController::class, 'deleteService'])->name('dashboard.deleteService');
-    Route::post('/dashboard/uploadAvatar', [DashboardController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
-    Route::post('/dashboard/updateProfile', [DashboardController::class, 'updateProfile'])->name('profile.updateProfile');
-    Route::post('/dashboard/insertHairDresser',[DashboardController::class, 'storeHairDresser'])->name('dashboard.insertHairDresser');
-    Route::post('/dashboard/signUp/hairdresser/store',[DashboardController::class, 'signupHairdresser'])->name('dashboard.signupHairdresser');
     
+    //Rutas que se encarga de la gestión de las peluquerias.
+    Route::get('/dashboard/hairdresser',[DashboardController::class, 'hairdresser'])->name('dashboard.hairdresser');
+    Route::post('/dashboard/insertHairDresser',[DashboardController::class, 'storeHairDresser'])->name('dashboard.insertHairDresser');
+
+    //Rutas que se encargan de las gestión de las altas de los clientes a las peluquerias.
+    Route::get('/dashboard/signUp/hairdresser', [DashboardController::class, 'showHairdressers'])->name('dashboard.showHairdressers');
+    Route::post('/dashboard/signUp/hairdresser/store',[DashboardController::class, 'signupHairdresser'])->name('dashboard.signupHairdresser');
+
+    //Rutas que se encargan de mostrar el calendario.
+    Route::get('/dashboard/select/signup', [CalendarController::class, 'findSignup'])->name('dashboard.selectSignup');
+    Route::post('/dashboard/calendar', [CalendarController::class, 'showCalendar'])->name('dashboard.showCalendar');
+
+    //Rutas que se encargan de la gestión de las citas.
+    Route::post('/dashboard/calendar/appointments', [AppointmentController::class, 'clientIndex'])->name('dashboard.clientAppointments');
+    Route::post('/dashboard/calendar/appointments/update', [AppointmentController::class, 'updateAppointment'])->name('dashboard.updateAppointment');
+    Route::post('/dashboard/calendar/appointments/delete', [AppointmentController::class, 'deleteAppointment'])->name('dashboard.deleteAppointment');
 });
 
 Route::get('/email/verify', function(){

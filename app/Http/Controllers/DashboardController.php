@@ -299,14 +299,17 @@ class DashboardController extends Controller
     //Función que se encarga de registar una nueva alta en una peluqueria.
     public function signupHairdresser(Request $request)
     {
+        //Seleccionamos la peluqueria con la id del cliente, y que coincida con el id enviado en el request.
         $signupSelect = Signup::where('client_id', auth()->user()->id)
             ->where('hairdresser_id', $request->hairdresser_id)
             ->first();
 
+        //Si el request viene vacio, se retorna un error.
         if ($request->hairdresser_id == '') {
             return response()->json(['error' => 'No se ha seleccionado ninguna peluquería'], 400);
         };
 
+        //Si el cliente ya se ha dado de alta en la peluqueria, se retorna un error.
         if ($request->hairdresser_id == $signupSelect->hairdresser_id) {
             return response()->json(['error' => 'Ya te has dado de alta en la peluquería'], 400);
         };
@@ -319,6 +322,7 @@ class DashboardController extends Controller
             $signup = new Signup();
 
 
+            //Se asignan los nuevos datos a la base de datos Signup.
             $signup->client_id = auth()->user()->id;
             $signup->hairdresser_id = $request->hairdresser_id;
 
@@ -334,4 +338,6 @@ class DashboardController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+
+    
 }

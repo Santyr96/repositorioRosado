@@ -10,4 +10,8 @@ class Service extends Model
     use HasFactory;
 
     protected $table = 'services';
+
+    public function hairdressers() {
+        return $this->belongsTo(Hairdresser::class);
+    }
 }

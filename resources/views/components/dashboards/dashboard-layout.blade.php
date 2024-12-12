@@ -1,5 +1,4 @@
 
-@vite('resources/js/components/dashboards/calendar.js')
 @vite('resources/js/components/dashboards/profile/load-view.js')
 @vite('resources/css/app.css')
 

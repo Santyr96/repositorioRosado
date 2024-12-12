@@ -6,7 +6,7 @@
     <p>Selecciona tu peluqueria del siguiente listado</p>
 
     <form name="fFormSignUp" method="POST" data-form="{{ route('dashboard.signupHairdresser') }}"
-        data-url="{{ route('dashboard.showHairdressers') }}">
+        data-url="{{ route('dashboard.showHairdressers') }}" data-calendar="">
         @csrf
         <select class="mb-4" name="hairdresser_id" id="peluquerias">
             <option value="">Selecciona peluqueria</option>

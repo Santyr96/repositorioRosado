@@ -10,5 +10,22 @@ class Appointment extends Model
     use HasFactory;
     
     protected $table = 'appointments';
+    protected $casts = [
+        'start' => 'datetime', 
+        'end' => 'datetime',
+    ];
     
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+    public function client(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function hairdresser()
+    {
+        return $this->belongsTo(Hairdresser::class);
+    }
 }

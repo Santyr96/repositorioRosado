@@ -72,7 +72,7 @@ function showErrorMessage(message) {
     }
 
     //Se llama a la función para cerrar el modal.
-    closeModal();;
+    closeModal();
 }
 
 async function reloadServicesView(url) {

@@ -1,9 +1,10 @@
-@vite('resources/js/components/dashboards/calendar.js')
+@vite('resources/js/components/dashboards/calendar/calendar.js')
 
-@extends('components.dashboards.dashboard-layout')
-
-@section('name')
-    <div id="title" class="font-noto text-xl md:text-3xl font-bold">
+<div id="container" class="w-full flex flex-col items-center">
+    <x-modals.error-modal class="hidden xl:left-40" modalTitle="Error al enviar el formulario"
+        modalMessage=""></x-modals.error-modal>
+    <x-modals.appointment-edit-and-delete-modal id="modal" modalTitle="" modalMessage="" :services="$services" ></x-modals.appointment-modal>
+    <div id="title" class="font-noto text-xl md:text-3xl font-bold mb-2">
         <h1>Planifica tus citas</h1>
     </div>
     <div id="calendar"
@@ -11,5 +12,4 @@
         lg:h-[800px] overflow-scroll text-xs/relaxed md:text-lg font-noto border-2 border-black
         bg-purple-500 text-white">
     </div>
-@endsection
-1
+</div>

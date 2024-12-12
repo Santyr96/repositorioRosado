@@ -7,6 +7,7 @@ import { storeHairDresser } from "./hairdresser/insertHairDresser";
 import { updateAvatar } from "./profile/update_avatar";
 import { servicesManage } from "./services-hair/services-manage";
 import { signupHairdresser } from "./signup/signup-hairdresser";
+import { showCalendar } from "./calendar/show-calendar";
 
 document.addEventListener("DOMContentLoaded", function () {
     const extendButton = document.getElementById("extendButton");
@@ -67,6 +68,10 @@ export function loadView() {
                             break;
                         case "signup":
                             signupHairdresser();
+                            break;
+                        case "appointments":
+                            showCalendar();
+                            break;
                     }
                     adminPanel.classList.add("hidden");
                 } catch (error) {

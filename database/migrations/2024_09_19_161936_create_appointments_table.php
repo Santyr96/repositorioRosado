@@ -22,7 +22,8 @@ return new class extends Migration
             $table->foreignId('hairdresser_id')
             ->constrained('hairdressers')
             ->onDelete('cascade');
-            $table->dateTime('date');
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->enum('status', ['pendiente', 'confirmado', 'cancelado']);
             $table->timestamps();
         });
