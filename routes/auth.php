@@ -52,6 +52,7 @@ Route::middleware('auth', 'verified')->group(function () {
 
     //Rutas que se encargan de la gestión de las citas.
     Route::post('/dashboard/calendar/appointments', [AppointmentController::class, 'clientIndex'])->name('dashboard.clientAppointments');
+    Route::post('/dashboard/calendar/appointments/create', [AppointmentController::class, 'storeAppointment'])->name('dashboard.storeAppointment');
     Route::post('/dashboard/calendar/appointments/update', [AppointmentController::class, 'updateAppointment'])->name('dashboard.updateAppointment');
     Route::post('/dashboard/calendar/appointments/delete', [AppointmentController::class, 'deleteAppointment'])->name('dashboard.deleteAppointment');
 });

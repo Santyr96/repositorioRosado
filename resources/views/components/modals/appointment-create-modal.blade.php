@@ -26,8 +26,8 @@
             </div>
 
             <div class="flex justify-center">
-                <form name="fAppointment" action="" method="post" enctype="multipart/form-data"
-                    data-update="{{ route('dashboard.updateAppointment') }}" data-delete="{{route('dashboard.deleteAppointment')}}" data-calendar="{{route('dashboard.clientAppointments')}}" class="flex flex-col gap-2">
+                .<form name="fCreateAppointment" action="" method="post" enctype="multipart/form-data"
+                    data-create="{{route('dashboard.storeAppointment')}}" data-calendar="{{route('dashboard.clientAppointments')}}" class="flex flex-col gap-2">
                     @csrf
                     <label class="text-white" for="service">Servicio</label>
                     <select name="service" id="service">
@@ -41,18 +41,20 @@
                     </select>
 
                     <label class="text-white"  for="start">Fecha de inicio</label>
-                    <input type="datetime-local" id="start" name="start">
+                    <input type="text" id="fakeStart" disabled>
+                    <input type="hidden" id="start" name="startf">
                     <label class="text-white" for="end">Fecha de fin</label>
-                    <input type="datetime-local" id="end" name="end">
+                    <input type="text" id="fakeEnd" disabled>
+                    <input type="hidden" id="end" name="endf">
                     <input type="hidden" id="status" name="status" value="pendiente">
-                    <input type="hidden" id="id_appointment" name="id_appointment">
+                    <input type="hidden" id="hairdresser_id" name="hairdresser_id" value="{{$hairdresser->id}}">
 
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button id="updateButton" type="submit"
-                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Editar
+                        <button id="createButton" type="submit"
+                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-hide="{{ $id }}">Crear
                             cita</button>
-                            <button id="deleteButton" type="submit"
-                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"  data-modal-hide="{{ $id }}">Eliminar cita</button>
+                            <button id="cancelButton" type="button"
+                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"  data-modal-hide="{{ $id }}">Cancelar</button>
                     </div>
                 </form>
             </div>

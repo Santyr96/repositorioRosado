@@ -3,8 +3,9 @@
 import { closeModal } from "../../modals/closeModal";
 import { Calendar } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
-import { modalAppointmentEdit } from "./modal-appointment";
+import {modalAppointmentEditAndDelete } from "./modal-appointment-edit-and-delete";
 import { info } from "autoprefixer";
+import { modalAppointmentCreate } from "./modal-appointment-create";
 
 export function showCalendar() {
     const contentContainer = document.getElementById("content");
@@ -12,9 +13,7 @@ export function showCalendar() {
     signUpForm.addEventListener("submit", async function (event) {
         event.preventDefault();
         const url = this.getAttribute("data-form");
-        console.log(url);
         const formData = new FormData(this);
-        //Se imprime en consola los valores de los campos del formulario, para saber que se envia.
         for (const [key, value] of formData.entries()) {
             console.log(`${key}:`, value);
         }
@@ -41,6 +40,7 @@ export function showCalendar() {
             const html = await response.text();
             contentContainer.innerHTML = html;
             renderCalendar(formData, this.getAttribute("data-calendar"));
+            console.log(this.getAttribute("data-calendar"));
         } catch (error) {
             console.error("Error al cargar el contenido", error);
             showErrorMessage(error);
@@ -52,8 +52,7 @@ export function showCalendar() {
 
 export function renderCalendar(formData, url) {
     var calendarEl = document.getElementById("calendar");
-    calendarEl.replaceChildren();
-
+    
     var calendarHeight = calendarEl.offsetHeight;
 
     var initialViews = "timeGridDay";
@@ -62,34 +61,21 @@ export function renderCalendar(formData, url) {
     }
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: "timeGridDay",
-        events: async function (
-            fetchInfo,
-            successCallback,
-            failureCallback
-        ) {
-            try {
-                const response = await fetch(url, {
-                    method: "POST",
-                    headers: {
-                        "X-CSRF-TOKEN": document
-                            .querySelector('meta[name="csrf-token"]')
-                            .getAttribute("content"),
-                    },
-                    body: formData,
-                });
-                if (!response.ok) {
-                    const data = await response.json();
-                    throw new Error(`${data.error}`);
-                }
-                const data = await response.json();
-                successCallback(data);
-            } catch (error) {
-                console.error("Error al cargar los eventos", error);
-                failureCallback(error);
+        eventSources: [
+            eventSourceConfig, 
+        ],
+        loading: function (isLoading) {
+            if (isLoading) {
+                console.log("Cargando eventos...");
+            } else {
+                console.log("Eventos cargados.");
             }
         },
         eventClick: function(info) { 
-            modalAppointmentEdit(info);
+            modalAppointmentEditAndDelete(info, calendar);
+        },
+        dateClick: function(info) {
+            modalAppointmentCreate(info,calendar);
         },
         aspectRatio: 1,
         headerToolbar: {
@@ -118,6 +104,20 @@ export function renderCalendar(formData, url) {
 
     calendar.render();
 }
+
+const eventSourceConfig = {
+    url: "http://hairbooker/dashboard/calendar/appointments", 
+    method: "POST",
+    extraParams: function () {
+        return {
+            _token: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+        };
+    },
+    failure: function (error) {
+        console.error("Error al cargar los eventos", error);
+    },
+};
+
 
 export function showErrorMessage(message) {
     const modal = document.getElementById("errorModal");

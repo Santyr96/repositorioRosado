@@ -35,11 +35,12 @@ class CalendarController extends Controller
             'hairdresser_id' => 'required|exists:hairdressers,id', // Asegura que el ID es válido
         ]);
     
+        $hairdresser = Hairdresser::find($request->hairdresser_id);
         // Obtener los servicios de la peluquería.
         $services = Service::where('hairdresser_id', $request->hairdresser_id)->get();
     
         // Retornar la vista con los servicios obtenidos
-        return view('dashboards.calendar', compact('services'));
+        return view('dashboards.calendar', compact('services', 'hairdresser'));
     }
     
 

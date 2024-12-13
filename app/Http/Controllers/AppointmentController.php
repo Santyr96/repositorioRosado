@@ -52,6 +52,59 @@ class AppointmentController extends Controller
         }
     }
 
+    //Función que se encarga de crear una cita.
+    public function storeAppointment(Request $request)
+    {
+        try {
+
+            //Se validan los campos enviados
+            $request->validate([
+                'start' => 'required|date',
+                'end' => 'required|date',
+                'status' => 'required|in:pendiente,confirmado,cancelado',
+                'service' => 'required|exists:services,id',
+            ]);
+
+            $existingAppointment = Appointment::where('hairdresser_id', $request->hairdresser_id)
+                ->where(function ($query) use ($request) {
+                    $query->whereBetween('start', [$request->start, $request->end])
+                        ->orWhereBetween('end', [$request->start, $request->end])
+                        ->orWhere(function ($query) use ($request) {
+                            $query->where('start', '<=', $request->start)
+                                ->where('end', '>=', $request->end);
+                        });
+                })
+                ->where('id', '!=', $request->id_appointment)
+                ->first();
+
+            if ($existingAppointment) {
+                return response()->json(['error' => 'Ya existe una cita en ese horario'], 400);
+            }
+
+            //Se crea la cita y recogemos las filas modificados en una variable.
+            $appointment = Appointment::create([
+                'start' => $request->start,
+                'end' => $request->end,
+                'status' => $request->input('status'),
+                'service_id' => $request->input('service'),
+                'client_id' => auth()->user()->id,
+                'hairdresser_id' => $request->hairdresser_id,
+            ]);
+
+            //Se comprueba que se ha creado la cita, si no, enviamos un error al usuario.
+            if (!$appointment) {
+                return response()->json(['error' => 'Ha ocurrido un error al crear la cita'], 500);
+            }
+
+            //Si todo va bien, se envía un mensaje de exito al usuario.
+            return response()->json(['message' => 'Cita creada correctamente']);
+
+        } catch (\Exception $e) {
+            Log::error('Error al crear la cita: ' . $e->getMessage());
+            return response()->json(['error' => 'Ha ocurrido un error al procesar la solicitud'], 500);
+        }
+    }
+
     //Función que se encarga de actualizar una cita.
     public function updateAppointment(Request $request)
     {

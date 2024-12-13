@@ -10,10 +10,20 @@ class Appointment extends Model
     use HasFactory;
     
     protected $table = 'appointments';
+    protected $fillable = [
+        'start',     
+        'end',       
+        'status',    
+        'service_id', 
+        'client_id', 
+        'hairdresser_id', 
+    ];
     protected $casts = [
         'start' => 'datetime', 
         'end' => 'datetime',
     ];
+
+
     
     public function service()
     {
