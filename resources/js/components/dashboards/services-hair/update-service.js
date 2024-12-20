@@ -1,0 +1,132 @@
+"use strict";
+import { closeModal } from "../../modals/closeModal";
+import { reloadServicesView, showErrorMessage } from "./services-manage";
+
+export function updateService(urlView) {
+    const updateForms = document.querySelectorAll(".updateForm");
+    const updateModal = document.querySelector(".advise-modal");
+    const updateChild = document.getElementById("child");
+    const updateModalTitle = document.getElementById("modalTitle");
+    const updateModalMessage = document.getElementById("message");
+
+    function openUpdateModal(trUpdate, url, urlView) {
+        if (updateModal.classList.contains("hidden")) {
+            updateModal.children[0].children[0].classList.remove("bg-gray-600");
+            updateModal.children[0].children[0].classList.add("bg-purple-700");
+            updateModal.children[0].children[0].children[0].classList.add("bg-white");
+            updateModal.id = "updateModal";
+            updateChild.replaceChildren();
+            updateChild.insertAdjacentHTML("afterbegin", createUpdateForm());
+
+            updateModalTitle.textContent = "Actualización de servicio";
+            updateModalTitle.classList.replace("text-white", "text-black");
+            updateModalMessage.textContent = "¿Quieres actualizar este servicio?";
+
+            fillUpdateForm(trUpdate, url);
+            initializeCloseButtons(urlView)
+        }
+
+        // Mostrar el modal
+        updateModal.classList.toggle("hidden");
+        
+    }
+
+    function initializeCloseButtons(urlView) {
+        const closeButtons = document.querySelectorAll("[data-modal-hide]");
+        closeButtons.forEach((button) => {
+            button.addEventListener("click", () => {
+                reloadServicesView(urlView);
+            });
+        });
+        closeModal();
+    }
+
+    function createUpdateForm() {
+        return `
+            <form class="flex flex-col justify-center gap-2" name="fupdateServiceModal" data-form="" method="post">
+                <label class="text-white" for="name">Nombre para el servicio</label>
+                <input type="text" name="name" id="name" value="">
+                <x-forms.span-validate class="w-10/12"></x-forms.span-validate>
+
+                <label class="text-white" for="description">Descripción</label>
+                <textarea name="description" id="description" cols="30" rows="10"></textarea>
+                <x-forms.span-validate class="w-10/12"></x-forms.span-validate>
+
+                <label class="text-white" for="price">Precio</label>
+                <input class="w-16 p-1 text-sm resize-none" step="0.50" type="number" name="price" value=""
+                    min="0" placeholder="0.00"
+                    oninput="this.value = (this.value && !isNaN(this.value)) ? parseFloat(this.value).toFixed(2) : ''">
+
+                <div class="flex justify-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button id="send" type="submit" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-hide="updateModal">
+                        Editar servicio
+                    </button>
+                    <button id="cancel" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-hide="updateModal">
+                        Cancelar
+                    </button>
+                </div>
+            </form>
+        `;
+    }
+
+    function fillUpdateForm(trUpdate, url) {
+        const tds = trUpdate.querySelectorAll("td");
+        const dataMap = new Map();
+        tds.forEach((td) => {
+            dataMap.set(td.id, td.textContent.trim());
+        });
+
+        
+        const updateServiceModalForm = document.forms["fupdateServiceModal"];
+        updateServiceModalForm.setAttribute("data-form", url);
+        updateServiceModalForm['name'].value = dataMap.get('tdName');
+        updateServiceModalForm['description'].value = dataMap.get('tdDescription');
+        const priceValue = parseFloat(String(dataMap.get('tdPrice')).replace(/\s+/g, '').replace('€', ''));
+        updateServiceModalForm['price'].value = priceValue;
+
+        // Manejo del submit del formulario de actualización
+        updateServiceModalForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    },
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(`Error en la solicitud: ${data.error}`);
+                }
+
+                const data = await response.json();
+                console.log(data);
+                reloadServicesView(urlView);
+
+            } catch (error) {
+                console.error("Error:", error);
+                showErrorMessage(
+                    error.message || "Ocurrió un error al actualizar el servicio. Inténtalo nuevamente."
+                );
+            }
+        });
+    }
+
+    updateForms.forEach((updateForm) => {
+        const trUpdate = updateForm.parentElement.parentElement;
+        updateForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const url = this.getAttribute("data-form");
+            if (!url) {
+                console.error("La URL para actualizar un servicio no está disponible.");
+                showErrorMessage("Error interno. Intenta más tarde.");
+                return;
+            }
+
+            openUpdateModal(trUpdate, url,urlView);
+        });
+    });
+}

@@ -1,112 +1,129 @@
+"use strict";
 import { renderCalendar, showErrorMessage } from "./show-calendar";
+import { DateTime } from "luxon";
 
-export function modalAppointmentCreate(info,calendar) {
+const closeModalListeners = new WeakMap();
+
+export function modalAppointmentCreate(info, calendar) {
     const form = document.forms["fCreateAppointment"];
     const modal = document.getElementById("createModal");
-    const urlCalendar = form.getAttribute("data-calendar");
+    let isSubmitting = false;
     const selectedTime = info.date;
-    const inputStart = document.getElementById("start");
+    const createButton = document.getElementById("createButton");
     const inputFakeStart = document.getElementById("fakeStart");
     const inputFakeEnd = document.getElementById("fakeEnd");
-    const inputEnd = document.getElementById("end");
+    const submitButton = form.querySelector("button[type='submit']");
+    const madridTime =
+        DateTime.fromJSDate(selectedTime).setZone("Europe/Madrid");
+    const start = madridTime.toISO();
+    const startFormatted = madridTime.toFormat("dd/MM/yyyy HH:mm");
+    const endTime = madridTime.plus({ hours: 1 });
+    const end = endTime.toISO();
+    const endFormatted = endTime.toFormat("dd/MM/yyyy HH:mm");
+    const addInputClient = document.getElementById("addInputClient");
+    const selectClient = document.getElementById("selectClient");
+    
 
-    //Se convierte  la fecha de inicio a formato válido para el input de nuestro formulario -> datetime-local.
-    const start = selectedTime.toISOString();
-    console.log(start);
-
-    //Formateamos la fecha de inicio para mostrarla en el input de nuestro formulario.
-    const startFormatted = selectedTime.toLocaleString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-    });
-
-    //Formateamos de la misma manera la fecha de fin.
-    const endFormatted = new Date(
-        selectedTime.getTime() + 60 * 60 * 1000
-    ).toLocaleString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-    });
-
-    //Asignamos las fechas formateadas formateada al input de nuestro formulario.
     inputFakeStart.value = startFormatted;
     inputFakeEnd.value = endFormatted;
 
+    if (!modal.classList.contains("modal-initialized")) {
+        modal.classList.add("modal-initialized");
 
-    //Establecemos el valor del input de fecha de fin de nuestro formulario sumandole una hora al valor de start.
-    const end = new Date(selectedTime.getTime() + 60 * 60 * 1000)
-        .toISOString();
+        createButton.addEventListener("click", handleCreate);
+        addInputClient.addEventListener("click", handleAddInputAddClient);
 
-
-    //Añadimos un listener al formulario.
-    form.addEventListener("submit", async function (event) {
-        event.preventDefault()
-
-        const formData = new FormData(this);
-
-        //Eliminamos los inputs fake.
-        formData.delete("startf");
-        formData.delete("endf");
-        formData.append("start", start);
-        formData.append("end", end);
-
-        for (const [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
+        function handleAddInputAddClient() {
+            const existInputAddClient = document.getElementById("inputAddClient");
+            if (existInputAddClient) {
+                selectClient.removeAttribute("disabled");
+                existInputAddClient.remove();
+                return;
+            } else{
+            selectClient.setAttribute("disabled", "disabled");
+            const inputAddClient = document.createElement("input");
+            inputAddClient.setAttribute("id", "inputAddClient");
+            inputAddClient.setAttribute("type", "text");
+            inputAddClient.setAttribute("name", "unregistered_client");
+            inputAddClient.setAttribute("placeholder", "Cliente no registrado");
+            addInputClient.insertAdjacentElement("afterend", inputAddClient);
+            }
         }
 
-        let url = form.getAttribute("data-create");
+        async function handleCreate(e) {
+            e.preventDefault();
+            if (isSubmitting) return;
+            console.log("submit triggered");
+            isSubmitting = true;
 
-        try{
+            const formData = new FormData(form);
+            const url = form.getAttribute("data-create");
 
-         const response = await fetch(url, {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
-            },
-            body: formData,
-        })
-        
-        if (!response.ok) {
-            console.log(response.json);
-            throw new Error(`Error en la solicitud: ${response.status}`);
+            formData.delete("startf");
+            formData.delete("endf");
+            formData.append("start", start);
+            formData.append("end", end);
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                    },
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    console.error(data);
+                    throw new Error(data.error || "Error desconocido");
+                }
+                const inputAddClient = document.getElementById("inputAddClient");
+                if (inputAddClient) {
+                    inputAddClient.remove();
+                }
+                if(selectClient.hasAttribute("disabled")){
+                    selectClient.removeAttribute("disabled");
+                }
+                modal.classList.add("hidden");
+
+                if (calendar) calendar.refetchEvents();
+            } catch (error) {
+                console.error(error);
+                modal.classList.add("hidden");
+                isSubmitting = false;
+                showErrorMessage(error);
+            } finally {
+                isSubmitting = false;
+            }
         }
 
-        if (calendar) {
-            calendar.refetchEvents();
-        } else {
-            console.error("No se encontró la instancia del calendario");
-        }
+        let closeButtons = modal.querySelectorAll("[data-modal-hide]");
 
+        closeButtons.forEach((button) => {
+            const previousListener = closeModalListeners.get(button);
+            if (previousListener) {
+                button.removeEventListener("click", previousListener);
+            }
+            const newListener = () => {
+                const inputAddClient = document.getElementById("inputAddClient");
+                if(selectClient.hasAttribute("disabled")){
+                    selectClient.removeAttribute("disabled");
+                }
+                if (inputAddClient) {
+                    inputAddClient.remove();
+                }
+                modal.classList.add("hidden");
+            };
 
-    } catch (error) {
-        console.error("Error al cargar el contenido", error);
-        modal.classList.add("hidden");
-        showErrorMessage(error);
-    } 
-
-    
-
-    },
-    {once: true});
+            button.addEventListener("click", newListener);
+            closeModalListeners.set(button, newListener);
+        });
+    }
 
     if (modal.classList.contains("hidden")) {
         modal.classList.remove("hidden");
     }
-
-    let closeButtons = modal.querySelectorAll("[data-modal-hide]");
-    closeButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            modal.classList.add("hidden");
-        });
-    });
 }

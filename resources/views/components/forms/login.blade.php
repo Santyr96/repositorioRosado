@@ -1,9 +1,19 @@
-@vite('resources/js/components/input_extend.js')
+
 @vite('resources/js/components/passwords/show_password.js')
 
 @error('general')
 <x-modals.error-modal modalTitle="Error al iniciar sesión" modalMessage="{{ $message }}"></x-modals.error-modal>
 @enderror
+
+@error('email')
+<x-modals.error-modal modalTitle="Error al enviar el link de restablecimiento de contraseña" modalMessage="{{ $errors->first('email') }}"></x-modals.error-modal>
+@enderror
+
+@if (session('status'))
+<x-modals.error-modal modalTitle="Solicitud de restablecimiento de contraseña" modalMessage="{{ session('status') }}"></x-modals.error-modal>
+@endif
+
+
 
 <section
     class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center pb-12 mb-10 md:mb-0  h-screen xl:pb-0"
@@ -87,7 +97,7 @@
                     </x-forms.span-validate>
 
                     <div class="flex justify-end text-sm md:text-lg hover:text-purple-600">
-                        <a href="">¿Olvidaste tu contraseña?</a>
+                        <a href="{{route('users.forgotPassword')}}"id="forgotPassword">¿Olvidaste tu contraseña?</a>
                     </div>
 
                 </div>
@@ -104,7 +114,7 @@
 
                 <div class="flex justify-center text-center font-work pt-2 md:text-xl">
                     <p>¿No tienes una cuenta? <a class="underline font-bold hover:text-purple-600"
-                            href="#">Regístrate</a></p>
+                            href="{{route('users.create')}}">Regístrate</a></p>
                 </div>
 
 

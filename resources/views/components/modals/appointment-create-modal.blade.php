@@ -26,9 +26,28 @@
             </div>
 
             <div class="flex justify-center">
-                .<form name="fCreateAppointment" action="" method="post" enctype="multipart/form-data"
-                    data-create="{{route('dashboard.storeAppointment')}}" data-calendar="{{route('dashboard.clientAppointments')}}" class="flex flex-col gap-2">
+                <form name="fCreateAppointment" action="" method="post" enctype="multipart/form-data"
+                    data-create="{{ route('dashboard.storeAppointment') }}" class="flex flex-col gap-2">
                     @csrf
+
+                    @auth
+                        @if (Auth::user()->role == 'propietario')
+                            <label class="text-white" for="client">Cliente</label>
+                            <select name="client" id="selectClient">
+                                @if ($clients->isNotEmpty())
+                                    @foreach ($clients as $client)
+                                        <option value="{{ $client->id }}">{{ $client->name }}</option>
+                                    @endforeach
+                                @else
+                                    <option value="">No hay clientes disponibles</option>
+                                @endif
+                            </select>
+                            <button id="addInputClient" class="bg-gray-200 hover:bg-gray-400 w-[80%] self-center" type="button">Añadir manualmente</button>
+                        @else
+                            <input type="hidden" id="status" name="status" value="pendiente">
+                        @endif
+                    @endauth
+
                     <label class="text-white" for="service">Servicio</label>
                     <select name="service" id="service">
                         @if ($services->isNotEmpty())
@@ -40,21 +59,34 @@
                         @endif
                     </select>
 
-                    <label class="text-white"  for="start">Fecha de inicio</label>
+                    <label class="text-white" for="start">Fecha de inicio</label>
                     <input type="text" id="fakeStart" disabled>
                     <input type="hidden" id="start" name="startf">
                     <label class="text-white" for="end">Fecha de fin</label>
                     <input type="text" id="fakeEnd" disabled>
                     <input type="hidden" id="end" name="endf">
-                    <input type="hidden" id="status" name="status" value="pendiente">
-                    <input type="hidden" id="hairdresser_id" name="hairdresser_id" value="{{$hairdresser->id}}">
+                    @auth
+                        @if (Auth::user()->role == 'propietario')
+                            <label class="text-white" for="status">Estado</label>
+                            <select name="status" id="statusSelect">
+                                <option value="pendiente">Pendiente</option>
+                                <option value="confirmado">Confirmado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        @else
+                            <input type="hidden" id="status" name="status" value="pendiente">
+                        @endif
+                    @endauth
+
+                    <input type="hidden" id="hairdresser_id" name="hairdresser_id" value="{{ $hairdresser->id }}">
 
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button id="createButton" type="submit"
-                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-hide="{{ $id }}">Crear
+                        <button id="createButton" type="button"
+                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Crear
                             cita</button>
-                            <button id="cancelButton" type="button"
-                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"  data-modal-hide="{{ $id }}">Cancelar</button>
+                        <button id="cancelButton" type="button"
+                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                            data-modal-hide="{{ $id }}">Cancelar</button>
                     </div>
                 </form>
             </div>

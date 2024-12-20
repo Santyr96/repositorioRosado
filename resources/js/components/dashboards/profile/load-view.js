@@ -3,8 +3,9 @@
 import { initValidationsHairDresser } from "../../../auth/validateHairDresser";
 import { initValidations } from "../../../auth/validateProfile";
 import { tooglePasswordVisibility } from "../../passwords/show_password";
+import { showCalendar } from "../calendar/show-calendar";
 import { storeHairDresser } from "../hairdresser/insertHairDresser";
-import { servicesManage } from "../services-hair/services-manage";
+import { showServices } from "../services-hair/services-manage";
 import { signupHairdresser } from "../signup/signup-hairdresser";
 import { updateAvatar } from "./update_avatar";
 import { updateProfile } from "./update_profile";
@@ -42,10 +43,17 @@ document.addEventListener("DOMContentLoaded", function () {
                         storeHairDresser();
                         break;
                     case "create-service":
-                        servicesManage();
+                        showServices();
                         break;
                     case "signup":
                         signupHairdresser();
+                        break;
+                    case "appointments":
+                        showCalendar();
+                        break;
+                    case "manage-appointments":
+                        showCalendar();
+                        break;
                 }
             } catch (error) {
                 console.error("Error al cargar el contenido", error);

@@ -4,8 +4,7 @@ import { closeModal } from "../../modals/closeModal";
 
 export function updateProfile() {
     const profileForm = document.forms["fForm"];
-
-    console.log(profileForm);
+    const spans = document.querySelectorAll(".validate-span");
 
     //Se envía las respuestas del formulario al servidor.
     profileForm.addEventListener("submit", async function (e) {
@@ -14,10 +13,6 @@ export function updateProfile() {
         //Creación del objeto FormData que se encargará de enviar el valor de los campos al servidor.
         const formData = new FormData(profileForm);
 
-        //Se imprime en consola los valores de los campos del formulario, para saber que se envia.
-        for (const [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-        }
 
         try {
             //Se obtiene la url a la cuál se enviará el formulario.
@@ -55,6 +50,9 @@ export function updateProfile() {
             //Se realiza la carga dinámica de los inputs para que aparezcan los nuevos datos introducidos en el formulario.
             if (data) {
                 showSuccessfulMessage("Datos actualizados correctamente.");
+                spans.forEach((span) => {
+                    span.textContent = "";
+                });
             } else {
                 showErrorMessage("Error al actualizar el perfil.");
             }
@@ -84,10 +82,15 @@ function showErrorMessage(message) {
 function showSuccessfulMessage(message) {
     const modal = document.getElementById("errorModal");
     const successMessageElement = modal.querySelector('p');
+    const modalTitle = document.getElementById('errorModalTitle');
 
     //Sí existe el elemento para añadir el mensaje, le añadimos el mensaje.
     if (successMessageElement) {
         successMessageElement.textContent = message;
+    }
+
+    if (modalTitle) {
+        modalTitle.textContent = "¡Éxito!";
     }
     //Si el modal existe, se muestra al usuario.
     if (modal) {

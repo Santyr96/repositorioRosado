@@ -14,8 +14,12 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')
+            ->nullable()
             ->constrained('users')
             ->onDelete('cascade');
+            $table->string('unregistered_client')
+            ->max(80)
+            ->nullable();
             $table->foreignId('service_id')
             ->constrained('services')
             ->onDelete('cascade');

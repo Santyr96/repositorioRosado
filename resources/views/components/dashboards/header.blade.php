@@ -19,10 +19,9 @@
         </div>
 
         <div class="h-full flex items-center md:pl-4">
-            <a href="{{ route('index') }}"><img
-                    class="w-10/12 md:w-52 pt-1 hover:animate-rotate-y animate-once animate-ease-in animate-fill-bot"
-                    src="{{ asset('storage/images/logo3.png') }}" alt="logo">
-            </a>
+            <img class="w-10/12 md:w-52 pt-1 hover:animate-rotate-y animate-once animate-ease-in animate-fill-bot"
+                src="{{ asset('storage/images/logo3.png') }}" alt="logo">
+
         </div>
     </div>
 
@@ -61,7 +60,7 @@
                 Spiderman
                 @auth
                     {{ Auth::user()->name }}
-                    {{$user = Auth::user()}}
+                    {{ $user = Auth::user() }}
                 @endauth
             </div>
 

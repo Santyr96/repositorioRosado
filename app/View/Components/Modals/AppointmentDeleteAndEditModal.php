@@ -12,13 +12,14 @@ class AppointmentDeleteAndEditModal extends Component
      * Create a new component instance.
      */
 
-    public function __construct( public $services,public string $modalTitle, public string $modalMessage, public ?string $id)
+    public function __construct( public $services,public $hairdresser,public string $modalTitle, public string $modalMessage, public ?string $id)
 
     {
         $this->modalTitle = $modalTitle;
         $this->modalMessage = $modalMessage; 
         $this->id = $id;
         $this->services = $services;
+        $this->hairdresser = $hairdresser;
     }
 
     public function render(): View|Closure|string

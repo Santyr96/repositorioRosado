@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class submitButton extends Component
+class SubmitButton extends Component
 {
     /**
      * Create a new component instance.

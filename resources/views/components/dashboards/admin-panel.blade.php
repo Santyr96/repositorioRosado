@@ -42,10 +42,10 @@
                                     data-url="{{ route('dashboard.hairdresser') }}">Crear peluquería</a>
                             </li>
                             <li><a id="create-service" class="hover:text-gray-500" href="#"
-                                    data-url="{{ route('dashboard.services') }}">Crear servicios</a></li>
+                                    data-url="{{ route('dashboard.selectHairdresser') }}">Crear servicios</a></li>
 
                             <li><a id="manage-appointments" class="hover:text-gray-500" href="#"
-                                    data-url="{{ route('dashboard.services') }}">Gestión de citas</a></li>
+                                    data-url="{{ route('dashboard.selectSignup') }}">Gestión de citas</a></li>
                         @endif
                     @endauth
 

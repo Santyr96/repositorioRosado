@@ -11,7 +11,7 @@ class AppointmentCreateModal extends Component
     /**
      * Create a new component instance.
      */
-    public function __construct( public $services, public $hairdresser,public string $modalTitle, public string $modalMessage, public ?string $id)
+    public function __construct( public $services, public $hairdresser, public $clients, public string $modalTitle, public string $modalMessage, public ?string $id)
 
     {
         $this->modalTitle = $modalTitle;
@@ -19,6 +19,7 @@ class AppointmentCreateModal extends Component
         $this->id = $id;
         $this->services = $services;
         $this->hairdresser = $hairdresser;
+        $this->clients = $clients;
     }
 
     public function render(): View|Closure|string

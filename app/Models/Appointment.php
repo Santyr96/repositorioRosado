@@ -17,6 +17,7 @@ class Appointment extends Model
         'service_id', 
         'client_id', 
         'hairdresser_id', 
+        'unregistered_client',
     ];
     protected $casts = [
         'start' => 'datetime', 

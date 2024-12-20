@@ -1,20 +1,20 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\Modals;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Pixel extends Component
+class AdviceModal extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(public string $modalTitle, public string $modalMessage, public ?string $id, public string $class, public $child)
+
     {
-        
-        
+       
     }
 
     /**
@@ -22,6 +22,6 @@ class Pixel extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.pixel');
+        return view('components.modals.advice-modal');
     }
 }

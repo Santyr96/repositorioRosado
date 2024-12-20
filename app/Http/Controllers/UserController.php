@@ -2,27 +2,81 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use App\Mail\TestEmailVerification;
 use Illuminate\Auth\Events\Registered;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password as FacadesPassword;
 
 class UserController extends Controller
 {
     public function login(){
-        return view('users.loginView');  //Retorna la vista login.
+        return view('users.loginView');  
     }
 
     public function create(){
-        return view('users.create');  //Retorna la vista register.
+        return view('users.create');  
     }
 
     public function dashboard(){
-        return view('dashboards.dashboard');  //Retorna la vista dashboard.
+        return view('dashboards.dashboard', ['userName' => Auth::user()->name]);
+    }
+
+    public function forgotPassword(){
+        return view('auth.forgot-password');  
+    }
+
+    //Función que se encargará de enviar el link de restablecimiento de contraseña. 
+    public function sendResetPasswordLink(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+        ]);
+
+        $status = FacadesPassword::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === FacadesPassword::RESET_LINK_SENT
+            ? back()->with(['status' => __($status)])
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    //Función que se encargará de mostrar el formulario de restablecimiento de la contraseña.
+    public function resetPasswordForm($token){
+        return view('auth.reset-password', ['token' => $token]);
+    }
+
+    //Función que se encargará de actualizar la contraseña del usuario en la base de datos.
+    public function resetPassword(Request $request){
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = FacadesPassword::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+     
+                $user->save();
+     
+                event(new PasswordReset($user));
+
+                
+                
+            }
+        );
+
+        return $status === FacadesPassword::PASSWORD_RESET
+                ? redirect()->route('users.login')->with('status', __($status))
+                : back()->withErrors(['email' => [__($status)]]);
     }
 
     //Función que se encargará de autenticar al usuario, tanto si es cliente como propietario.
@@ -34,6 +88,8 @@ class UserController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:8',
         ]);
+
+        Log::info('Intento de inicio de sesión para el usuario: ' . $credentials['email']);
 
         /**
          * Para recordar la sesión del usuario se crea una variable remember que recibira el estado del 
@@ -53,6 +109,7 @@ class UserController extends Controller
             ])->onlyInput('email');
         }
     } catch (\Exception $e) {
+        Log::error('Error al iniciar sesión: ' . $e->getMessage());
         return back()->withErrors([
             'general' => 'Hubo un problema al iniciar sesión. Inténtelo de nuevo. '
         ]);

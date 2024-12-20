@@ -3,9 +3,12 @@
 import { closeModal } from "../../modals/closeModal";
 import { Calendar } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
-import {modalAppointmentEditAndDelete } from "./modal-appointment-edit-and-delete";
+import { modalAppointmentEditAndDelete } from "./modal-appointment-edit-and-delete";
+import luxonPlugin from "@fullcalendar/luxon";
 import { info } from "autoprefixer";
 import { modalAppointmentCreate } from "./modal-appointment-create";
+
+let globalHairdresserId;
 
 export function showCalendar() {
     const contentContainer = document.getElementById("content");
@@ -18,9 +21,14 @@ export function showCalendar() {
             console.log(`${key}:`, value);
         }
         try {
-            if (!formData.has('hairdresser_id') || formData.get('hairdresser_id') === '') {
+            if (
+                !formData.has("hairdresser_id") ||
+                formData.get("hairdresser_id") === ""
+            ) {
                 throw new Error("No se ha seleccionado ninguna peluquería");
             }
+
+            globalHairdresserId = formData.get("hairdresser_id");
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
@@ -39,31 +47,42 @@ export function showCalendar() {
             }
             const html = await response.text();
             contentContainer.innerHTML = html;
-            renderCalendar(formData, this.getAttribute("data-calendar"));
-            console.log(this.getAttribute("data-calendar"));
+            renderCalendar();
+            
         } catch (error) {
             console.error("Error al cargar el contenido", error);
             showErrorMessage(error);
         }
     });
-
-   
 }
 
-export function renderCalendar(formData, url) {
+export function renderCalendar(f) {
+    console.log("http://hairbooker/dashboard/calendar/appointments/"  + globalHairdresserId);
+    const eventSourceConfig = {
+        url: "http://hairbooker/dashboard/calendar/appointments/" + globalHairdresserId,
+        method: "GET",
+        extraParams: function () {
+            return {
+                _token: document
+                    .querySelector('meta[name="csrf-token"]')
+                    .getAttribute("content"),
+            };
+        },
+        failure: function (error) {
+            console.error("Error al cargar los eventos", error);
+        },
+    };
     var calendarEl = document.getElementById("calendar");
-    
+
     var calendarHeight = calendarEl.offsetHeight;
 
-    var initialViews = "timeGridDay";
-    if (calendarHeight >= 640) {
-        initialViews = "timeGridDay,timeGridWeek,dayGridMonth";
-    }
+    var initialView = "timeGridDay";
+    
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: "timeGridDay",
-        eventSources: [
-            eventSourceConfig, 
-        ],
+        initialView: initialView,
+        plugins: [luxonPlugin],
+        timeZone: "Europe/Madrid",
+        eventSources: [eventSourceConfig],
         loading: function (isLoading) {
             if (isLoading) {
                 console.log("Cargando eventos...");
@@ -71,20 +90,22 @@ export function renderCalendar(formData, url) {
                 console.log("Eventos cargados.");
             }
         },
-        eventClick: function(info) { 
-            modalAppointmentEditAndDelete(info, calendar);
+        eventClick: function (info) {
+            //Si el evento pertenece al usuario, se muestra el modal de edición y de eliminación.
+            if (info.event.extendedProps.edit) {
+                modalAppointmentEditAndDelete(info, calendar);
+            }
         },
-        dateClick: function(info) {
-            modalAppointmentCreate(info,calendar);
+        dateClick: function (info) {
+            modalAppointmentCreate(info, calendar);
         },
         aspectRatio: 1,
         headerToolbar: {
             left: "title",
         },
         footerToolbar: {
-            center: initialViews,
+            center: initialView,
         },
-
         dayHeaderFormat: {
             weekday: "short",
             day: "numeric",
@@ -94,29 +115,22 @@ export function renderCalendar(formData, url) {
             minute: "2-digit",
         },
         views: {
-            Semana: {
+            semana: {
                 type: "timeGrid",
                 duration: { days: 3 },
             },
         },
+        slotMinTime: "08:00:00",
+        slotMaxTime: "23:00:00",
+        minTime: "08:00:00",
+        maxTime: "23:00:00",
+        allDaySlot: false,
         locale: esLocale,
     });
 
     calendar.render();
 }
 
-const eventSourceConfig = {
-    url: "http://hairbooker/dashboard/calendar/appointments", 
-    method: "POST",
-    extraParams: function () {
-        return {
-            _token: document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
-        };
-    },
-    failure: function (error) {
-        console.error("Error al cargar los eventos", error);
-    },
-};
 
 
 export function showErrorMessage(message) {

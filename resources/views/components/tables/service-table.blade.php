@@ -1,52 +1,25 @@
-<div class="w-[95%] h-96 xl:h-[40rem] relative  overflow-auto">
+<div id="serviceTable" data-url="{{ route('dashboard.services') }}" class="w-[95%] h-96 xl:h-[40rem] relative flex flex-col gap-2 overflow-auto">
     <x-modals.error-modal class="hidden xl:left-40" modalTitle="Error al enviar el formulario"
         modalMessage=""></x-modals.error-modal>
 
+    <x-modals.advice-modal class="hidden xl:left-40" modalTitle="Eliminar servicio"
+        modalMessage="¿Estas seguro de eliminar este servicio?" id="deleteWarning"
+        :child="view('elements-for-modals.confirmation-delete')"></x-modals.advice-modal>
+
+
     @if ($services->isEmpty())
         <p>No hay servicios registrados.</p>
-        <table id="tableServices" class="w-full text-center leading-normal table-auto border-collapse border border-slate-400 font-work" data-url="{{ route('dashboard.services') }}">
-            <thead class="text-xs text-white uppercase bg-purple-500">
-                <tr>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Formulario para crear -->
-                <tr id="crear" class="text-[0.80rem]">
-                    <td class="border border-slate-300">
-                        <input class="p-2 text-sm resize-none" name="name" type="text"
-                            placeholder="Nombre del servicio">
-                    </td>
-                    <td class="text-center border border-slate-300">
-                        <textarea class="p-2 text-sm resize-none" name="description" placeholder="Descripción"></textarea>
-                    </td>
-                    <td class="border text-center border-slate-300">
-                        <div class="flex items-center justify-center w-full">
-                            <input class="w-16 p-2 text-sm resize-none" step="0.01" type="number" name="price"
-                                placeholder="5,00">
-                            <span class="ml-1">€</span>
-                        </div>
-                    </td>
-                    <td class="border border-slate-300">
-                        <form action="#" method="post" name="createServicesForm"
-                            data-form="{{ route('dashboard.createService') }}"
-                            >
-                            @csrf
-                            <button class="text-white rounded bg-green-500 hover:bg-green-300 p-1 mt-1"
-                                type="submit">Crear</button>
-                                <input type="hidden" name="idHairdresser" value="{{ $hairdresser->id }}">
-                        </form>
-                    </td>
-                   
-                </tr>
-            </tbody>
-        </table>
-
+        <button id="create" data-form="{{ route('dashboard.createService') }}" class="text-white rounded bg-green-500
+            hover:bg-green-300 p-1 mt-1 w-28" type="button">Crear</button>
+        <input id="idHairdresser" type="hidden" name="idHairdresser" value="{{ $hairdresser->id }}">
     @else
-        <table id="tableServices" class="w-full text-center leading-normal table-auto border-collapse border border-slate-400 font-work" data-url="{{ route('dashboard.services') }}">
+        <button id="create" data-form="{{ route('dashboard.createService') }}"
+            class="text-white rounded bg-green-500 hover:bg-green-300 p-1 mt-1 w-28 self-end" type="submit">Crear</button>
+        <input id="idHairdresser" type="hidden" name="idHairdresser" value="{{ $hairdresser->id }}">
+
+        <table id="tableServices"
+            class="w-full text-center leading-normal table-auto border-collapse border border-slate-400 font-work"
+            data-url="{{ route('dashboard.services') }}">
             <thead class="text-xs text-white uppercase bg-purple-500">
                 <tr>
                     <th>Nombre</th>
@@ -59,29 +32,28 @@
                 @foreach ($services as $service)
                     <tr class="text-[0.80rem] text-center">
 
-                        <td class="border border-slate-300">
-                            <input class="p-1 text-sm resize-y xl:w-full text-center" name="name" type="text"
-                                value="{{ $service->name }}">
+                        <td id="tdName" class="border border-slate-300">
+
+                            {{ $service->name }}
                         </td>
-                        <td class="text-center border border-slate-300">
-                            <textarea class="p-1 text-sm resize-none xl:w-full" name="description">{{ $service->description }}</textarea>
+                        <td id="tdDescription" class="text-center border border-slate-300">
+                            {{ $service->description }}
                         </td>
-                        <td class="border text-center border-slate-300">
+                        <td id="tdPrice" class="border text-center border-slate-300">
                             <div class="flex items-center justify-center w-full">
-                                <input class="w-16 p-1 text-sm resize-none" step="0.01" type="number" name="price"
-                                    value="{{ $service->price }}">
+                                {{ $service->price }}
                                 <span class="ml-1">€</span>
                             </div>
                         </td>
 
-                        <td class="border border-slate-300 p-1">
+                        <td id="tdActions" class="border border-slate-300 p-1">
                             <form class="updateForm" method="post"
                                 data-form="{{ route('dashboard.updateService', $service->id) }}">
                                 @csrf
                                 <button
                                     class="text-white rounded bg-blue-500 hover:bg-blue-300 p-1 mt-1">Editar</button>
                             </form>
-                            
+
                             <form method="post" class="deleteForm"
                                 data-form="{{ route('dashboard.deleteService', $service->id) }}">
                                 @csrf
@@ -91,34 +63,6 @@
                         </td>
                     </tr>
                 @endforeach
-
-                <!-- Formulario para crear -->
-                <tr id="crear" class="text-[0.80rem]">
-                    <td class="border border-slate-300">
-                        <input class="p-2 text-sm resize-none xl:w-full text-center" name="name" type="text"
-                            placeholder="Nombre del servicio">
-                    </td>
-                    <td class="text-center border border-slate-300">
-                        <textarea class="p-2 text-sm resize-none xl:w-full" name="description" placeholder="Descripción"></textarea>
-                    </td>
-                    <td class="border text-center border-slate-300">
-                        <div class="flex items-center justify-center w-full">
-                            <input class="w-16 p-2 text-sm resize-none" step="0.01" type="number" name="price"
-                                placeholder="5,00">
-                            <span class="ml-1">€</span>
-                        </div>
-                    </td>
-                    <td class="border border-slate-300">
-                        <form action="#" method="post" name="createServicesForm"
-                            data-form="{{ route('dashboard.createService') }}"
-                            >
-                            @csrf
-                            <button class="text-white rounded bg-green-500 hover:bg-green-300 p-1 mt-1"
-                                type="submit">Crear</button>
-                                <input type="hidden" name="idHairdresser" value="{{ $hairdresser->id }}">
-                        </form>
-                    </td>
-                   
 
                 </tr>
             </tbody>

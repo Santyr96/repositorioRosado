@@ -5,7 +5,7 @@ import { tooglePasswordVisibility } from "../passwords/show_password";
 import { updateProfile } from "./profile/update_profile";
 import { storeHairDresser } from "./hairdresser/insertHairDresser";
 import { updateAvatar } from "./profile/update_avatar";
-import { servicesManage } from "./services-hair/services-manage";
+import { showServices } from "./services-hair/services-manage";
 import { signupHairdresser } from "./signup/signup-hairdresser";
 import { showCalendar } from "./calendar/show-calendar";
 
@@ -64,12 +64,15 @@ export function loadView() {
                             storeHairDresser();
                             break;
                         case "create-service":
-                            servicesManage();
+                            showServices();
                             break;
                         case "signup":
                             signupHairdresser();
                             break;
                         case "appointments":
+                            showCalendar();
+                            break;
+                        case "manage-appointments":
                             showCalendar();
                             break;
                     }

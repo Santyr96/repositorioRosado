@@ -10,7 +10,8 @@
                     Bienvenidos a <span class="text-purple-600">HairBooker</span>: la agenda digital para peluquerías
                 </h1>
 
-                <x-buttons.dynamic-button href="{{ route('users.login') }}" message="Iniciar Sesión" class="w-52 md:w-64 md:text-2xl">
+                <x-buttons.dynamic-button href="{{ route('users.login') }}" message="Iniciar Sesión"
+                    class="w-52 md:w-64 md:text-2xl">
 
                 </x-buttons.dynamic-button>
 
@@ -28,41 +29,34 @@
                 <p class="text-xl md:text-2xl xl:text-3xl mt-4">Fácil, estas son las soluciones</p>
             </div>
 
-            <div class="fondo h-52 bg-cover lg:h-96 2xl:h-[40rem]" style="background-image: url('storage/images/onda.svg');">
+            <div class="fondo h-52 bg-cover lg:h-96 2xl:h-[40rem]"
+                style="background-image: url('storage/images/onda.svg');">
             </div>
 
 
             <div id="casillas" class="pb-24 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 xl:pb-32 bg-[#945cf2]">
 
                 <x-cards.polygon-card src="storage/images/notebook_icon.svg" alt="Notebook Icon"
-                    title="Gestión de citas" message1="¿Cansado de organizar tus cita a mano?"
-                    message2="Optimiza tu tiempo a través de una una solución intuitiva
-                            gestionando tus citas de manera eficiente y sencilla, mientras que los
-                            clientes pueden reservar fácilmente su próximo servicio en solo unos clicks.
-">
+                    title="Organiza tus citas fácilmente"
+                    message1="¿Te resulta complicado gestionar las reservas manualmente?"
+                    message2="Simplifica la gestión de tus citas con nuestra herramienta intuitiva. Tus clientes podrán reservar su próximo servicio con facilidad en solo unos clics.">
                 </x-cards.polygon-card>
 
                 <x-cards.polygon-card src="storage/images/watch_icon.svg" alt="Watch Icon"
-                    title="Recordatorios automáticos" message1="¿Has olvidado tu reserva?"
-                    message2=" Reduce las ausencias con nuestros recordatorios automáticos de citas: HairBooker envía
-                            notificaciones a tus clientes, asegurando que estén siempre al tanto de sus próximas
-                            visitas.">
+                    title="Gestión de servicios y horarios" message1="¿Quieres personalizar tus servicios y horarios?"
+                    message2="Configura tus horarios y los servicios que ofreces directamente desde nuestra plataforma, adaptándolos a las necesidades de tu negocio.">
                 </x-cards.polygon-card>
 
-                <x-cards.polygon-card src="storage/images/relationship_icon.svg" alt="Relationship Icon"
-                    title="Conexión Constante" message1="¿Necesitas mantener contacto con tu cliente?"
-                    message2="Nuestra plataforma permite un contacto permanente entre propietarios y clientes a través de
-                            mensajes directos y notificaciones.
-">
+                <x-cards.polygon-card src="storage/images/calendar_icon.svg" alt="Calendar Icon"
+                    title="Visualización en calendario" message1="¿Quieres una forma clara de gestionar tus citas?"
+                    message2="Consulta y edita las reservas fácilmente gracias a nuestra vista en calendario, que se actualiza en tiempo real para reflejar cualquier cambio.">
                 </x-cards.polygon-card>
 
-                <x-cards.polygon-card src="storage/images/analysis_icono.svg" alt="Analysis Icon"
-                    title="Análisis del negocio" message1="¿Te gustaría conocer estadísticas sobre tu negocio?"
-                    message2="Tendrás acceso a información clave sobre la evolución de tu negocio.
-                            Todo esto con el objetivo de que puedas analizar los datos y diseñar una
-                            estrategia efectiva que te permita optimizar tus operaciones.">
+                <x-cards.polygon-card src="storage/images/client_management_icon.svg" alt="Client Management Icon"
+                    title="Gestión de clientes"
+                    message1="¿Quieres administrar la información de tus clientes de manera eficiente?"
+                    message2="Organiza y accede fácilmente a los datos de tus clientes, incluyendo su historial de reservas, para ofrecer un servicio más personalizado y profesional.">
                 </x-cards.polygon-card>
-
 
 
             </div>
@@ -71,6 +65,6 @@
         </section>
 
 
-    </main>
+        </main>
 
 </x-app-layout>

@@ -38,7 +38,7 @@
                 </svg>
             </div>
 
-            <x-forms.span-validate class="w-10/12">
+            <x-forms.span-validate class="w-10/12 validate-span">
 
             </x-forms.span-validate>
 
@@ -61,7 +61,7 @@
                 </svg>
             </div>
 
-            <x-forms.span-validate class="w-10/12">
+            <x-forms.span-validate class="w-10/12 validate-span">
 
             </x-forms.span-validate>
 
@@ -85,7 +85,7 @@
                 </svg>
             </div>
 
-            <x-forms.span-validate class="w-10/12">
+            <x-forms.span-validate class="w-10/12 validate-span">
 
             </x-forms.span-validate>
         </div>
@@ -124,7 +124,7 @@
                 </svg>
             </div>
 
-            <x-forms.span-validate class="w-10/12">
+            <x-forms.span-validate class="w-10/12 validate-span">
 
             </x-forms.span-validate>
 
@@ -157,7 +157,7 @@
                     </svg>
                 </div>
 
-                <x-forms.span-validate class="w-10/12">
+                <x-forms.span-validate class="w-10/12 validate-span">
 
                 </x-forms.span-validate>
 

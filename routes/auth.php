@@ -13,27 +13,29 @@ use Illuminate\Http\Request;
  * middleware de autenticación.
  */
 Route::middleware('guest', 'web')->group(function () {
-
     Route::get('/login', [UserController::class, 'login'])->name('users.login');
     Route::post('/loginUser', [UserController::class, 'loginEntrance'])->name('users.loginUser');
     Route::get('/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
+    Route::get('/forgot-password', [UserController::class, 'forgotPassword'])->name('users.forgotPassword');
+    Route::get('/reset-password/{token}', [UserController::class, 'resetPasswordForm'])->name('password.reset');
+    Route::post('/forgot-password', [UserController::class, 'sendResetPasswordLink'])->name('users.sendResetLink');
+    Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('users.resetPassword');
 });
 
 Route::middleware('auth', 'verified')->group(function () {
     //Ruta inicial que carga el dashboard.
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
-
     //Ruta que se encarga de manejar el cierre de sesión por parte del usuario.
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
-
     //Rutas de la vista de edición de perfil.
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::post('/dashboard/uploadAvatar', [DashboardController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
     Route::post('/dashboard/updateProfile', [DashboardController::class, 'updateProfile'])->name('profile.updateProfile');
 
     //Rutas que se encarga de la gestión de los servicios de la peluqueria.
-    Route::get('/dashboard/services', [DashboardController::class, 'showServices'])->name('dashboard.services');
+    Route::get('/dashboard/select/hairdresser', [DashboardController::class, 'selectHairdresser'])->name('dashboard.selectHairdresser');
+    Route::post('/dashboard/services', [DashboardController::class, 'showServices'])->name('dashboard.services');
     Route::post('/dashboard/createService', [DashboardController::class, 'createService'])->name('dashboard.createService');
     Route::post('/dashboard/updateService/{serviceId}', [DashboardController::class, 'updateService'])->name('dashboard.updateService');
     Route::post('/dashboard/deleteService/{serviceId}', [DashboardController::class, 'deleteService'])->name('dashboard.deleteService');
@@ -51,7 +53,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/dashboard/calendar', [CalendarController::class, 'showCalendar'])->name('dashboard.showCalendar');
 
     //Rutas que se encargan de la gestión de las citas.
-    Route::post('/dashboard/calendar/appointments', [AppointmentController::class, 'clientIndex'])->name('dashboard.clientAppointments');
+    Route::get('/dashboard/calendar/appointments/{hairdresserId}', [AppointmentController::class, 'clientIndex'])->name('dashboard.clientAppointments');
     Route::post('/dashboard/calendar/appointments/create', [AppointmentController::class, 'storeAppointment'])->name('dashboard.storeAppointment');
     Route::post('/dashboard/calendar/appointments/update', [AppointmentController::class, 'updateAppointment'])->name('dashboard.updateAppointment');
     Route::post('/dashboard/calendar/appointments/delete', [AppointmentController::class, 'deleteAppointment'])->name('dashboard.deleteAppointment');

@@ -20,14 +20,18 @@
             </div>
 
             <div class="p-4 md:p-5 space-y-4">
-                <p id="message" class="text-base leading-relaxed text-white">
+                <p id="messages" class="text-base leading-relaxed text-white">
                     {{ $modalMessage }}
                 </p>
             </div>
 
-            <div class="flex justify-center">
+            <div class="flex flex-col gap-1 items-center">
+                <label class="text-white" for="cliente">Cliente</label>
+                    <input class="bg-gray-200 px-2" type="text" id="client" name="client"  value="" disabled>
+                    <label class="text-white" for="date">Fecha</label>
+                    <textarea class="bg-gray-200 text-center" name="date" id="date" cols="30" value="" disabled></textarea>
                 <form name="fAppointment" action="" method="post" enctype="multipart/form-data"
-                    data-update="{{ route('dashboard.updateAppointment') }}" data-delete="{{route('dashboard.deleteAppointment')}}" data-calendar="{{route('dashboard.clientAppointments')}}" class="flex flex-col gap-2">
+                    data-update="{{ route('dashboard.updateAppointment') }}" data-delete="{{route('dashboard.deleteAppointment')}}" class="flex flex-col gap-2">
                     @csrf
                     <label class="text-white" for="service">Servicio</label>
                     <select name="service" id="service">
@@ -39,20 +43,29 @@
                             <option value="">No hay servicios disponibles</option>
                         @endif
                     </select>
-
                     <label class="text-white"  for="start">Fecha de inicio</label>
                     <input type="datetime-local" id="start" name="start">
-                    <label class="text-white" for="end">Fecha de fin</label>
-                    <input type="datetime-local" id="end" name="end">
-                    <input type="hidden" id="status" name="status" value="pendiente">
+                    @auth
+                        @if (Auth::user()->role == 'propietario')
+                        <label class="text-white" for="status">Estado</label>
+                            <select name="status" id="statusSelect">
+                                <option value="pendiente">Pendiente</option>
+                                <option value="confirmado">Confirmado</option>
+                                <option value="cancelado">Cancelado</option>
+                            </select>
+                        @else
+                            <input type="hidden" id="status" name="status" value="pendiente">
+                        @endif
+                    @endauth
                     <input type="hidden" id="id_appointment" name="id_appointment">
+                    <input type="hidden" id="hairdresser_id" name="hairdresser_id" value="{{ $hairdresser->id }}">
 
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                         <button id="updateButton" type="submit"
                             class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Editar
                             cita</button>
                             <button id="deleteButton" type="submit"
-                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"  data-modal-hide="{{ $id }}">Eliminar cita</button>
+                            class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Eliminar cita</button>
                     </div>
                 </form>
             </div>

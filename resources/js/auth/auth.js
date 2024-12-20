@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.forms.fForm;
     let isValid = false;
 
-    // Agregar listeners a todos los inputs relevantes.
     form.email.addEventListener("change", () => validateEmail(form.email));
     form.password.addEventListener("change", () =>
         validatePassword(form.password)
@@ -62,8 +61,6 @@ function validatePassword(input) {
 //Validación confirmación de contraseña.
 
 function validateConfirmPassword(input, password) {
-    console.log(input.value);
-    console.log(password.value);
     if ((input.value === "")) {
         showFeedBack(
             input,

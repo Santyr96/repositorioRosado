@@ -23,7 +23,7 @@ class DashboardController extends Controller
         return view('dashboards.insert-hairdresser');
     }
 
-    public function showServices()
+    public function showServices(Request $request)
     {
         try {
             //Se obtiene el usuario autenticado.
@@ -36,7 +36,7 @@ class DashboardController extends Controller
             }
 
             //Se realiza una consulta a la base de datos para obtener la peluquería del usuario.
-            $hairdresser = Hairdresser::where('owner_id', $user->id)
+            $hairdresser = Hairdresser::where('id', $request->hairdresser_id)
                 ->select('id', 'name')
                 ->first();
 
@@ -62,6 +62,21 @@ class DashboardController extends Controller
             // Responder con un mensaje de error genérico
             return response()->json(['error' => 'Ocurrió un error en el servidor'], 500);
         }
+    }
+
+    public function selectHairdresser()
+    {
+        //Si el usuario no esta autenticado se redirige a la pagina de login.
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+        if (auth()->user()->role == 'propietario') {
+            $hairdressers = Hairdresser::where('owner_id', auth()->user()->id)
+            ->get();
+            Log::info('Hairdressers: ' . $hairdressers);
+            return view('dashboards.select-hairdresser', compact('hairdressers'));
+        } 
+
     }
 
     //Función que se encarga de mostrar la vista de peluquerías para que los clientes se den de alta.
@@ -305,14 +320,17 @@ class DashboardController extends Controller
             ->first();
 
         //Si el request viene vacio, se retorna un error.
-        if ($request->hairdresser_id == '') {
+        if ($request->hairdresser_id == '' || $request->hairdresser_id == null) {
             return response()->json(['error' => 'No se ha seleccionado ninguna peluquería'], 400);
         };
 
-        //Si el cliente ya se ha dado de alta en la peluqueria, se retorna un error.
+        if($signupSelect != null){
         if ($request->hairdresser_id == $signupSelect->hairdresser_id) {
             return response()->json(['error' => 'Ya te has dado de alta en la peluquería'], 400);
         };
+        }
+        
+
         try {
             $request->validate([
                 'hairdresser_id' => 'required|integer',
@@ -320,8 +338,6 @@ class DashboardController extends Controller
 
             //Se crea una nueva instancia del modelo Signup para añadir datos a la tabla.
             $signup = new Signup();
-
-
             //Se asignan los nuevos datos a la base de datos Signup.
             $signup->client_id = auth()->user()->id;
             $signup->hairdresser_id = $request->hairdresser_id;
