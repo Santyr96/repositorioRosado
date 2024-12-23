@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-layouts.app-layout>
     <x-slot:title>
         Inicio
     </x-slot>
@@ -12,7 +12,6 @@
 
                 <x-buttons.dynamic-button href="{{ route('users.login') }}" message="Iniciar Sesión"
                     class="w-52 md:w-64 md:text-2xl">
-
                 </x-buttons.dynamic-button>
 
             </div>
@@ -67,4 +66,4 @@
 
         </main>
 
-</x-app-layout>
+</x-layouts.app-layout>

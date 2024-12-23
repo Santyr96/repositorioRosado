@@ -1,7 +1,8 @@
 "use strict";
-import { closeModal } from "../../modals/closeModal";
+import { closeModal } from "../../modals/close-modal";
 import { reloadServicesView, showErrorMessage } from "./services-manage";
 
+//Función que se encarga de la actualización de un servicio.
 export function updateService(urlView) {
     const updateForms = document.querySelectorAll(".updateForm");
     const updateModal = document.querySelector(".advise-modal");
@@ -9,10 +10,10 @@ export function updateService(urlView) {
     const updateModalTitle = document.getElementById("modalTitle");
     const updateModalMessage = document.getElementById("message");
 
+    //Función que se encarga de abrir el modal de actualización de servicio.
     function openUpdateModal(trUpdate, url, urlView) {
         if (updateModal.classList.contains("hidden")) {
-            updateModal.children[0].children[0].classList.remove("bg-gray-600");
-            updateModal.children[0].children[0].classList.add("bg-purple-700");
+            updateModal.children[0].children[0].classList.replace("bg-gray-600", "bg-purple-700");
             updateModal.children[0].children[0].children[0].classList.add("bg-white");
             updateModal.id = "updateModal";
             updateChild.replaceChildren();
@@ -26,11 +27,11 @@ export function updateService(urlView) {
             initializeCloseButtons(urlView)
         }
 
-        // Mostrar el modal
         updateModal.classList.toggle("hidden");
         
     }
 
+    //Función que se encarga de inicializar los botones de cerrar.
     function initializeCloseButtons(urlView) {
         const closeButtons = document.querySelectorAll("[data-modal-hide]");
         closeButtons.forEach((button) => {
@@ -41,6 +42,7 @@ export function updateService(urlView) {
         closeModal();
     }
 
+    //Función que se encarga de generar el formulario de actualización de servicio.
     function createUpdateForm() {
         return `
             <form class="flex flex-col justify-center gap-2" name="fupdateServiceModal" data-form="" method="post">
@@ -69,6 +71,7 @@ export function updateService(urlView) {
         `;
     }
 
+    //Función que se encarga de llenar el formulario de actualización de servicio.
     function fillUpdateForm(trUpdate, url) {
         const tds = trUpdate.querySelectorAll("td");
         const dataMap = new Map();
@@ -84,7 +87,6 @@ export function updateService(urlView) {
         const priceValue = parseFloat(String(dataMap.get('tdPrice')).replace(/\s+/g, '').replace('€', ''));
         updateServiceModalForm['price'].value = priceValue;
 
-        // Manejo del submit del formulario de actualización
         updateServiceModalForm.addEventListener("submit", async function (e) {
             e.preventDefault();
             const formData = new FormData(this);
@@ -115,6 +117,7 @@ export function updateService(urlView) {
         });
     }
 
+    //Recorre todos los formularios de actualización y agrega el evento submit a cada uno.
     updateForms.forEach((updateForm) => {
         const trUpdate = updateForm.parentElement.parentElement;
         updateForm.addEventListener("submit", function (e) {

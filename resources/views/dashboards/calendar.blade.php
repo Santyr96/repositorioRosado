@@ -3,6 +3,7 @@
 <div id="container" class="w-full flex flex-col items-center">
     <x-modals.error-modal class="hidden xl:left-40" modalTitle="Error al enviar el formulario"
         modalMessage=""></x-modals.error-modal>
+        
         <x-modals.advice-modal class="hidden xl:left-40" modalTitle="Eliminar cita"
         modalMessage="¿Estas seguro de eliminar esta cita?" id="deleteWarning"
         :child="view('elements-for-modals.confirmation-delete')"></x-modals.advice-modal>

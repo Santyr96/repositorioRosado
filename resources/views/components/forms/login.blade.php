@@ -13,12 +13,10 @@
 <x-modals.error-modal modalTitle="Solicitud de restablecimiento de contraseña" modalMessage="{{ session('status') }}"></x-modals.error-modal>
 @endif
 
-
-
 <section
-    class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center pb-12 mb-10 md:mb-0  h-screen xl:pb-0"
+    class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center pb-12 mb-10 md:mb-0 h-screen xl:pb-0"
     id="login">
-    <div class="hidden xl:flex flex-col font-work  text-center xl:px-6">
+    <div class="hidden xl:flex flex-col font-work text-center xl:px-6 ">
 
         <h1 class="text-7xl/relaxed font-bold ">
             ¡Bienvenido de vuelta!
@@ -33,7 +31,7 @@
         <div id="caja_login"
             class="font-work border-black border-2 shadow-md shadow-black h-auto p-4 w-full  xl:w-7/12 xl:bg-white">
 
-            <form name="fForm" id="form" class="flex flex-col gap-3  md:h-full 
+            <form name="fForm" id="form" class="flex flex-col gap-3  
         " action="{{route('users.loginUser')}}" method="post" novalidate>
         @csrf
                 <div class="text-center">
@@ -116,10 +114,6 @@
                     <p>¿No tienes una cuenta? <a class="underline font-bold hover:text-purple-600"
                             href="{{route('users.create')}}">Regístrate</a></p>
                 </div>
-
-
-
-
             </form>
         </div>
 

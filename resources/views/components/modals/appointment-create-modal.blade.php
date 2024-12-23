@@ -61,10 +61,10 @@
 
                     <label class="text-white" for="start">Fecha de inicio</label>
                     <input type="text" id="fakeStart" disabled>
-                    <input type="hidden" id="start" name="startf">
+                    <input type="hidden" id="start" name="start" value="">
                     <label class="text-white" for="end">Fecha de fin</label>
                     <input type="text" id="fakeEnd" disabled>
-                    <input type="hidden" id="end" name="endf">
+                    <input type="hidden" id="end" name="end" value="">
                     @auth
                         @if (Auth::user()->role == 'propietario')
                             <label class="text-white" for="status">Estado</label>

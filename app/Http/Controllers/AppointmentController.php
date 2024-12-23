@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Appointment;
+use App\Models\Hairdresser;
+use App\Models\User;
+use App\Notifications\AppointmentNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
+//Clase que se encarga de controlar las citas.
 class AppointmentController extends Controller
 {
-    public function clientIndex($hairdresser_id)
+    //Función que se encarga de obtener las citas de un cliente o propietario.
+    public function indexAppointments($hairdresser_id)
     {
         try {
             $user = auth()->user();
@@ -22,8 +27,17 @@ class AppointmentController extends Controller
                 // Consulta para obtener todas las citas de otros clientes y que no tengan el estado 'cancelado'
                 $otherAppointments = Appointment::where('client_id', '!=', $user->id)
                     ->where('hairdresser_id', $hairdresser_id)
-                    ->where('status', '!=', 'cancelado')  // Excluimos las citas con estado 'cancelado'
+                    ->where('status', '!=', 'cancelado')
                     ->get();
+
+                //Consulta para obtener las citas de otros clientes no registrados.
+                $otherUnregisteredAppointments = Appointment::where('client_id', null)
+                    ->where('hairdresser_id', $hairdresser_id)
+                    ->where('status', '!=', 'cancelado')
+                    ->get();
+
+                //Se combinan las citas de los clientes registrados y no registrados.
+                $otherAppointments = $otherAppointments->merge($otherUnregisteredAppointments);
 
 
                 //Función que se encarga de recuperar las citas del cliente en la peluqueria seleccionada por el cliente.
@@ -80,6 +94,7 @@ class AppointmentController extends Controller
                 //Se retorna las citas en formato JSON.
                 Log::info('Citas obtenidas correctamente ', $events->toArray());
                 return response()->json($events);
+
             } else if (auth()->user()->role == 'propietario') {
                 //Se obtienen todas las citas de la peluquería.
                 $hairdresserAppointments = Appointment::where('hairdresser_id', $hairdresser_id)->get();
@@ -125,6 +140,7 @@ class AppointmentController extends Controller
     public function storeAppointment(Request $request)
     {
         try {
+
 
             //Si el usuario es propietario se valida también el nombre del cliente.
             if (auth()->user()->role == 'propietario') {
@@ -189,6 +205,20 @@ class AppointmentController extends Controller
                 'hairdresser_id' => $request->hairdresser_id,
             ]);
 
+
+            if (auth()->user()->role == 'propietario') {
+                if ($appointment->client_id) {
+                    $client = User::where('id', $appointment->client_id)->first();
+                    $client->notify(new AppointmentNotification($appointment, 'registrado',true));
+                }
+            } else if (auth()->user()->role == 'cliente') {
+                $hairdresser = Hairdresser::where('id', $appointment->hairdresser_id)->first();
+                $owner_id = $hairdresser->owner_id;
+                $owner = User::where('id', $owner_id)->first();
+                $owner->notify(new AppointmentNotification($appointment, 'registrado',false));
+            }
+
+
             //Se comprueba que se ha creado la cita, si no, enviamos un error al usuario.
             if (!$appointment) {
                 Log::error('Ha ocurrido un error al crear la cita.' . $appointment);
@@ -208,7 +238,9 @@ class AppointmentController extends Controller
     public function updateAppointment(Request $request)
     {
         try {
-            Log::info('Datos enviados en el Request:', $request->all());
+
+            $hairdresser = Hairdresser::find($request->hairdresser_id);
+            $appointment = Appointment::find($request->id_appointment);
 
             //Se validan los campos enviados
             $request->validate([
@@ -258,7 +290,24 @@ class AppointmentController extends Controller
                 'service_id' => $request->input('service'),
             ]);
 
-            // Comprobamos que se ha modificado alguna fila en nuestra base de datos, si no, enviamos un error al usuario.
+            if (auth()->user()->role == 'propietario') {
+                if ($appointment->client_id) {
+                    if ($request->input('status') == 'cancelado') {
+                        $client = User::where('id', $appointment->client_id)->first();
+                        $client->notify(new AppointmentNotification($appointment, 'cancelado',true));
+                    } else {
+                        $client = User::where('id', $appointment->client_id)->first();
+                        $client->notify(new AppointmentNotification($appointment, 'modificado',true));
+                    }
+                }
+            } else if (auth()->user()->role == 'cliente') {
+                $hairdresser = Hairdresser::where('id', $appointment->hairdresser_id)->first();
+                $owner_id = $hairdresser->owner_id;
+                $owner = User::where('id', $owner_id)->first();
+                $owner->notify(new AppointmentNotification($appointment, 'modificado',false));
+            }
+
+            //Se comprueba que se ha modificado alguna fila en nuestra base de datos, si no, enviamos un error al usuario.
             if ($updated === 0) {
                 Log::error('No se encontró la cita o no hubo cambios');
                 return response()->json(['error' => 'Cita no encontrada o no hubo cambios'], 404);
@@ -288,9 +337,22 @@ class AppointmentController extends Controller
             }
             $appointment->delete();
 
+            if (auth()->user()->role == 'propietario') {
+                if ($appointment->client_id) {
+                    $client = User::where('id', $appointment->client_id)->first();
+                    $client->notify(new AppointmentNotification($appointment, 'eliminado',true));
+                }
+            } else if (auth()->user()->role == 'cliente') {
+                $hairdresser = Hairdresser::where('id', $appointment->hairdresser_id)->first();
+                $owner_id = $hairdresser->owner_id;
+                $owner = User::where('id', $owner_id)->first();
+                $owner->notify(new AppointmentNotification($appointment, 'eliminado',false));
+            }
+
             //Si todo va bien, se envía un mensaje de exito al usuario.
             Log::info('Cita eliminada correctamente.');
             return response()->json(['message' => 'Cita eliminada correctamente']);
+            
         } catch (\Exception $e) {
             Log::error('Error al eliminar la cita: ' . $e->getMessage());
             //Se maneja cualquier error que pueda ocurrir.

@@ -13,21 +13,29 @@ use Illuminate\Http\Request;
  * middleware de autenticación.
  */
 Route::middleware('guest', 'web')->group(function () {
+    //Rutas para el login de usuarios.
     Route::get('/login', [UserController::class, 'login'])->name('users.login');
     Route::post('/loginUser', [UserController::class, 'loginEntrance'])->name('users.loginUser');
+
+    //Rutas para el registro de usuarios.
     Route::get('/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/store', [UserController::class, 'store'])->name('users.store');
+
+    //Rutas para el restablecimiento de contraseña.
     Route::get('/forgot-password', [UserController::class, 'forgotPassword'])->name('users.forgotPassword');
     Route::get('/reset-password/{token}', [UserController::class, 'resetPasswordForm'])->name('password.reset');
     Route::post('/forgot-password', [UserController::class, 'sendResetPasswordLink'])->name('users.sendResetLink');
     Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('users.resetPassword');
 });
 
+//Utilización de un middleware para comprobar si el usuario ha verificado su correo electrónico.
 Route::middleware('auth', 'verified')->group(function () {
     //Ruta inicial que carga el dashboard.
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('users.dashboard');
     //Ruta que se encarga de manejar el cierre de sesión por parte del usuario.
     Route::post('/logout', [UserController::class, 'logout'])->name('users.logout');
+    //Ruta que se encarga de marcar todas las notificaciones como leídas.
+    Route::get('/markAllAsRead', [UserController::class, 'markAllAsRead'])->name('users.markAllAsRead');
     //Rutas de la vista de edición de perfil.
     Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::post('/dashboard/uploadAvatar', [DashboardController::class, 'uploadAvatar'])->name('profile.uploadAvatar');
@@ -53,15 +61,17 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/dashboard/calendar', [CalendarController::class, 'showCalendar'])->name('dashboard.showCalendar');
 
     //Rutas que se encargan de la gestión de las citas.
-    Route::get('/dashboard/calendar/appointments/{hairdresserId}', [AppointmentController::class, 'clientIndex'])->name('dashboard.clientAppointments');
+    Route::get('/dashboard/calendar/appointments/{hairdresserId}', [AppointmentController::class, 'indexAppointments'])->name('dashboard.clientAppointments');
     Route::post('/dashboard/calendar/appointments/create', [AppointmentController::class, 'storeAppointment'])->name('dashboard.storeAppointment');
     Route::post('/dashboard/calendar/appointments/update', [AppointmentController::class, 'updateAppointment'])->name('dashboard.updateAppointment');
     Route::post('/dashboard/calendar/appointments/delete', [AppointmentController::class, 'deleteAppointment'])->name('dashboard.deleteAppointment');
 });
 
+//Rutas que se encargan de la verificación del correo electrónico.
 Route::get('/email/verify', function(){
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
+
 
 Route::get('/email', function(){
     return view('auth.verify-email');

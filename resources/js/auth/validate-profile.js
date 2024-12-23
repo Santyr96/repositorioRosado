@@ -80,15 +80,19 @@ function validateName(input) {
 
 //Función que se encarga de la validación del número de telefono.
 function validatePhone(input) {
-    //Si el campo esta vacio o el tamaño del numero de telefono no es igual a 9, se muestra un mensaje de ayuda al usuario.
-    if (input.value.length != 9) {
+    const phoneRegex = /^[69]\d{8}$/;
+    if (input.value === "") {
         showFeedBack(
             input,
             false,
             "El teléfono debe tener 9 dígitos y ser numérico."
         );
-
-        //Si los datos introducidos son correctos, se muestra un mensaje de éxito al usuario.
+    } else if (!phoneRegex.test(input.value)) {
+        showFeedBack(
+            input,
+            false,
+            "El teléfono debe empezar por 6 o 9 y tener 9 dígitos."
+        );
     } else {
         showFeedBack(input, true, "Correcto");
     }

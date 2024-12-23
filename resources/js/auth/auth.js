@@ -1,9 +1,11 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.forms.fForm;
-    let isValid = false;
 
+    //Se obtiene el formulario de la página con nombre fForm.
+    const form = document.forms.fForm;
+
+    //Se añaden los listeners a los campos del formulario.
     form.email.addEventListener("change", () => validateEmail(form.email));
     form.password.addEventListener("change", () =>
         validatePassword(form.password)
@@ -18,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
 });
 
+//Función encargada de mostrar feedback al usuario sobre los datos introducidos en los campos del formulario.
 function showFeedBack(input, valid, message) {
     const validClass = valid ? "text-green-600" : "text-red-500";
     const span = input.parentElement.parentElement.querySelector("span");
@@ -25,9 +28,9 @@ function showFeedBack(input, valid, message) {
     span.classList.add(validClass);
     span.textContent = message;
 }
-
-// Validación para el email.
+//Función que se encarga de la validación del email.
 function validateEmail(input) {
+    //Se crea una expresión regular para comparar el dato introducido en el campo del formulario.
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (input.value === "") {
         showFeedBack(input, false, "El campo e-mail no puede estar vacío.");
@@ -35,11 +38,11 @@ function validateEmail(input) {
         showFeedBack(input, false, "Introduce un email válido");
     } else {
         showFeedBack(input, true, "Correcto");
-        isValid = true;
+       
     }
 }
 
-// Validación para la contraseña.
+//Función que se encarga de la validación de la contraseña.
 function validatePassword(input) {
     console.log(input.value);
     const passwordRegex =
@@ -54,12 +57,11 @@ function validatePassword(input) {
         );
     } else {
         showFeedBack(input, true, "Correcto");
-        isValid = true;
     }
 }
 
-//Validación confirmación de contraseña.
 
+//Función que se encarga de la validación de la confirmación de la contraseña.
 function validateConfirmPassword(input, password) {
     if ((input.value === "")) {
         showFeedBack(
@@ -71,11 +73,10 @@ function validateConfirmPassword(input, password) {
         showFeedBack(input, false, "Las contraseñas no coinciden.");
     } else {
         showFeedBack(input, true, "Correcto");
-        isValid = true;
     }
 }
 
-// Validación para el DNI.
+//Función que se encarga de la validación del DNI.
 function validateDNI(input) {
     const dniRegex = /^\d{8}[A-Za-z]$/;
     if (input.value === "") {
@@ -88,11 +89,10 @@ function validateDNI(input) {
         );
     } else {
         showFeedBack(input, true, "Correcto");
-        isValid = true;
     }
 }
 
-// Validación para el nombre.
+//Función que se encarga de la validación del nombre.
 function validateName(input) {
     if (input.value === "") {
         showFeedBack(input, false, "El campo nombre no puede estar vacío");
@@ -101,16 +101,22 @@ function validateName(input) {
     }
 }
 
-// Validación para el teléfono.
+//Función que se encarga de la validación del número de telefono.
 function validatePhone(input) {
-    if (isNaN(input.value) || input.value.length != 9) {
+    const phoneRegex = /^[69]\d{8}$/;
+    if (input.value === "") {
         showFeedBack(
             input,
             false,
             "El teléfono debe tener 9 dígitos y ser numérico."
         );
+    } else if (!phoneRegex.test(input.value)) {
+        showFeedBack(
+            input,
+            false,
+            "El teléfono debe empezar por 6 o 9 y tener 9 dígitos."
+        );
     } else {
         showFeedBack(input, true, "Correcto");
-        isValid = true;
     }
 }

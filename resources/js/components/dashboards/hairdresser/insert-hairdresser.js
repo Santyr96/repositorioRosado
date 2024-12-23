@@ -1,10 +1,12 @@
 "use strict";
 
-import { closeModal } from "../../modals/closeModal";
+import { closeModal } from "../../modals/close-modal";
 
-export function updateProfile() {
-    const profileForm = document.forms["fForm"];
-    const spans = document.querySelectorAll(".validate-span");
+
+export function storeHairDresser() {
+    const profileForm = document.forms["HairDresserForm"];
+    const inputs = profileForm.querySelectorAll("input");
+    const span = document.querySelectorAll("span");
 
     //Se envía las respuestas del formulario al servidor.
     profileForm.addEventListener("submit", async function (e) {
@@ -13,6 +15,10 @@ export function updateProfile() {
         //Creación del objeto FormData que se encargará de enviar el valor de los campos al servidor.
         const formData = new FormData(profileForm);
 
+        //Se imprime en consola los valores de los campos del formulario, para saber que se envia.
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+        }
 
         try {
             //Se obtiene la url a la cuál se enviará el formulario.
@@ -20,7 +26,7 @@ export function updateProfile() {
 
             //Si no existe la url lo registramos en la consola para saber que existe el problema.
             if (!url) {
-                console.error("La URL para actualizar el perfil no está definida.");
+                console.error("La URL para insertar una peluquería en la base de datos no esta disponible.");
                 showErrorMessage("Error interno. Intenta más tarde.");
             }
 
@@ -49,16 +55,31 @@ export function updateProfile() {
 
             //Se realiza la carga dinámica de los inputs para que aparezcan los nuevos datos introducidos en el formulario.
             if (data) {
-                showSuccessfulMessage("Datos actualizados correctamente.");
-                spans.forEach((span) => {
+                showSuccessfulMessage("Peluquería creada correctamente.");
+                inputs.forEach((input) => {
+                    input.value = "";
+                });
+                span.forEach((span) => {
                     span.textContent = "";
                 });
             } else {
-                showErrorMessage("Error al actualizar el perfil.");
+                showErrorMessage("Error al crear la peluquería.");
+                inputs.forEach((input) => {
+                    input.value = "";
+                });
+                span.forEach((span) => {
+                    span.textContent = "";
+                });
             }
         } catch (error) {
             console.error("Error:", error);
-            showErrorMessage("Ocurrió un error al actualizar el perfil. Intentalo nuevamente.");
+            showErrorMessage("Ocurrió un error al crear la peluquería. Intentalo nuevamente.");
+            inputs.forEach((input) => {
+                input.value = "";
+            });
+            span.forEach((span) => {
+                span.textContent = "";
+            });
         }
     });
 }
@@ -82,15 +103,15 @@ function showErrorMessage(message) {
 function showSuccessfulMessage(message) {
     const modal = document.getElementById("errorModal");
     const successMessageElement = modal.querySelector('p');
-    const modalTitle = document.getElementById('errorModalTitle');
+    const successTitleElement = modal.querySelector('h3');
 
     //Sí existe el elemento para añadir el mensaje, le añadimos el mensaje.
     if (successMessageElement) {
         successMessageElement.textContent = message;
     }
 
-    if (modalTitle) {
-        modalTitle.textContent = "¡Éxito!";
+    if(successTitleElement){
+        successTitleElement.textContent = "¡Éxito!";
     }
     //Si el modal existe, se muestra al usuario.
     if (modal) {
@@ -99,3 +120,4 @@ function showSuccessfulMessage(message) {
     //Se llama a la función para cerrar el modal.
     closeModal();
 }
+

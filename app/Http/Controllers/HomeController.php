@@ -2,28 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 
+//Clase que se encarga de controlar las vistas de inicio de la aplicación.
 class HomeController extends Controller
 {
     
-    //Creamos método para mostrar la vista index.
-
+    //Funcion para cargar la vista index.
     public function index(){
-        return view('index');  //Retorna la vista index.
+        return view('index');  
     }
 
-    public function about(){
-        return view('about');  //Retorna la vista about.
+    //Función que carga la vista about-me.
+    public function aboutMe(){
+        return view('about-me');  
     }
 
-    public function aboutSantiago(){
-        return view('aboutSantiago');  //Retorna la vista aboutSantiago.
-    }
 
-    public function dashboard(){
-        return view('dashboards.customer');  //Retorna la vista dashboard.
-    }
-
-   
 }

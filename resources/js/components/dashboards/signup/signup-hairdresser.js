@@ -1,6 +1,6 @@
 "use strict";
 
-import { closeModal } from "../../modals/closeModal";
+import { closeModal } from "../../modals/close-modal";
 
 
 export function signupHairdresser() {

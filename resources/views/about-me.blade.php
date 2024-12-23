@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-layouts.app-layout>
     <x-slot:title>
         Sobre Mi
     </x-slot>
@@ -14,9 +14,9 @@
 
                 <div class="lg:w-[70%]">
                     <figure class="flex justify-center">
-                        <x-imageRounded id="CVImage" src="storage/images/cv_image.png" alt="Imagen curriculum"
+                        <x-images.imageRounded id="CVImage" src="storage/images/cv_image.png" alt="Imagen curriculum"
                             class=" md:w-3/4 xl:w-1/2 ">
-                        </x-imageRounded>
+                        </x-images.imageRounded>
                     </figure>
                 </div>
                 <div class="text-justify text-xl font-work 2xl:text-3xl leading-relaxed font-medium p-5 md:p-10 ">
@@ -77,4 +77,4 @@
 
         </section>
     </main>
-</x-app-layout>
+</x-layouts.app-layout>

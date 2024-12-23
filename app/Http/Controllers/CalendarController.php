@@ -9,6 +9,7 @@ use App\Models\Appointment;
 use App\Models\Service;
 use Illuminate\Support\Facades\Log;
 
+//Clase que se encarga de controlar las vistas de calendario.
 class CalendarController extends Controller
 {
     //Funcion que se encarga de encontrar las peluquerias donde el cliente se ha dado de alta.
@@ -39,6 +40,7 @@ class CalendarController extends Controller
 
     }
 
+    //Funcion que se encarga de mostrar el calendario de la peluquería seleccionada.
     public function showCalendar(Request $request)
     {
        try{

@@ -1,7 +1,8 @@
 "use strict";
-import { closeModal } from "../../modals/closeModal";
+import { closeModal } from "../../modals/close-modal";
 import { reloadServicesView, showErrorMessage } from "./services-manage";
 
+//Función que se encarga de crear un servicio.
 export function createService(urlView) {
     const createButton = document.getElementById("create");
     const createModal = document.querySelector(".advise-modal");
@@ -10,7 +11,9 @@ export function createService(urlView) {
     const createModalMessage = document.getElementById("message");
     const inputIdHairdresser = document.getElementById("idHairdresser");
 
+    //Se agrega el evento click al botón de crear servicio.
     createButton.addEventListener("click", function () {
+        //Se verifica si el modal tiene la clase hidden, si la tiene se le quita y se llama a la función openCreateModal.
         if (createModal.classList.contains("hidden")) {
             openCreateModal(
                 createModal,
@@ -18,13 +21,16 @@ export function createService(urlView) {
                 createModalTitle,
                 createModalMessage
             );
+            //Se inicializan los botones de cerrar.
             initializeCloseButtons(urlView);
+            //Se inicializa el formulario de creación de servicio.
             setupCreateServiceForm(createModal, urlView, inputIdHairdresser);
             createModal.classList.toggle("hidden");
         }
     });
 }
 
+//Función que se encarga de abrir el modal de creación de servicio.
 function openCreateModal(modal, child, modalTitle, modalMessage) {
     const header = modal.children[0].children[0];
     header.classList.replace("bg-gray-600", "bg-purple-700");
@@ -39,6 +45,7 @@ function openCreateModal(modal, child, modalTitle, modalMessage) {
     modalMessage.textContent = "¿Quieres crear un servicio?";
 }
 
+//Función que se encarga de generar el formulario de creación de servicio.
 function generateCreateFormHTML() {
     return `
         <form class="flex flex-col justify-center gap-2" name="fcreateService" data-form="" method="post">
@@ -69,6 +76,7 @@ function generateCreateFormHTML() {
     `;
 }
 
+//Función que se encarga de inicializar los botones de cerrar.
 function initializeCloseButtons(urlView) {
     const closeButtons = document.querySelectorAll("[data-modal-hide]");
     closeButtons.forEach((button) => {
@@ -79,6 +87,7 @@ function initializeCloseButtons(urlView) {
     closeModal();
 }
 
+//Función que se encarga de inicializar el formulario de creación de servicio.
 function setupCreateServiceForm(modal, urlView, inputIdHairdresser) {
     const createServiceForm = document.forms["fcreateService"];
     createServiceForm.addEventListener("submit", async function (e) {
@@ -89,7 +98,9 @@ function setupCreateServiceForm(modal, urlView, inputIdHairdresser) {
         formData.append(inputIdHairdresser.name, inputIdHairdresser.value);
 
         try {
-            await submitCreateServiceForm(url, formData);
+            //Se envía la petición fetch con el formulario de creación de servicio.
+             submitCreateServiceForm(url, formData);
+            //Se recarga la vista de servicios.
             reloadServicesView(urlView);
         } catch (error) {
             console.error("Error:", error);
@@ -102,6 +113,7 @@ function setupCreateServiceForm(modal, urlView, inputIdHairdresser) {
     });
 }
 
+//Función que se encarga de enviar la petición fetch con el formulario de creación de servicio.
 async function submitCreateServiceForm(url, formData) {
     try {
         const response = await fetch(url, {

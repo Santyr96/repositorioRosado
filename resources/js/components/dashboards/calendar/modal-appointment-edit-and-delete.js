@@ -3,7 +3,10 @@ import { showErrorMessage } from "./show-calendar";
 import { DateTime } from "luxon";
 const closeModalListeners = new WeakMap();
 
+//Función que maneja la edición y eliminación de una cita
 export function modalAppointmentEditAndDelete(info, calendar) {
+    //Obtenemos los elementos del DOM necesarios.
+    const calendarVar = calendar;
     const event = info.event;
     const client = document.getElementById("client");
     const statusP = document.getElementById("statusSelect");
@@ -20,38 +23,35 @@ export function modalAppointmentEditAndDelete(info, calendar) {
     let isSubmitting = false;
 
 
+    //Si el modal no ha sido inicializado, lo inicializamos. Esto asegura que los listeners no se dupliquen.
     if (!modal.classList.contains("modal-initialized")) {
         modal.classList.add("modal-initialized");
     
-    setupModal(
-        event,
-        modalTitle,
-        modalMessage,
-        selectService,
-        inputAppointmentId,
-        client,
-        statusP,
-        date,
-        inputStart
-    );
-
+    //Agregamos los listeners para los botones de editar y eliminar.
     updateButton.addEventListener("click", handleUpdateClick);
     deleteButton.addEventListener("click", handleDeleteClick);
 
+    //Función que maneja el evento de click en el botón de editar.
     async function handleUpdateClick(e) {
         e.preventDefault();
     
+        //Se establece un bloqueo para evitar múltiples envíos del formulario.
         if (isSubmitting) return;
         isSubmitting = true;
     
+        //Se deshabilitan los botones de submit.
         toggleSubmitButtons(true);
     
         try {
+            //Se obtiene la información del formulario y se prepara para ser enviada.
             const formData = new FormData(form);
+            //Se obtiene la fecha de inicio y fin de la cita y se transforma a un formato adecuado.
             const { start, end } = prepareFormData(inputStart, formData);
     
+            //Se envía la petición al servidor para editar la cita.
             await handleEdit(formData, form);
     
+            //Se actualiza el calendario.
             closeModal(modal);
             calendar?.refetchEvents();
         } catch (error) {
@@ -65,6 +65,7 @@ export function modalAppointmentEditAndDelete(info, calendar) {
     }
 
   
+    //Función que maneja el evento de click en el botón de eliminar.
         async function handleDeleteClick (e) {
             e.preventDefault();
 
@@ -74,8 +75,7 @@ export function modalAppointmentEditAndDelete(info, calendar) {
             toggleSubmitButtons(true);
 
             try {
-                const formData = new FormData(form);
-                await handleDelete(formData, form, calendar);
+                handleDelete();
                 closeModal(modal);
             } catch (error) {
                 console.error("Error al eliminar la cita", error);
@@ -100,11 +100,64 @@ export function modalAppointmentEditAndDelete(info, calendar) {
         closeModalListeners.set(button, newListener);
     });
 
+    
+
+    //Función que maneja el evento de click en el botón de confirmación de la eliminación.
+     function handleDelete() {
+        //Se obtiene los elementos del DOM necesarios.
+        const modalDeleteWarning = document.getElementById("deleteWarning");
+        const confirmationButton = document.getElementById("confirmation");
+        //Se muestra el modal de confirmación de eliminación.
+        openModal(modalDeleteWarning);
+
+        //Si el modal no ha sido inicializado, lo inicializamos. Esto asegura que los listeners no se dupliquen.
+        if(!modalDeleteWarning.classList.contains("modal-initialized")) {
+            modalDeleteWarning.classList.add("modal-initialized");
+            const closeButtons =
+            modalDeleteWarning.querySelectorAll("[data-modal-hide]");
+        closeButtons.forEach(
+            (button) =>
+                button.addEventListener("click", () =>
+                    closeModal(modalDeleteWarning)
+                )
+        );
+        //Agregamos el listener para el botón de confirmación de eliminación.
+            confirmationButton.addEventListener("click", () =>
+                handleDeleteConfirmation()
+            );
+        }
+
+       
+    }
     }
 
+    //Función que maneja la apertura del modal.
     openModal(modal);
+    setupModal(
+        event,
+        modalTitle,
+        modalMessage,
+        selectService,
+        inputAppointmentId,
+        client,
+        statusP,
+        date,
+        inputStart
+    );
 
-    
+    //Función que maneja la confirmación de la eliminación de la cita.	
+    async function handleDeleteConfirmation() {
+        const url = form.getAttribute("data-delete");
+        const formData = new FormData(form);
+        try {
+            await sendRequest(url, formData);
+            calendarVar?.refetchEvents();
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
+
+    //Función que muestra los datos de la cita a editar en el modal.
     function setupModal(
         event,
         modalTitle,
@@ -123,7 +176,9 @@ export function modalAppointmentEditAndDelete(info, calendar) {
         selectService.value = event.extendedProps.service_id;
         inputAppointmentId.value = event.extendedProps.appointment_id;
         client.value = event.extendedProps.client_name ? event.extendedProps.client_name : event.extendedProps.unregistered_client;
-        status.value = event.extendedProps.status;
+        if(status){
+            status.value = event.extendedProps.status;
+        }
         date.value =
             startDateTime.toFormat("dd/MM/yyyy HH:mm") +
             " - " +
@@ -131,6 +186,7 @@ export function modalAppointmentEditAndDelete(info, calendar) {
         start.value = startDateTime.toFormat("yyyy-MM-dd'T'HH:mm:ss");
     }
 
+    //Función que transforma la fecha de inicio y fin de la cita a un formato adecuado para ser enviada.
     function prepareFormData(inputStart, formData) {
         const start = inputStart.value
             ? DateTime.fromISO(inputStart.value)
@@ -146,6 +202,7 @@ export function modalAppointmentEditAndDelete(info, calendar) {
         return { start, end };
     }
 
+    //Funciónm que se encarga de deshabilitar o habilitar los botones de submit.
     function toggleSubmitButtons(disabled) {
         const submitsButton = document.querySelectorAll(
             "button[type='submit']"
@@ -155,55 +212,23 @@ export function modalAppointmentEditAndDelete(info, calendar) {
         });
     }
 
-   
+   //Función que abre un modal.
     function openModal(modal) {
         if (modal.classList.contains("hidden")) {
             modal.classList.remove("hidden");
         }
     }
 
-    
+    //Función que cierra un modal.
     function closeModal(modal) {
         modal.classList.add("hidden");
     }
 
     
-    async function handleDelete(formData, form, calendar) {
-        const modalDeleteWarning = document.getElementById("deleteWarning");
-        const confirmationButton = document.getElementById("confirmation");
-
-        const closeButtons =
-            modalDeleteWarning.querySelectorAll("[data-modal-hide]");
-        closeButtons.forEach(
-            (button) =>
-                button.addEventListener("click", () =>
-                    closeModal(modalDeleteWarning)
-                ),
-            { once: true }
-        );
-
-        
-        openModal(modalDeleteWarning);
-
-        confirmationButton.addEventListener("click", async function () {
-            closeModal(modalDeleteWarning);
-
-            const url = form.getAttribute("data-delete");
-            try {
-                await sendRequest(url, formData);
-                calendar?.refetchEvents();
-            } catch (error) {
-                throw new Error(error);
-            }
-        }),
-            { once: true };
-    }
-
-
+  
+    //Función que maneja la petición al servidor para editar la cita.
     async function handleEdit(formData, form) {
         const url = form.getAttribute("data-update");
-
-        console.log("Enviando los datos al servidor para editar...");
         try {
             await sendRequest(url, formData);
         } catch (error) {
@@ -212,7 +237,7 @@ export function modalAppointmentEditAndDelete(info, calendar) {
         }
     }
 
-   
+   //Función que maneja el envío de la petición al servidor.
     async function sendRequest(url, formData) {
         const response = await fetch(url, {
             method: "POST",
@@ -228,6 +253,6 @@ export function modalAppointmentEditAndDelete(info, calendar) {
             const data = await response.json();
             throw new Error(`${data.error}`);
         }
-        console.log("Operación exitosa.");
+
     }
 }

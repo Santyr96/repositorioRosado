@@ -1,12 +1,15 @@
 "use strict";
-import { closeModal } from "../../modals/closeModal";
+import { closeModal } from "../../modals/close-modal";
 import { createService } from "./create-service";
 import { deleteService } from "./delete-service";
 import { updateService } from "./update-service";
 
+//Variable global para almacenar el id del peluquero seleccionado.
 let globalHairdresserId;
 
+//Función para mostrar los servicios de un peluquero.
 export function showServices() {
+    //Se obtiene el contenedor donde se mostrará el contenido.
     const contentContainer = document.getElementById("content");
     const selectHairdresser = document.forms["fSelectHairdresserServices"];
     selectHairdresser.addEventListener("submit", async function (event) {
@@ -48,6 +51,7 @@ export function showServices() {
     });
 }
 
+//Función para gestionar los servicios.
  function servicesManage() {
     const urlView = document.getElementById("serviceTable").getAttribute("data-url");
     createService(urlView);
@@ -55,6 +59,7 @@ export function showServices() {
     updateService(urlView);
 }
 
+//Función para mostrar un mensaje de error.
 export function showErrorMessage(message) {
     const modal = document.getElementById("errorModal");
     const errorMessageElement = modal.querySelector("p");
@@ -77,6 +82,7 @@ export function showErrorMessage(message) {
     closeModal();
 }
 
+//Función para recargar la vista de servicios.
 export async function reloadServicesView(url) {
     const contentContainer = document.getElementById("content");
     const formData = new FormData();

@@ -16,4 +16,8 @@ class Hairdresser extends Model
     	return $this->belongsToMany(User::class, 'signups', 'hairdresser_id', 'client_id')
         ->where('role','cliente');
     }
+
+    public function owner(){
+    	return $this->belongsTo(User::class, 'owner_id');
+    }
 }

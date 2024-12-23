@@ -4,7 +4,6 @@
     <x-modals.error-modal class="hidden xl:left-40" modalTitle="Error al envíar el formulario"
         modalMessage=""></x-modals.error-modal>
 
-
     <form class="flex flex-col gap-5 w-4/5 md:h-full
     " name="HairDresserForm" action="#" method="post"
         data-form="{{ route('dashboard.insertHairDresser') }}">
@@ -35,7 +34,7 @@
         <div>
             <label class="pl-1 font-semibold md:text-2xl" for="CIF">CIF</label>
             <div class="flex w-full pt-1 gap-x-3">
-                <x-inputs.input type="text" name="cif" placeholder="CIF..." class="md:text-lg">
+                <x-inputs.input type="text" name="cif" placeholder="A12345678..." class="md:text-lg">
                 </x-inputs.input>
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24">
@@ -58,7 +57,7 @@
         <div>
             <label class="pl-1 font-semibold md:text-2xl" for="phone">Télefono</label>
             <div class="flex w-full pt-1 gap-x-3">
-                <x-inputs.input type="phone" name="phone" placeholder="Teléfono..." class="md:text-lg">
+                <x-inputs.input type="phone" name="phone" placeholder="665612234..." class="md:text-lg">
                 </x-inputs.input>
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24">
@@ -91,47 +90,6 @@
                 <x-forms.span-validate class="w-10/12">
 
                 </x-forms.span-validate>
-            </div>
-        </div>
-
-        {{-- Input para introducir la latitud de la peluqueria en el formulario --}}
-
-        <div>
-            <div>
-                <label class="pl-1 font-semibold md:text-2xl" for="latitude">Ubicación</label>
-                <div class="flex w-full pt-1 gap-x-3">
-                    <x-inputs.input type="text" name="latitude" placeholder="40.416775" class="md:text-lg">
-                    </x-inputs.input>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24">
-                        <path fill="#9333ea"
-                            d="m15 21l-6-2.1l-4.65 1.8q-.5.2-.925-.112T3 19.75v-14q0-.325.188-.575T3.7 4.8L9 3l6 2.1l4.65-1.8q.5-.2.925.113T21 4.25v14q0 .325-.187.575t-.513.375zm-1-2.45V6.85l-4-1.4v11.7z" />
-                    </svg>
-                </div>
-
-                <x-forms.span-validate class="w-10/12">
-
-                </x-forms.span-validate>
-
-            </div>
-        </div>
-
-        <div>
-            <div>
-                <div class="flex w-full pt-1 gap-x-3">
-                    <x-inputs.input type="text" name="longitude" placeholder="3.703790" class="md:text-lg">
-                    </x-inputs.input>
-
-                    <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" viewBox="0 0 24 24">
-                        <path fill="#9333ea"
-                            d="m15 21l-6-2.1l-4.65 1.8q-.5.2-.925-.112T3 19.75v-14q0-.325.188-.575T3.7 4.8L9 3l6 2.1l4.65-1.8q.5-.2.925.113T21 4.25v14q0 .325-.187.575t-.513.375zm-1-2.45V6.85l-4-1.4v11.7z" />
-                    </svg>
-                </div>
-
-                <x-forms.span-validate class="w-10/12">
-
-                </x-forms.span-validate>
-
             </div>
         </div>
 

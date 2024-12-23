@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
@@ -12,20 +13,41 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password as FacadesPassword;
 
+//Clase que se encarga de controlar las vistas que tienen que ver con los usuarios.
 class UserController extends Controller
 {
-    public function login(){
-        return view('users.loginView');  
+
+    //Importamos el servicio de notificaciones.
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
     }
 
+    //Función que se encargará de mostrar el formulario de inicio de sesión.
+    public function login(){
+        return view('users.login-view');  
+    }
+
+    //Función que se encargará de mostrar el formulario de registro.
     public function create(){
         return view('users.create');  
     }
 
+    //Función que se encargará de mostrar el dashboard del usuario.
     public function dashboard(){
-        return view('dashboards.dashboard', ['userName' => Auth::user()->name]);
+        $user = User::find(Auth::user()->id);
+        $notifications = $this->notificationService->getUnreadNotifications($user);
+        return view('dashboards.dashboard', ['userName' => Auth::user()->name], compact('notifications'));
     }
 
+    //Función que se encargará de marcar todas las notificaciones como leídas.
+    public function markAllAsRead(){
+        $user = User::find(Auth::user()->id);
+        $this->notificationService->markAllAsRead($user);
+    }
+    //Función que se encargará de mostrar el formulario de restablecimiento de contraseña.
     public function forgotPassword(){
         return view('auth.forgot-password');  
     }

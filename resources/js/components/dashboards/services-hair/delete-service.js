@@ -1,14 +1,16 @@
 "use strict";
 
-import { closeModal } from "../../modals/closeModal";
+import { closeModal } from "../../modals/close-modal";
 import { reloadServicesView, showErrorMessage } from "./services-manage";
 
+//Función que se encarga de la eliminación de un servicio.
 export function deleteService(urlView) {
     const deleteForms = document.querySelectorAll(".deleteForm");
     const confirmationDelete = document.getElementById("confirmation");
     const deleteWarning = document.getElementById("deleteWarning");
 
  
+    //Se agrega el evento click al botón de confirmación de eliminación.
     confirmationDelete.addEventListener("click", async function () {
         const url = this.getAttribute("data-delete");
 
@@ -33,7 +35,6 @@ export function deleteService(urlView) {
 
             
             const data = await response.json();
-            console.log(data);
             reloadServicesView(urlView);
 
         } catch (error) {
@@ -44,7 +45,7 @@ export function deleteService(urlView) {
         }
     });
 
-    
+    //Recorre todos los formularios de eliminación y agrega el evento submit a cada uno.
     deleteForms.forEach((deleteForm) => {
         deleteForm.addEventListener("submit", function (e) {
             e.preventDefault();

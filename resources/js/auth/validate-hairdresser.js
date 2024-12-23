@@ -11,13 +11,6 @@ export function initValidationsHairDresser() {
     form.address.addEventListener("change", () =>
         validateAddress(form.address)
     );
-    form.latitude.addEventListener("change", () =>
-        validateLatitude(form.latitude)
-    );
-
-    form.longitude.addEventListener("change", () =>
-        validateLongitude(form.longitude)
-    );
 }
 
 //Función encargada de mostrar feedback al usuario sobre los datos introducidos en los campos del formulario.
@@ -110,53 +103,4 @@ function validateAddress(input) {
         showFeedBack(input, true, "Correcto");
     }
 }
-//Función que se encarga de la validación de la latitud.
-function validateLatitude(input) {
-    //Se crea una expresión regular para que la latitud introducida tenga un patrón establecido -> 40.123456
-    const latitudeRegex = /^[-+]?((\d|[1-8]\d)(\.\d+)?|90(\.0+)?)$/;
-    //Si el campo esta vacio o el valor introducido no es un número, se muestra un mensaje de ayuda al usuario.
-    if (input.value === "" || isNaN(input.value)) {
-        showFeedBack(
-            input,
-            false,
-            "El campo latitud no puede estar vacío y debe ser un número."
-        );
 
-        //Si el campo no se corresponde con la expresión regular, se muestra un mensaje de ayuda al usuario.
-    } else if (!latitudeRegex.test(input.value)) {
-        showFeedBack(
-            input,
-            false,
-            "La latitud introducida no cumple con el patrón establecido. (40.123456)"
-        );
-
-        //Si los datos introducidos son correctos, se muestra un mensaje de éxito al usuario.
-    } else {
-        showFeedBack(input, true, "Correcto");
-    }
-}
-
-//Función que se encaga de la validación de la longitud.
-function validateLongitude(input) {
-    //Se crea una expresión regular para que la longitud introducida tenga un patrón establecido -> -3.123456
-    const longitudeRegex = /^[-+]?((\d|[1-9]\d|1[0-7]\d)(\.\d+)?|180(\.0+)?)$/;
-    //Si el campo esta vacio o el valor introducido no es un número, se muestra un mensaje de ayuda al usuario.
-    if (input.value === "" || isNaN(input.value)) {
-        showFeedBack(
-            input,
-            false,
-            "El campo longitud no puede estar vacío y debe ser un número."
-        );
-
-        //Si el campo no se corresponde con la expresión regular, se muestra un mensaje de ayuda al usuario.
-    } else if (!longitudeRegex.test(input.value)) {
-        showFeedBack(
-            input,
-            false,
-            "La longitud introducida no cumple con el patrón establecido. (-3.123456)"
-        );
-        //Si los datos introducidos son correctos, se muestra un mensaje de éxito al usuario.
-    } else {
-        showFeedBack(input, true, "Correcto");
-    }
-}

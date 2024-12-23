@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+
     //Obtención de elementos del DOM.
     const registro = document.getElementById("registro");
     const arrow = document.getElementById("arrow");
@@ -9,12 +10,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     //Manejo del evento hover del ráton.
     registro.addEventListener("mouseover", function () {
+        arrow.classList.remove("fill-white");
         arrow.classList.add("fill-purple-600");
     });
 
     //Manejo del evento out del ratón.
     registro.addEventListener("mouseout", function () {
         arrow.classList.remove("fill-purple-600");
+        arrow.classList.add("fill-white");
     });
 
     //Función para mostrar el menú con animación.
@@ -38,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         menuLateral.classList.add("hidden");
     };
 
-    // Manejo del evento click para mostrar/ocultar el menú
+    //Manejo del evento click para mostrar/ocultar el menú.
     registro.addEventListener("click", function () {
         if (iniciar.classList.contains("hidden")) {
             mostrarMenu();
@@ -55,8 +58,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    //Manejo del evento click en el botoón cerrar.
+    //Manejo del evento click en el botón cerrar.
     closeButton.addEventListener("click", function () {
         ocultarMenuLateral();
     });
+
 });

@@ -10,19 +10,23 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Log;
 
+//Clase que se encarga de controlar las vistas del dashboard.
 class DashboardController extends Controller
 {
+    //Función que se encarga de mostrar la vista de actualización del perfil del usuario.
     public function profile()
     {
         $user = auth()->user();
         return view('dashboards.profile', compact('user'));
     }
 
+    //Función que se encarga de mostrar la vista para el registro de una peluquería.
     public function hairdresser()
     {
         return view('dashboards.insert-hairdresser');
     }
 
+    //Función que se encarga de mostrar la vista para la gestión de los servicios de la peluquería.
     public function showServices(Request $request)
     {
         try {
@@ -59,11 +63,11 @@ class DashboardController extends Controller
                 'user_id' => auth()->id(),
             ]);
 
-            // Responder con un mensaje de error genérico
             return response()->json(['error' => 'Ocurrió un error en el servidor'], 500);
         }
     }
 
+    //Función que se encarga de mostrar la vista para la selección de la peluquería.
     public function selectHairdresser()
     {
         //Si el usuario no esta autenticado se redirige a la pagina de login.
@@ -106,7 +110,7 @@ class DashboardController extends Controller
     //Función que se encarga de actualizar el avatar del usuario.
     public function uploadAvatar(Request $request)
     {
-
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         //Verificamos si el usuario tiene un avatar.
@@ -139,6 +143,7 @@ class DashboardController extends Controller
     //Función que se encarga de actualizar el perfil del usuario.
     public function updateProfile(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = auth()->user();
 
         try {
@@ -354,6 +359,7 @@ class DashboardController extends Controller
             return response()->json(['error' => $e->getMessage()], 400);
         }
     }
+
 
     
 }

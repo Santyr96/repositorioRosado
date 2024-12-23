@@ -1,4 +1,4 @@
-@vite('resources/js/components/dashboards/profile/load-view.js')
+@vite('resources/js/components/dashboards/load-view.js')
 @vite('resources/css/app.css')
 
 <html lang="es">
@@ -32,7 +32,7 @@
 
     <div class="grid grid-rows-[auto_1fr_auto] xl:col-start-2">
 
-        <x-dashboards.header>
+        <x-dashboards.header class="" :notifications="$notifications">
 
         </x-dashboards.header>
 

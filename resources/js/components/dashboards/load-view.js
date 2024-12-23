@@ -1,14 +1,14 @@
 "use_strict";
 
-import { initValidationsHairDresser } from "../../../auth/validateHairDresser";
-import { initValidations } from "../../../auth/validateProfile";
-import { tooglePasswordVisibility } from "../../passwords/show_password";
-import { showCalendar } from "../calendar/show-calendar";
-import { storeHairDresser } from "../hairdresser/insertHairDresser";
-import { showServices } from "../services-hair/services-manage";
-import { signupHairdresser } from "../signup/signup-hairdresser";
-import { updateAvatar } from "./update_avatar";
-import { updateProfile } from "./update_profile";
+import { tooglePasswordVisibility } from "../passwords/show-password";
+import { showCalendar } from "./calendar/show-calendar";
+import { showServices } from "./services-hair/services-manage";
+import { signupHairdresser } from "./signup/signup-hairdresser";
+import { updateAvatar } from "./profile/update-avatar";
+import { updateProfile } from "./profile/update-profile";
+import { initValidationsHairDresser } from "../../auth/validate-hairdresser";
+import { initValidations } from "../../auth/validate-profile";
+import { storeHairDresser } from "./hairdresser/insert-hairdresser";
 
 document.addEventListener("DOMContentLoaded", function () {
     const adminPanel = document.querySelector("aside #adminPanel");

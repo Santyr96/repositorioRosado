@@ -8,12 +8,14 @@ use Illuminate\View\Component;
 
 class Header extends Component
 {
+
     /**
      * Create a new component instance.
      */
-    public function __construct(public ?string $class = null)
+    public function __construct(public ?string $class = null, public $notifications)
     {
-        $this->class = $class;    
+        $this->class = $class;   
+        $this->notifications = $notifications; 
     }
 
     /**

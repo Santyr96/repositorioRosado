@@ -25,53 +25,67 @@
         </div>
     </div>
 
-    {{-- APARTADO DE NOTIFICACIONES --}}
     <div id="admin" class="flex flex-wrap gap-2 justify-end lg:justify-end items-center pr-4">
+        @if ($notifications->isNotEmpty())
+        <div id="notificationCounter"
+        class="transform translate-x-12 -translate-y-4 bottom-auto left-auto right-0 top-0 z-10 inline-block rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 whitespace-nowrap rounded-full bg-indigo-700 px-2 py-1 text-center align-baseline text-xs font-bold leading-none text-white">
+        {{$notifications->count()}}
+      </div>
+        @endif
         <div>
-            <a id="notificationButton" role="button"><svg xmlns="http://www.w3.org/2000/svg" width="2rem"
+            <a id="notificationButton" data-notification="{{route('users.markAllAsRead')}}"  role="button"><svg xmlns="http://www.w3.org/2000/svg" width="2rem"
                     height="2rem" viewBox="0 0 24 24">
                     <path class="hover:fill-purple-600" fill="white"
                         d="M4 19v-2h2v-7q0-2.075 1.25-3.687T10.5 4.2v-.7q0-.625.438-1.062T12 2t1.063.438T13.5 3.5v.7q2 .5 3.25 2.113T18 10v7h2v2zm8 3q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22" />
                 </svg></a>
         </div>
 
-        <div id="dropdown" class=" hidden absolute top-16 right-5 mt-1 w-48  border-2 stroke-gray-300 bg-white">
+        <div id="dropdown" class=" h-[200px] hidden absolute top-16 right-5 mt-1 w-48  border-2 stroke-gray-300 bg-white overflow-y-auto">
             <div class="text-center font-noto text-sm ">
-                <h1>Notificaciones</h1>
+                <h1 class="pt-1"><strong>Notificaciones</strong></h1>
             </div>
 
-            <div>
-                <ul class="flex h-auto flex-col overflow-y-auto">
-                    <li>
-                        <a class="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-100"
-                            href="#">
-                            <p>Hola</p>
-                        </a>
-                    </li>
-                </ul>
+            <div class="p-6">
+                <ul class="flex h-auto flex-col gap-1">
+                    @if ($notifications->isNotEmpty())
+                        @foreach ($notifications as $notification)
+                            <li class="text-sm border-b-2 border-gray-300 py-3">
+                                @auth
+                                    @if (Auth::user()->role == 'cliente')
+                                    {{ $notification->data['message'] }} por el propietario de la peluqueria {{ $notification->data['hairdresser_name'] }}
+                                    @else
+                                    {{ $notification->data['message'] }} por el cliente {{ $notification->data['client_name'] }} en la 
+                                    peluqueria {{ $notification->data['hairdresser_name'] }}
+                                    @endif
+                                @endauth
+                                </li>
+                            @endforeach
+                        @else
+                            <li>No hay notificaciones</li>
+                        @endif
+                    </ul>
+                </div>
+
             </div>
 
+
+            <div class="p-2 flex items-center">
+                <div class="hidden">
+                    Spiderman
+                    @auth
+                        {{ Auth::user()->name }}
+                        {{ $user = Auth::user() }}
+                    @endauth
+                </div>
+
+
+                <x-images.image-rounded id="headerAvatar"
+                    src="{{ $user->avatar ? asset($user->avatar) : asset('storage/images/default_user_avatar.webp') }}"
+                    alt="Imagen de perfil" class="h-14 w-14">
+                </x-images.image-rounded>
+
+            </div>
         </div>
 
-        {{-- HAY QUE MODIFICAR QUE EL AVATAR SEA EL QUE RECIBE POR PARTE DEL USUARIO SI NO SE PONDRA UNA IMAGEN POR DEFECTO --}}
 
-        <div class="p-2 flex items-center">
-            <div class="hidden">
-                Spiderman
-                @auth
-                    {{ Auth::user()->name }}
-                    {{ $user = Auth::user() }}
-                @endauth
-            </div>
-
-
-            <x-image-rounded id="headerAvatar"
-                src="{{ $user->avatar ? asset($user->avatar) : asset('storage/images/default_user_avatar.webp') }}"
-                alt="Imagen de perfil" class="h-14 w-14">
-            </x-image-rounded>
-
-        </div>
-    </div>
-
-
-</header>
+    </header>

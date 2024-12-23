@@ -20,9 +20,8 @@ require __DIR__.'/auth.php';
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
-Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/about', [HomeController::class, 'aboutMe'])->name('aboutMe');
 
-Route::get('/aboutSantiago', [HomeController::class, 'aboutSantiago'])->name('aboutSantiago');
 
 
 

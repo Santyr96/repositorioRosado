@@ -1,10 +1,10 @@
 "use strict";
-import { initValidationsHairDresser } from "../../auth/validateHairDresser";
-import { initValidations } from "../../auth/validateProfile";
-import { tooglePasswordVisibility } from "../passwords/show_password";
-import { updateProfile } from "./profile/update_profile";
-import { storeHairDresser } from "./hairdresser/insertHairDresser";
-import { updateAvatar } from "./profile/update_avatar";
+import { initValidationsHairDresser } from "../../auth/validate-hairdresser";
+import { initValidations } from "../../auth/validate-profile";
+import { tooglePasswordVisibility } from "../passwords/show-password";
+import { updateProfile } from "./profile/update-profile";
+import { storeHairDresser } from "./hairdresser/insert-hairdresser";
+import { updateAvatar } from "./profile/update-avatar";
 import { showServices } from "./services-hair/services-manage";
 import { signupHairdresser } from "./signup/signup-hairdresser";
 import { showCalendar } from "./calendar/show-calendar";

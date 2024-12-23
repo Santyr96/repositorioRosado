@@ -1,11 +1,10 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
- 
   tooglePasswordVisibility();
-  
 });
 
+//Función que se encarga de mostrar u ocultar la contraseña.
 export function tooglePasswordVisibility(){
   
   //Se seleccionan los inputs de tipo password.

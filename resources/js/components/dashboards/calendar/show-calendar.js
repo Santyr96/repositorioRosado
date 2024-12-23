@@ -1,6 +1,6 @@
 "use strict";
 
-import { closeModal } from "../../modals/closeModal";
+import { closeModal } from "../../modals/close-modal";
 import { Calendar } from "@fullcalendar/core";
 import esLocale from "@fullcalendar/core/locales/es";
 import { modalAppointmentEditAndDelete } from "./modal-appointment-edit-and-delete";

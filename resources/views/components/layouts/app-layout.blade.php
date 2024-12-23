@@ -1,3 +1,6 @@
+@vite('resources/css/app.css')
+@vite('resources/js/components/layouts/flyout_menu.js')
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,14 +8,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @vite('resources/css/app.css')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
     <script src="https://kit.fontawesome.com/09f844330b.js" crossorigin="anonymous"></script>
-    @vite('resources/js/components/flyout_menu.js')
     <title>{{$title}}</title>
 </head>
 
@@ -37,7 +38,7 @@
                     Inicio
                 </a>
 
-                <a href="{{ route('aboutSantiago') }}"
+                <a href="{{ route('aboutMe') }}"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-bold leading-7
                      text-white text-shadow-bottom hover:text-purple-600">
                     Sobre mí
@@ -120,7 +121,7 @@
                         <div class="space-y-2 py-6">
                             <a href="{{ route('index') }}"
                                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Inicio</a>
-                            <a href="{{ route('aboutSantiago') }}"
+                            <a href="{{ route('aboutMe') }}"
                                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Sobre
                                 mí</a>
                             <a href="#solutions"
@@ -143,8 +144,8 @@
 
     {{ $slot }}
 
-    <x-footer>
-    </x-footer>
+    <x-footers.footer>
+    </x-footers.footer>
 
 </body>
 

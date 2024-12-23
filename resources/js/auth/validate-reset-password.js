@@ -1,7 +1,7 @@
 "use strict";
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.forms.fForm;
-
+    
     form.email.addEventListener("change", () => validateEmail(form.email));
     form.password.addEventListener("change", () =>
         validatePassword(form.password)
