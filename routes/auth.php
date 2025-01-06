@@ -42,15 +42,18 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/dashboard/updateProfile', [DashboardController::class, 'updateProfile'])->name('profile.updateProfile');
 
     //Rutas que se encarga de la gestión de los servicios de la peluqueria.
-    Route::get('/dashboard/select/hairdresser', [DashboardController::class, 'selectHairdresser'])->name('dashboard.selectHairdresser');
     Route::post('/dashboard/services', [DashboardController::class, 'showServices'])->name('dashboard.services');
     Route::post('/dashboard/createService', [DashboardController::class, 'createService'])->name('dashboard.createService');
     Route::post('/dashboard/updateService/{serviceId}', [DashboardController::class, 'updateService'])->name('dashboard.updateService');
     Route::post('/dashboard/deleteService/{serviceId}', [DashboardController::class, 'deleteService'])->name('dashboard.deleteService');
-    
+
+    //Ruta que se encarga de mostrar las pleuquerias del propietario.
+    Route::get('/dashboard/select/hairdresser', [DashboardController::class, 'selectHairdresser'])->name('dashboard.selectHairdresser');
+
     //Rutas que se encarga de la gestión de las peluquerias.
     Route::get('/dashboard/hairdresser',[DashboardController::class, 'hairdresser'])->name('dashboard.hairdresser');
-    Route::post('/dashboard/insertHairDresser',[DashboardController::class, 'storeHairDresser'])->name('dashboard.insertHairDresser');
+    Route::post('/dashboard/hairdresser/store',[DashboardController::class, 'storeHairDresser'])->name('dashboard.insertHairdresser');
+    Route::post('/dashboard/hairdresser/delete',[DashboardController::class, 'deleteHairdresser'])->name('dashboard.deleteHairdresser');
 
     //Rutas que se encargan de las gestión de las altas de los clientes a las peluquerias.
     Route::get('/dashboard/signUp/hairdresser', [DashboardController::class, 'showHairdressers'])->name('dashboard.showHairdressers');
@@ -61,7 +64,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::post('/dashboard/calendar', [CalendarController::class, 'showCalendar'])->name('dashboard.showCalendar');
 
     //Rutas que se encargan de la gestión de las citas.
-    Route::get('/dashboard/calendar/appointments/{hairdresserId}', [AppointmentController::class, 'indexAppointments'])->name('dashboard.clientAppointments');
+    Route::get('/dashboard/calendar/appointments/{hairdresserId}', [AppointmentController::class, 'indexAppointments'])->name('dashboard.showAppointments');
     Route::post('/dashboard/calendar/appointments/create', [AppointmentController::class, 'storeAppointment'])->name('dashboard.storeAppointment');
     Route::post('/dashboard/calendar/appointments/update', [AppointmentController::class, 'updateAppointment'])->name('dashboard.updateAppointment');
     Route::post('/dashboard/calendar/appointments/delete', [AppointmentController::class, 'deleteAppointment'])->name('dashboard.deleteAppointment');

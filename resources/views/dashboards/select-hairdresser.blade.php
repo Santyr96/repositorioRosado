@@ -2,9 +2,10 @@
     <x-modals.error-modal class="hidden xl:left-40" modalTitle="Error al enviar el formulario"
         modalMessage=""></x-modals.error-modal>
 
-        <h1 class="text-xl"><strong>Selecciona una peluquería a la que quiereas añadir servicios</strong></h1>
+        <h1 class="text-xl"><strong>Selecciona una peluquería</strong></h1>
         
-    <form name="fSelectHairdresserServices" method="POST" data-form="{{ route('dashboard.services') }}">
+    <form name="fSelectHairdresser" method="POST" data-select_services="{{ route('dashboard.services') }}" data-delete_hairdresser="{{route('dashboard.deleteHairdresser')}}"
+    data-reload="{{route('dashboard.selectHairdresser')}}">
         @csrf
         <select class="mb-4" name="hairdresser_id" id="peluquerias">
             <option value="">Selecciona peluqueria</option>

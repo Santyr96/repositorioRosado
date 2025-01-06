@@ -25,11 +25,13 @@
                     @auth
                         @if (Auth::user()->role == 'cliente')
                             <li>
-                                <a id="appointments" class="hover:text-gray-500" href="" data-url="{{ route('dashboard.selectSignup') }}">Mis citas</a>
+                                <a id="appointments" class="hover:text-gray-500" href=""
+                                    data-url="{{ route('dashboard.selectSignup') }}">Mis citas</a>
                             </li>
 
                             <li>
-                                <a id="signup" class="hover:text-gray-500" href="" data-url="{{ route('dashboard.showHairdressers') }}">Darse de alta en peluquería</a>
+                                <a id="signup" class="hover:text-gray-500" href=""
+                                    data-url="{{ route('dashboard.showHairdressers') }}">Darse de alta en peluquería</a>
                             </li>
                         @endif
 
@@ -41,8 +43,12 @@
                                 <a id="create-hairdresser" class="hover:text-gray-500" href="#"
                                     data-url="{{ route('dashboard.hairdresser') }}">Crear peluquería</a>
                             </li>
+                            <li>
+                                <a id="delete-hairdresser" class="hover:text-gray-500" href="#"
+                                data-url="{{ route('dashboard.selectHairdresser') }}">Eliminar peluquería</a>
+                            </li>
                             <li><a id="create-service" class="hover:text-gray-500" href="#"
-                                    data-url="{{ route('dashboard.selectHairdresser') }}">Crear servicios</a></li>
+                                    data-url="{{ route('dashboard.selectHairdresser') }}">Gestión de servicios</a></li>
 
                             <li><a id="manage-appointments" class="hover:text-gray-500" href="#"
                                     data-url="{{ route('dashboard.selectSignup') }}">Gestión de citas</a></li>

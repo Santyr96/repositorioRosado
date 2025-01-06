@@ -12,6 +12,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password as FacadesPassword;
+use Illuminate\Validation\ValidationException;
 
 //Clase que se encarga de controlar las vistas que tienen que ver con los usuarios.
 class UserController extends Controller
@@ -140,56 +141,63 @@ class UserController extends Controller
 
 
     //Función para el registro de un nuevo usuario.
-    public function store (Request $request){
-
-        try{
-
-        
-        //Validamos los datos.
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'phone' => 'numeric|min:9',
-            'dni' => 'required|regex:/^\d{8}[A-Za-z]$/',
-            'sex' => 'required|in:masculino,femenino',
-            'rol' => 'required|in:cliente,propietario',
-
-            //Utilizamos el objeto Password el cual nos facilita la validación de las contraseñas.
-            'password' => 'required|confirmed|', Password::min(8)->letters()->mixedCase()->numbers()->symbols(),
-            'password_confirmation' => 'required',
-        ]);
-
-        //Si los datos son correctos, creamos un nuevo usuario en la base de datos.
-      
-
-        //Creamos un nuevo objeto de la clase Model User.
-        $user = new User();
-
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->dni = $request->dni;
-        $user->sex = $request->sex;
-        $user->role = $request->rol;
-        $user->password = $request->password;
-
-        //Guardamos los cambios en la base de datos.
-        $user->save();
-
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect()->route('users.dashboard');
-
-    }catch(\Exception $e){
-        return back()->withErrors([
-            'general' => 'Hubo un problema al registrar el usuario. Inténtelo de nuevo. '
-        ]);
-        Log::error('Error al enviar el correo: ' . $e->getMessage());
-        Log::error('Detalles del error: ' . $e->getTraceAsString());
-}
+    public function store(Request $request)
+    {
+        try {
+            
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users',
+                'phone' => 'required|digits:9',
+                'dni' => 'required|regex:/^\d{8}[A-Za-z]$/|unique:users',
+                'sex' => 'required|in:masculino,femenino',
+                'rol' => 'required|in:cliente,propietario',
+                'password' => [
+                    'required',
+                    'confirmed',
+                    Password::min(8)
+                        ->letters()
+                        ->mixedCase()
+                        ->numbers()
+                        ->symbols(),
+                ],
+            ]);
+    
+            
+            $user = new User();
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->dni = $request->dni;
+            $user->sex = $request->sex;
+            $user->role = $request->rol;
+            $user->password = bcrypt($request->password); 
+    
+            
+            $user->save();
+    
+            
+            event(new Registered($user));
+            Auth::login($user);
+    
+            return redirect()->route('users.dashboard');
+    
+        }catch (ValidationException $e){
+            Log::error('Error al registrar el usuario: ' . $e->getMessage());
+            Log::error('Detalles del error: ' . $e->getTraceAsString());
+            return back()->withErrors([
+                'general' => 'Hubo un problema al registrar el usuario. '.$e->getMessage()
+            ])->withInput();
+            
+        } catch (\Exception $e) {
+            Log::error('Error al registrar el usuario: ' . $e->getMessage());
+            Log::error('Detalles del error: ' . $e->getTraceAsString());
+            return back()->withErrors([
+                'general' => 'Hubo un problema al registrar el usuario. Por favor, inténtelo de nuevo.'
+            ])->withInput();
+        }
     }
+    
 
 
     //Función para cerrar sesión.

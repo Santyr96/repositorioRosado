@@ -124,7 +124,7 @@
                             <a href="{{ route('aboutMe') }}"
                                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Sobre
                                 mí</a>
-                            <a href="#solutions"
+                            <a href="{{ url('/') . '#solutions' }}"
                                 class="-mx-3 block rounded-lg px-3 py-2 text-base font-noto font-semibold leading-7 text-gray-900 hover:bg-gray-50">Aplicación</a>
                         </div>
                         <div class="py-6">

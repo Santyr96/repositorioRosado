@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Hairdresser;
 use App\Models\Signup;
-use App\Models\Appointment;
 use App\Models\Service;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 //Clase que se encarga de controlar las vistas de calendario.
 class CalendarController extends Controller
@@ -34,24 +34,26 @@ class CalendarController extends Controller
         } else if (auth()->user()->role == 'propietario') {
             $hairdressers = Hairdresser::where('owner_id', auth()->user()->id)
             ->get();
-            Log::info('Hairdressers: ' . $hairdressers);
             return view('dashboards.select-signup', compact('hairdressers'));
         } 
-
     }
 
     //Funcion que se encarga de mostrar el calendario de la peluquería seleccionada.
     public function showCalendar(Request $request)
     {
        try{
-
+        
         //Se valida que se haya enviado el id de la peluquería.
         $request->validate([
-            'hairdresser_id' => 'required|exists:hairdressers,id', 
+            'hairdresser_id' => 'required|numeric', 
         ]);
     
         //Buscamos la peluqueria en la Base de Datos.
         $hairdresser = Hairdresser::find($request->hairdresser_id);
+
+        if(!$hairdresser){
+            return response()->json(['error' => 'Peluquería no encontrada'], 404);
+        }
 
         //Se obtienen los servicios de la peluquería.
         $services = Service::where('hairdresser_id', $request->hairdresser_id)->get();
@@ -61,6 +63,10 @@ class CalendarController extends Controller
     
         //Se devuelve la vista con los datos de los servicios la peluquería y los clientes asociados a esta.
         return view('dashboards.calendar', compact('services', 'hairdresser', 'clients'));
+
+        }catch(ValidationException $e){
+            Log::error('Error al mostrar el calendario: ' . $e->getMessage());
+            return response()->json(['error' => 'Error al mostrar el calendario'], 400);
 
         }catch(\Exception $e){
             Log::error('Error al mostrar el calendario: ' . $e->getMessage());

@@ -6,7 +6,7 @@
 
     <form class="flex flex-col gap-5 w-4/5 md:h-full
     " name="HairDresserForm" action="#" method="post"
-        data-form="{{ route('dashboard.insertHairDresser') }}">
+        data-form="{{ route('dashboard.insertHairdresser') }}">
         @csrf
 
         {{-- Input para introducir el nombre de la peluquería en el formulario --}}

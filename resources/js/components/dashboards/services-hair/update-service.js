@@ -13,32 +13,31 @@ export function updateService(urlView) {
     //Función que se encarga de abrir el modal de actualización de servicio.
     function openUpdateModal(trUpdate, url, urlView) {
         if (updateModal.classList.contains("hidden")) {
-            updateModal.children[0].children[0].classList.replace("bg-gray-600", "bg-purple-700");
-            updateModal.children[0].children[0].children[0].classList.add("bg-white");
+            updateModal.children[0].children[0].classList.replace(
+                "bg-gray-600",
+                "bg-purple-700"
+            );
+            updateModal.children[0].children[0].children[0].classList.add(
+                "bg-white"
+            );
             updateModal.id = "updateModal";
             updateChild.replaceChildren();
             updateChild.insertAdjacentHTML("afterbegin", createUpdateForm());
 
             updateModalTitle.textContent = "Actualización de servicio";
             updateModalTitle.classList.replace("text-white", "text-black");
-            updateModalMessage.textContent = "¿Quieres actualizar este servicio?";
+            updateModalMessage.textContent =
+                "¿Quieres actualizar este servicio?";
 
             fillUpdateForm(trUpdate, url);
-            initializeCloseButtons(urlView)
+            initializeCloseButtons();
         }
 
         updateModal.classList.toggle("hidden");
-        
     }
 
     //Función que se encarga de inicializar los botones de cerrar.
-    function initializeCloseButtons(urlView) {
-        const closeButtons = document.querySelectorAll("[data-modal-hide]");
-        closeButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                reloadServicesView(urlView);
-            });
-        });
+    function initializeCloseButtons() {
         closeModal();
     }
 
@@ -79,13 +78,15 @@ export function updateService(urlView) {
             dataMap.set(td.id, td.textContent.trim());
         });
 
-        
         const updateServiceModalForm = document.forms["fupdateServiceModal"];
         updateServiceModalForm.setAttribute("data-form", url);
-        updateServiceModalForm['name'].value = dataMap.get('tdName');
-        updateServiceModalForm['description'].value = dataMap.get('tdDescription');
-        const priceValue = parseFloat(String(dataMap.get('tdPrice')).replace(/\s+/g, '').replace('€', ''));
-        updateServiceModalForm['price'].value = priceValue;
+        updateServiceModalForm["name"].value = dataMap.get("tdName");
+        updateServiceModalForm["description"].value =
+            dataMap.get("tdDescription");
+        const priceValue = parseFloat(
+            String(dataMap.get("tdPrice")).replace(/\s+/g, "").replace("€", "")
+        );
+        updateServiceModalForm["price"].value = priceValue;
 
         updateServiceModalForm.addEventListener("submit", async function (e) {
             e.preventDefault();
@@ -94,7 +95,9 @@ export function updateService(urlView) {
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
                     },
                     body: formData,
                 });
@@ -104,14 +107,14 @@ export function updateService(urlView) {
                     throw new Error(`Error en la solicitud: ${data.error}`);
                 }
 
-                const data = await response.json();
-                console.log(data);
-                reloadServicesView(urlView);
-
+                await reloadServicesView(urlView);
+                
             } catch (error) {
                 console.error("Error:", error);
                 showErrorMessage(
-                    error.message || "Ocurrió un error al actualizar el servicio. Inténtalo nuevamente."
+                    error.message ||
+                        "Ocurrió un error al actualizar el servicio. Inténtalo nuevamente.",
+                    "Error al actualizar el servicio"
                 );
             }
         });
@@ -124,12 +127,14 @@ export function updateService(urlView) {
             e.preventDefault();
             const url = this.getAttribute("data-form");
             if (!url) {
-                console.error("La URL para actualizar un servicio no está disponible.");
+                console.error(
+                    "La URL para actualizar un servicio no está disponible."
+                );
                 showErrorMessage("Error interno. Intenta más tarde.");
                 return;
             }
 
-            openUpdateModal(trUpdate, url,urlView);
+            openUpdateModal(trUpdate, url, urlView);
         });
     });
 }

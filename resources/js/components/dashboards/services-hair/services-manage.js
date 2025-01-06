@@ -4,17 +4,17 @@ import { createService } from "./create-service";
 import { deleteService } from "./delete-service";
 import { updateService } from "./update-service";
 
-//Variable global para almacenar el id del peluquero seleccionado.
+//Variable global para almacenar el id de la peluquería seleccionada.
 let globalHairdresserId;
 
 //Función para mostrar los servicios de un peluquero.
 export function showServices() {
     //Se obtiene el contenedor donde se mostrará el contenido.
     const contentContainer = document.getElementById("content");
-    const selectHairdresser = document.forms["fSelectHairdresserServices"];
+    const selectHairdresser = document.forms["fSelectHairdresser"];
     selectHairdresser.addEventListener("submit", async function (event) {
         event.preventDefault();
-        const url = this.getAttribute("data-form");
+        const url = this.getAttribute("data-select_services");
         try {
             const formData = new FormData(this);
             globalHairdresserId = formData.get("hairdresser_id");
@@ -60,14 +60,14 @@ export function showServices() {
 }
 
 //Función para mostrar un mensaje de error.
-export function showErrorMessage(message) {
+export function showErrorMessage(message,title) {
     const modal = document.getElementById("errorModal");
     const errorMessageElement = modal.querySelector("p");
     const errorTitleElement = modal.querySelector("h3");
 
     //Sí existe el elemento para añadir el mensaje, le añadimos el mensaje.
     if (errorTitleElement) {
-        errorTitleElement.textContent = "Error al actualizar el formulario";
+        errorTitleElement.textContent = title;
     }
 
     //Sí existe el elemento para añadir el mensaje, le añadimos el mensaje.

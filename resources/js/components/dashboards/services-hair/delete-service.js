@@ -33,9 +33,7 @@ export function deleteService(urlView) {
                 throw new Error(`Error en la solicitud: ${data.error}`);
             }
 
-            
-            const data = await response.json();
-            reloadServicesView(urlView);
+            await reloadServicesView(urlView);
 
         } catch (error) {
             console.error("Error:", error);

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-layouts.app-layout>
     <x-slot:title>
         Registro
     </x-slot>
@@ -9,5 +9,5 @@
         </x-forms.sign>
     </main>
 
-</x-app-layout>
+</x-layouts.app-layout>
      

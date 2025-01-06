@@ -8,12 +8,14 @@ import { updateAvatar } from "./profile/update-avatar";
 import { showServices } from "./services-hair/services-manage";
 import { signupHairdresser } from "./signup/signup-hairdresser";
 import { showCalendar } from "./calendar/show-calendar";
+import { deleteHairdresser } from "./hairdresser/delete-hairdresser";
 
 document.addEventListener("DOMContentLoaded", function () {
     const extendButton = document.getElementById("extendButton");
     const adminPanel = document.querySelector("header #adminPanel");
     extendButton.setAttribute("tabindex", "0");
     const backButton = adminPanel.querySelector("header button");
+
     extendButton.addEventListener("click", function () {
         if (adminPanel.classList.contains("hidden")) {
             adminPanel.classList.remove("hidden");
@@ -62,6 +64,9 @@ export function loadView() {
                         case "create-hairdresser":
                             initValidationsHairDresser();
                             storeHairDresser();
+                            break;
+                        case "delete-hairdresser":
+                            deleteHairdresser();
                             break;
                         case "create-service":
                             showServices();

@@ -8,7 +8,7 @@ export function initValidationsHairDresser() {
     form.cif.addEventListener("change", () => validateCIF(form.cif));
     form.name.addEventListener("change", () => validateName(form.name));
     form.phone.addEventListener("change", () => validatePhone(form.phone));
-    form.address.addEventListener("change", () =>
+    form.address.addEventListener("keyup", () =>
         validateAddress(form.address)
     );
 }
@@ -84,8 +84,7 @@ function validatePhone(input) {
 //Función que se encarga de la validación de la dirección.
 function validateAddress(input) {
     //Se crea una expresión regular para que la dirección introducida tenga un patrón establecido -> Calle Mayor, 15, 28013, Madrid
-    const addressRegex =
-        /^(C\/|Calle )?[A-Za-zÀ-ÿ\s]+,\s?\d{1,3},\s?\d{5},\s?[A-Za-zÀ-ÿ\s]+$/;
+    const addressRegex = /^(C\/|Calle )?[A-Za-zÀ-ÿ\s]+,\s?\d{1,3},\s?\d{5},\s+[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/;
     //Si el campo esta vacio, se muestra mensaje al usuario.
     if (input.value === "") {
         showFeedBack(input, false, "La dirección no puede estar vacía.");

@@ -15,11 +15,11 @@
                 <div class="lg:w-[70%]">
                     <figure class="flex justify-center">
                         <x-images.imageRounded id="CVImage" src="storage/images/cv_image.png" alt="Imagen curriculum"
-                            class=" md:w-3/4 xl:w-1/2 ">
+                            class=" md:w-3/4 xl:w-[40%] xl:h-[40%] ">
                         </x-images.imageRounded>
                     </figure>
                 </div>
-                <div class="text-justify text-xl font-work 2xl:text-3xl leading-relaxed font-medium p-5 md:p-10 ">
+                <div class="text-justify text-xl font-work 2xl:text-xl 2xl:w-[80%] leading-relaxed font-medium p-5 md:p-10 ">
                     <p>
                         Me llamo Santiago Rosado Ruiz, soy desarrollador de aplicaciones web con una sólida formación en
                         Desarrollo de Aplicaciones Web, además de haber estudiado Geografía y Ordenación del Territorio

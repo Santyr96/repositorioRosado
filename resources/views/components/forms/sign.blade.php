@@ -1,13 +1,19 @@
 @vite('resources/js/auth/auth.js')
-@vite('resources/js/components/passwords/show_password.js')
-
-
+@vite('resources/js/components/passwords/show-password.js')
 
 @error('general')
 <x-modals.error-modal modalTitle="Error en el registro" modalMessage="{{ $message }}"></x-modals.error-modal>
 @enderror
 
-<section class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center  pb-12 h-auto xl:pb-0"
+@error('email')
+<x-modals.error-modal modalTitle="Error en el registro" modalMessage="{{ $message }}"></x-modals.error-modal>
+@enderror
+
+@error('dni')
+<x-modals.error-modal modalTitle="Error en el registro" modalMessage="{{ $message }}"></x-modals.error-modal>
+@enderror
+
+<section class="flex justify-center items-center xl:grid xl:grid-cols-2 xl:justify-items-center max-xl:pb-12 "
     id="login">
     <div class="hidden xl:flex flex-col font-work  text-center xl:px-6">
 
@@ -20,7 +26,7 @@
         </h2>
     </div>
 
-    <div class="xl:flex justify-center items-center w-4/5 md:max-xl:w-9/12 xl:h-full xl:w-full xl:bg-purple-600">
+    <div class="xl:flex justify-center items-center w-4/5 md:max-xl:w-9/12  xl:w-full xl:bg-purple-600">
         <div id="caja_sign"
             class="font-work border-black border-2 shadow-md shadow-black h-auto p-2 md:p-12 w-full  xl:w-4/5 xl:mt-10 xl:mb-10 xl:bg-white">
 

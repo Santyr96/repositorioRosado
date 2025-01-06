@@ -7,7 +7,6 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/components/flyout_menu.js',
             ],
             refresh: true,
         }),
@@ -15,6 +14,14 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': '/resources/js', 
+        },
+    },
+    build: {
+        onError: (error) => {
+            console.error('Error de construcción:', error);
+        },
+        onWarn: (warning) => {
+            console.warn('Advertencia de construcción:', warning);
         },
     },
 });

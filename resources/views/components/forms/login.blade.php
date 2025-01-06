@@ -1,5 +1,5 @@
 
-@vite('resources/js/components/passwords/show_password.js')
+@vite('resources/js/components/passwords/show-password.js')
 
 @error('general')
 <x-modals.error-modal modalTitle="Error al iniciar sesión" modalMessage="{{ $message }}"></x-modals.error-modal>

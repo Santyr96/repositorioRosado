@@ -21,8 +21,6 @@ export function createService(urlView) {
                 createModalTitle,
                 createModalMessage
             );
-            //Se inicializan los botones de cerrar.
-            initializeCloseButtons(urlView);
             //Se inicializa el formulario de creación de servicio.
             setupCreateServiceForm(createModal, urlView, inputIdHairdresser);
             createModal.classList.toggle("hidden");
@@ -76,16 +74,6 @@ function generateCreateFormHTML() {
     `;
 }
 
-//Función que se encarga de inicializar los botones de cerrar.
-function initializeCloseButtons(urlView) {
-    const closeButtons = document.querySelectorAll("[data-modal-hide]");
-    closeButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            reloadServicesView(urlView);
-        });
-    });
-    closeModal();
-}
 
 //Función que se encarga de inicializar el formulario de creación de servicio.
 function setupCreateServiceForm(modal, urlView, inputIdHairdresser) {
@@ -99,23 +87,22 @@ function setupCreateServiceForm(modal, urlView, inputIdHairdresser) {
 
         try {
             //Se envía la petición fetch con el formulario de creación de servicio.
-             submitCreateServiceForm(url, formData);
-            //Se recarga la vista de servicios.
-            reloadServicesView(urlView);
+            await submitCreateServiceForm(url, formData, urlView);
+            modal.classList.add('hidden');
+            
         } catch (error) {
-            console.error("Error:", error);
-            modal.classList.toggle("hidden");
+            modal.classList.add('hidden')
             showErrorMessage(
                 error.message ||
-                    "Ocurrió un error al crear el servicio. Inténtalo nuevamente."
+                    "Ocurrió un error al crear el servicio. Inténtalo nuevamente.", "Error al crear el servicio"
             );
         }
     });
 }
 
 //Función que se encarga de enviar la petición fetch con el formulario de creación de servicio.
-async function submitCreateServiceForm(url, formData) {
-    try {
+async function submitCreateServiceForm(url, formData, urlView) {
+    
         const response = await fetch(url, {
             method: "POST",
             headers: {
@@ -129,10 +116,9 @@ async function submitCreateServiceForm(url, formData) {
         if (!response.ok) {
             const data = await response.json();
             throw new Error(`Error en la solicitud: ${data.error}`);
+        } else{
+            await reloadServicesView(urlView);
         }
+       
 
-        return await response.json();
-    } catch (error) {
-        throw new Error(error.message || "Error al procesar la solicitud");
-    }
 }

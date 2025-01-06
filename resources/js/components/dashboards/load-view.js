@@ -9,6 +9,7 @@ import { updateProfile } from "./profile/update-profile";
 import { initValidationsHairDresser } from "../../auth/validate-hairdresser";
 import { initValidations } from "../../auth/validate-profile";
 import { storeHairDresser } from "./hairdresser/insert-hairdresser";
+import { deleteHairdresser } from "./hairdresser/delete-hairdresser";
 
 document.addEventListener("DOMContentLoaded", function () {
     const adminPanel = document.querySelector("aside #adminPanel");
@@ -44,6 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         break;
                     case "create-service":
                         showServices();
+                        break;
+                    case "delete-hairdresser":
+                        deleteHairdresser();
                         break;
                     case "signup":
                         signupHairdresser();

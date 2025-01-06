@@ -50,6 +50,8 @@ class AppointmentNotification extends Notification
             return $this->getMessage("registrado");
         case 'modificado':
             return $this->getMessage("modificado");
+        case 'confirmado':
+            return $this->getMessage("confirmado");
         case 'cancelado':
             return $this->getMessage("cancelado");
         case 'eliminado':
@@ -68,6 +70,8 @@ class AppointmentNotification extends Notification
                     return "Se ha registrado una nueva cita para ti  ";
                 case 'modificado':
                     return "Se ha modificado tu cita ";
+                case 'confirmado':
+                    return 'Se ha confirmado tu cita';
                 case 'cancelado':
                     return "Se ha cancelado tu cita  ";
                 case 'eliminado':

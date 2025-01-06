@@ -2,7 +2,7 @@
 @vite('resources/js/components/dashboards/admin-panel-extend.js')
 
 <header class="grid grid-cols-2 bg-gradient-to-r from-yellow-400 to-red-600 rounded-b-lg {{ $class }}">
-    <x-dashboards.admin-panel class="hidden">
+    <x-dashboards.admin-panel class="hidden xl:hidden  ">
 
     </x-dashboards.admin-panel>
     <div class="flex justify-start items-center gap-3">

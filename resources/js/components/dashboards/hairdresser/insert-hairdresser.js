@@ -4,16 +4,16 @@ import { closeModal } from "../../modals/close-modal";
 
 
 export function storeHairDresser() {
-    const profileForm = document.forms["HairDresserForm"];
-    const inputs = profileForm.querySelectorAll("input");
+    const hairDresserForm = document.forms["HairDresserForm"];
+    const inputs = hairDresserForm.querySelectorAll("input");
     const span = document.querySelectorAll("span");
 
     //Se envía las respuestas del formulario al servidor.
-    profileForm.addEventListener("submit", async function (e) {
+    hairDresserForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         //Creación del objeto FormData que se encargará de enviar el valor de los campos al servidor.
-        const formData = new FormData(profileForm);
+        const formData = new FormData(hairDresserForm);
 
         //Se imprime en consola los valores de los campos del formulario, para saber que se envia.
         for (const [key, value] of formData.entries()) {
@@ -45,10 +45,8 @@ export function storeHairDresser() {
 
             //Si no hay respuesta se envia un error.
             if (!response.ok) {
-                console.log(response.json);
                 const data = await response.json();
-                console.log(data);
-                throw new Error(`Error en la solicitud: ${response.status}`);
+                throw new Error(data.error);
             }
 
             const data = await response.json();
@@ -73,7 +71,7 @@ export function storeHairDresser() {
             }
         } catch (error) {
             console.error("Error:", error);
-            showErrorMessage("Ocurrió un error al crear la peluquería. Intentalo nuevamente.");
+            showErrorMessage(error);
             inputs.forEach((input) => {
                 input.value = "";
             });
@@ -87,11 +85,17 @@ export function storeHairDresser() {
 function showErrorMessage(message) {
     const modal = document.getElementById("errorModal");
     const errorMessageElement = modal.querySelector('p');
+    const errorModalTitle = document.getElementById('errorModalTitle');
 
     //Sí existe el elemento para añadir el mensaje, le añadimos el mensaje.
     if (errorMessageElement) {
         errorMessageElement.textContent = message;
     }
+
+    if(errorModalTitle){
+        errorModalTitle.textContent = "Error al envíar el formulario";
+    }
+
     //Si el modal existe, se muestra al usuario.
     if (modal) {
         modal.classList.toggle("hidden");

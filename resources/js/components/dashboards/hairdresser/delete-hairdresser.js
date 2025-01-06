@@ -1,29 +1,32 @@
 "use strict";
 
 import { closeModal } from "../../modals/close-modal";
+import { reloadServicesView } from "../services-hair/services-manage";
+import { reloadHairdresserView } from "./reload-select-hairdresser-view";
 
-export function updateProfile() {
-    const profileForm = document.forms["fForm"];
-    const spans = document.querySelectorAll(".validate-span");
+
+export function deleteHairdresser() {
+    const deleteHairdresserForm = document.forms["fSelectHairdresser"];
 
     //Se envía las respuestas del formulario al servidor.
-    profileForm.addEventListener("submit", async function (e) {
+    deleteHairdresserForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         //Creación del objeto FormData que se encargará de enviar el valor de los campos al servidor.
-        const formData = new FormData(profileForm);
+        const formData = new FormData(deleteHairdresserForm);
 
+        //Obtenemos la url de la vista del formulario para realizar la recarga dinámica de la página una vez se ha eliminado la peluqueria.
+        const urlReloadView = this.getAttribute('data-reload');
 
         try {
             //Se obtiene la url a la cuál se enviará el formulario.
-            const url = this.getAttribute("data-form");
+            const url = this.getAttribute("data-delete_hairdresser");
 
             //Si no existe la url lo registramos en la consola para saber que existe el problema.
             if (!url) {
-                console.error("La URL para actualizar el perfil no está definida.");
+                console.error("La URL para insertar una peluquería en la base de datos no esta disponible.");
                 showErrorMessage("Error interno. Intenta más tarde.");
             }
-
             //Se obtiene la respuesta asincrona utilizando await junto con fetch.
             const response = await fetch(url, {
                 method: "POST",
@@ -44,16 +47,7 @@ export function updateProfile() {
             }
 
             const data = await response.json();
-
-            //Se realiza la carga dinámica de los inputs para que aparezcan los nuevos datos introducidos en el formulario.
-            if (data) {
-                showSuccessfulMessage(data.success);
-                spans.forEach((span) => {
-                    span.textContent = "";
-                });
-            } else {
-                showErrorMessage("Error al actualizar el perfil.");
-            }
+            showSuccessfulMessage(data.success,urlReloadView);
         } catch (error) {
             showErrorMessage(error);
         }
@@ -82,23 +76,30 @@ function showErrorMessage(message) {
     //Se llama a la función para cerrar el modal.
     closeModal();
 }
-function showSuccessfulMessage(message) {
+function showSuccessfulMessage(message,url) {
     const modal = document.getElementById("errorModal");
     const successMessageElement = modal.querySelector('p');
-    const modalTitle = document.getElementById('errorModalTitle');
+    const successTitleElement = modal.querySelector('h3');
+    const errorButton = document.querySelector('.errorButton')
 
     //Sí existe el elemento para añadir el mensaje, le añadimos el mensaje.
     if (successMessageElement) {
         successMessageElement.textContent = message;
     }
 
-    if (modalTitle) {
-        modalTitle.textContent = "¡Éxito!";
+    if(successTitleElement){
+        successTitleElement.textContent = "¡Éxito!";
     }
     //Si el modal existe, se muestra al usuario.
     if (modal) {
         modal.classList.toggle("hidden");
     }
+
+    errorButton.addEventListener('click', function(){
+        reloadHairdresserView(url);
+    })
+
     //Se llama a la función para cerrar el modal.
     closeModal();
 }
+

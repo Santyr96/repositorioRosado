@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Notifications\AppointmentNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 //Clase que se encarga de controlar las citas.
 class AppointmentController extends Controller
@@ -18,6 +19,7 @@ class AppointmentController extends Controller
     {
         try {
             $user = auth()->user();
+
 
             if (auth()->user()->role == 'cliente') {
 
@@ -89,12 +91,8 @@ class AppointmentController extends Controller
                     $events = $userEvents->merge($otherEvents);
                 }
 
-
-
                 //Se retorna las citas en formato JSON.
-                Log::info('Citas obtenidas correctamente ', $events->toArray());
                 return response()->json($events);
-
             } else if (auth()->user()->role == 'propietario') {
                 //Se obtienen todas las citas de la peluquería.
                 $hairdresserAppointments = Appointment::where('hairdresser_id', $hairdresser_id)->get();
@@ -144,7 +142,6 @@ class AppointmentController extends Controller
 
             //Si el usuario es propietario se valida también el nombre del cliente.
             if (auth()->user()->role == 'propietario') {
-                Log::info('Datos enviados en el Request:', $request->all());
                 $request->validate([
                     'client' => 'string|max:255',
                 ]);
@@ -167,17 +164,20 @@ class AppointmentController extends Controller
             //Comprobamos que no exista una cita en ese horario. Si tienen el estatus de cancelado si se pueden asignar las citas ahi.
             $existingAppointment = Appointment::where('hairdresser_id', $request->hairdresser_id)
                 ->where(function ($query) use ($request) {
-                    $query->whereBetween('start', [$request->start, $request->end])
-                        ->orWhereBetween('end', [$request->start, $request->end])
+                    $query->where(function ($query) use ($request) {
+                        $query->where('start', '<', $request->end)
+                            ->where('end', '>', $request->start);
+                    })
                         ->orWhere(function ($query) use ($request) {
                             $query->where('start', '<=', $request->start)
                                 ->where('end', '>=', $request->end);
                         });
                 })
-                ->where('status', '!=', 'cancelado')  // Excluimos las citas canceladas
-                ->whereIn('status', ['pendiente', 'confirmado'])  // Solo incluimos las citas con estos estados
+                ->where('status', '!=', 'cancelado')
+                ->whereIn('status', ['pendiente', 'confirmado'])
                 ->where('id', '!=', $request->id_appointment)
                 ->first();
+
 
             if ($existingAppointment) {
                 Log::error('Ya existe una cita en ese horario.');
@@ -209,13 +209,13 @@ class AppointmentController extends Controller
             if (auth()->user()->role == 'propietario') {
                 if ($appointment->client_id) {
                     $client = User::where('id', $appointment->client_id)->first();
-                    $client->notify(new AppointmentNotification($appointment, 'registrado',true));
+                    $client->notify(new AppointmentNotification($appointment, 'registrado', true));
                 }
             } else if (auth()->user()->role == 'cliente') {
                 $hairdresser = Hairdresser::where('id', $appointment->hairdresser_id)->first();
                 $owner_id = $hairdresser->owner_id;
                 $owner = User::where('id', $owner_id)->first();
-                $owner->notify(new AppointmentNotification($appointment, 'registrado',false));
+                $owner->notify(new AppointmentNotification($appointment, 'registrado', false));
             }
 
 
@@ -227,7 +227,10 @@ class AppointmentController extends Controller
 
             //Si todo va bien, se envía un mensaje de exito al usuario.
             Log::info('Cita creada correctamente.');
-            return response()->json(['message' => 'Cita creada correctamente']);
+            return response()->json(['message' => 'Cita creada correctamente'], 201);
+        } catch (ValidationException $e) {
+            Log::error('Error al crear la cita: ' . $e->getMessage());
+            return response()->json(['error' => 'Ha ocurrido en la validación de los datos'], 400);
         } catch (\Exception $e) {
             Log::error('Error al crear la cita: ' . $e->getMessage());
             return response()->json(['error' => 'Ha ocurrido un error al procesar la solicitud'], 500);
@@ -254,18 +257,21 @@ class AppointmentController extends Controller
             $end = Carbon::parse($request->end)->format('Y-m-d H:i:s');
 
             $existingAppointment = Appointment::where('hairdresser_id', $request->hairdresser_id)
-                ->where(function ($query) use ($start, $end) {
-                    $query->whereBetween('start', [$start, $end])
-                        ->orWhereBetween('end', [$start, $end])
-                        ->orWhere(function ($query) use ($start, $end) {
-                            $query->where('start', '<=', $start)
-                                ->where('end', '>=', $end);
+                ->where(function ($query) use ($request) {
+                    $query->where(function ($query) use ($request) {
+                        $query->where('start', '<', $request->end)
+                            ->where('end', '>', $request->start);
+                    })
+                        ->orWhere(function ($query) use ($request) {
+                            $query->where('start', '<=', $request->start)
+                                ->where('end', '>=', $request->end);
                         });
                 })
-                ->where('status', '!=', 'cancelado')  // Excluimos las citas canceladas
-                ->whereIn('status', ['pendiente', 'confirmado'])  // Solo incluimos las citas con estos estados
+                ->where('status', '!=', 'cancelado')
+                ->whereIn('status', ['pendiente', 'confirmado'])
                 ->where('id', '!=', $request->id_appointment)
                 ->first();
+
 
             if ($existingAppointment) {
                 Log::error('Ya existe una cita en ese horario.');
@@ -294,17 +300,20 @@ class AppointmentController extends Controller
                 if ($appointment->client_id) {
                     if ($request->input('status') == 'cancelado') {
                         $client = User::where('id', $appointment->client_id)->first();
-                        $client->notify(new AppointmentNotification($appointment, 'cancelado',true));
+                        $client->notify(new AppointmentNotification($appointment, 'cancelado', true));
+                    } else if($request->input('status') == 'confirmado'){
+                        $client = User::where('id', $appointment->client_id)->first();
+                        $client->notify(new AppointmentNotification($appointment, 'confirmado', true));
                     } else {
                         $client = User::where('id', $appointment->client_id)->first();
-                        $client->notify(new AppointmentNotification($appointment, 'modificado',true));
+                        $client->notify(new AppointmentNotification($appointment, 'modificado', true));
                     }
                 }
             } else if (auth()->user()->role == 'cliente') {
                 $hairdresser = Hairdresser::where('id', $appointment->hairdresser_id)->first();
                 $owner_id = $hairdresser->owner_id;
                 $owner = User::where('id', $owner_id)->first();
-                $owner->notify(new AppointmentNotification($appointment, 'modificado',false));
+                $owner->notify(new AppointmentNotification($appointment, 'modificado', false));
             }
 
             //Se comprueba que se ha modificado alguna fila en nuestra base de datos, si no, enviamos un error al usuario.
@@ -316,6 +325,9 @@ class AppointmentController extends Controller
             //Si todo va bien, se envía un mensaje de exito al usuario.
             Log::info('Cita actualizada correctamente.');
             return response()->json(['message' => 'Cita actualizada correctamente']);
+        } catch (ValidationException $e) {
+            Log::error('Error al actualizar la cita: ' . $e->getMessage());
+            return response()->json(['error' => 'Ha ocurrido un error en la validación de los datos'], 400);
         } catch (\Exception $e) {
             Log::error('Error al actualizar la cita: ' . $e->getMessage());
             return response()->json(['error' => 'Ocurrió un error al actualizar la cita: ' . $e->getMessage()], 500);
@@ -340,19 +352,18 @@ class AppointmentController extends Controller
             if (auth()->user()->role == 'propietario') {
                 if ($appointment->client_id) {
                     $client = User::where('id', $appointment->client_id)->first();
-                    $client->notify(new AppointmentNotification($appointment, 'eliminado',true));
+                    $client->notify(new AppointmentNotification($appointment, 'eliminado', true));
                 }
             } else if (auth()->user()->role == 'cliente') {
                 $hairdresser = Hairdresser::where('id', $appointment->hairdresser_id)->first();
                 $owner_id = $hairdresser->owner_id;
                 $owner = User::where('id', $owner_id)->first();
-                $owner->notify(new AppointmentNotification($appointment, 'eliminado',false));
+                $owner->notify(new AppointmentNotification($appointment, 'eliminado', false));
             }
 
             //Si todo va bien, se envía un mensaje de exito al usuario.
             Log::info('Cita eliminada correctamente.');
             return response()->json(['message' => 'Cita eliminada correctamente']);
-            
         } catch (\Exception $e) {
             Log::error('Error al eliminar la cita: ' . $e->getMessage());
             //Se maneja cualquier error que pueda ocurrir.

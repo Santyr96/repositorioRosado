@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     form.password.addEventListener("change", () =>
         validatePassword(form.password)
     );
-    form.password_confirmation.addEventListener("change", () =>
+    form.password_confirmation.addEventListener("keyup", () =>
         validateConfirmPassword(form.password_confirmation, form.password)
     );
     form.dni.addEventListener("change", () => validateDNI(form.dni));

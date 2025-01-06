@@ -9,6 +9,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+
+use function PHPUnit\Framework\isEmpty;
 
 //Clase que se encarga de controlar las vistas del dashboard.
 class DashboardController extends Controller
@@ -76,11 +79,10 @@ class DashboardController extends Controller
         }
         if (auth()->user()->role == 'propietario') {
             $hairdressers = Hairdresser::where('owner_id', auth()->user()->id)
-            ->get();
+                ->get();
             Log::info('Hairdressers: ' . $hairdressers);
             return view('dashboards.select-hairdresser', compact('hairdressers'));
-        } 
-
+        }
     }
 
     //Función que se encarga de mostrar la vista de peluquerías para que los clientes se den de alta.
@@ -94,7 +96,7 @@ class DashboardController extends Controller
 
         //Se obtiene la lista de las peluquerías en las que el cliente se ha dado de alta.
         $signups = Signup::where('client_id', $user->id)
-            ->pluck('hairdresser_id'); // Esto devuelve un array de IDs
+            ->pluck('hairdresser_id');
 
         //Se obtiene las peluquerías correspondientes a los IDs de $signups.
         $hairdressersSignedUp = Hairdresser::whereIn('id', $signups)
@@ -141,52 +143,65 @@ class DashboardController extends Controller
     }
 
     //Función que se encarga de actualizar el perfil del usuario.
-    public function updateProfile(Request $request)
-    {
-        /** @var \App\Models\User $user */
-        $user = auth()->user();
+public function updateProfile(Request $request)
+{
+    /** @var \App\Models\User $user */
+    $user = auth()->user();
+    $changesMade = false;
 
-        try {
-            //Validamos los datos del formulario.
-            $request->validate([
-                'name' => 'string',
-                'dni' => 'regex:/^\d{8}[A-Za-z]$/',
-                'phone' => 'numeric|min:9',
-
-                //Utilizamos el objeto Password el cual nos facilita la validación de las contraseñas.
-                'password' => 'confirmed|',
-                Password::min(8)->letters()->mixedCase()->numbers()->symbols(),
-                'password_confirmation'
-            ]);
-
-            //Actualizamos el perfil del usuario.
-
-            //Se ha de comprobar que el campo enviado no este vacío, ya que puede ser que el usaurio haya querido actualizar solo agunos cammpos.
-            if ($request->name != '' && $request->name != $user->name) {
-                $user->name = $request->name;
-            }
-
-            if ($request->dni != '' && $request->dni != $user->dni) {
-                $user->dni = $request->dni;
-            }
-
-            if ($request->phone != '' && $request->phone != $user->phone) {
-                $user->phone = $request->phone;
-            }
-
-            if ($request->password != '' && $request->password != $user->password) {
-                $user->password = $request->password;
-            }
-
-            $user->save();
-
-            //Se devuelve una respuesta en formato JSON con un mensaje de éxito.
-            return response()->json(['success' => 'Perfil actualizado correctamente'], 200);
-        } catch (\Exception $e) {
-            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
-            return response()->json(['error' => $e->getMessage()], 400);
-        }
+    if (!$user) {
+        return response()->json(['error' => 'Usuario no autenticado'], 401);
     }
+
+    try {
+        $request->validate([
+            'name' => 'nullable|string',
+            'dni' => 'nullable|regex:/^\d{8}[A-Za-z]$/',
+            'phone' => 'nullable|numeric|digits:9',
+            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+        ]);
+
+        if ($request->filled('name') && $request->name !== $user->name) {
+            $user->name = $request->name;
+            $changesMade = true;
+        }
+
+        if ($request->filled('dni') && $request->dni !== $user->dni) {
+            Log::info("Hola");
+            $user->dni = $request->dni;
+            $changesMade = true;
+        }
+
+        if ($request->filled('phone') && $request->phone !== $user->phone) {
+            $user->phone = $request->phone;
+            $changesMade = true;
+        }
+
+        if ($request->filled('password')) {
+            if (!password_verify($request->password, $user->password)) {
+                $user->password = bcrypt($request->password);
+                $changesMade = true;
+            }
+        }
+
+        
+        if (!$changesMade) {
+            return response()->json(['error' => 'No se realizaron cambios en el perfil'], 400);
+        }  
+
+        $user->save();
+
+       
+        return response()->json(['success' => 'Perfil actualizado correctamente'], 200);
+    } catch (ValidationException $e) {
+        
+        return response()->json(['error' => $e->validator->errors()->first()], 400);
+    } catch (\Exception $e) {
+        Log::error('Error al actualizar: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+        return response()->json(['error' => 'Ocurrió un error inesperado.'], 500);
+    }
+}
+
 
     //Función que se encarga de añadir una peluquería en nuestra base de datos.
     public function storeHairDresser(Request $request)
@@ -194,16 +209,21 @@ class DashboardController extends Controller
 
         $user = auth()->user();
 
+        if ($user->role != 'propietario') {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción'], 403);
+        }
+
         try {
             $request->validate([
                 'cif' => 'required|regex:/^[ABCDEFGHJKLMNPQRSUVW]\d{8}$/',
                 'name' => 'required|string|max:50',
                 'address' => ['required', 'string', 'regex:/^(C\/|Calle )?[A-Za-zÀ-ÿ\s]+,\s?\d{1,3},\s?\d{5},\s?[A-Za-zÀ-ÿ\s]+$/'],
                 'phone' => 'required|digits:9',
-                'latitude' => ['required', 'regex:/^[-+]?((\d|[1-8]\d)(\.\d+)?|90(\.0+)?)$/'],
-                'longitude' => ['required', 'regex:/^[-+]?((\d|[1-9]\d|1[0-7]\d)(\.\d+)?|180(\.0+)?)$/']
             ]);
 
+            if (Hairdresser::where('cif', $request->cif)->exists()) {
+                return response()->json(['error' => 'Ya existe una peluquería registrada con este CIF'], 400);
+            }
 
             //Si los datos son correctos, se añade la peluquería a la base de datos.
             //Se crea una nueva instancia del modelo HairDresser para añadir datos a la tabla.
@@ -213,8 +233,6 @@ class DashboardController extends Controller
             $hairdresser->name = $request->name;
             $hairdresser->address = $request->address;
             $hairdresser->phone = $request->phone;
-            $hairdresser->latitude = $request->latitude;
-            $hairdresser->longitude = $request->longitude;
             $hairdresser->owner_id = $user->id;
 
             //Se guardan los cambios en la base de datos.
@@ -222,10 +240,39 @@ class DashboardController extends Controller
 
             //Se retorna una respuesta en formato JSON con un mensaje de éxito.
             return response()->json(['success' => 'Peluquería añadida correctamente'], 200);
+        } catch (ValidationException $e) {
+            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
+            return response()->json(['error' => $e->getMessage()], 400);
         } catch (Exception $e) {
             //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
             Log::error('Error al añadir peluquería: ' . $e->getMessage() . '--' . $e->getTraceAsString());
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    //Función para eliminar una peluquería.
+    public function deleteHairdresser(Request $request){
+        try{
+            if (empty($request->hairdresser_id)) {
+                return response()->json(['error' => 'No has seleccionado ninguna peluquería'], 400); 
+            }
+            
+
+            $hairdresser = Hairdresser::find($request->hairdresser_id);
+
+            if(!$hairdresser){
+                return response()->json(['error' => 'Peluquería no encontrada'], 404);
+            }
+
+            //Se elimina el servicio.
+            $hairdresser->delete();
+
+            //Se retorna una respuesta en formato JSON con un mensaje de éxito.
+            return response()->json(['success' => 'Peluquería eliminada correctamente'], 200);
+
+        }catch(Exception $e){
+            Log::error('Error al eliminar la peluquería -> ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -233,6 +280,12 @@ class DashboardController extends Controller
     public function createService(Request $request)
     {
         try {
+
+            $user = auth()->user();
+            if ($user->role != 'propietario') {
+                return response()->json(['error' => 'No tienes permisos para realizar esta acción'], 403);
+            }
+
             $request->validate([
                 'name' => 'required|string|max:50',
                 'price' => 'required|decimal:2|min:0',
@@ -252,10 +305,13 @@ class DashboardController extends Controller
 
             //Se retorna una respuesta en formato JSON con un mensaje de éxito.
             return response()->json(['success' => 'Servicio añadido correctamente'], 200);
+        } catch (ValidationException $e) {
+            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
+            return response()->json(['error' => $e->getMessage()], 400);
         } catch (Exception $e) {
             //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
             Log::error('Error al añadir servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -263,6 +319,13 @@ class DashboardController extends Controller
     public function updateService(Request $request, $serviceId)
     {
         try {
+
+            $user = auth()->user();
+
+            if ($user->role != 'propietario') {
+                return response()->json(['error' => 'No tienes permisos para realizar esta acción'], 403);
+            }
+
             $request->validate([
                 'name' => 'required|string|max:50',
                 'price' => 'required|decimal:2|min:0',
@@ -271,6 +334,10 @@ class DashboardController extends Controller
 
             //Se obtiene el servicio a actualizar.
             $service = Service::find($serviceId);
+
+            if (!$service) {
+                return response()->json(['error' => 'Servicio no encontrado'], 404);
+            }
 
             //Se actualizan los datos del servicio.
             if ($request->name != '' && $request->name != $service->name) {
@@ -290,10 +357,14 @@ class DashboardController extends Controller
 
             //Se retorna una respuesta en formato JSON con un mensaje de éxito.
             return response()->json(['success' => 'Servicio actualizado correctamente'], 200);
+        } catch (ValidationException $e) {
+            Log::error('Error al actualizar servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
+            return response()->json(['error' => $e->getMessage()], 400);
         } catch (Exception $e) {
             //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
             Log::error('Error al actualizar servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -301,8 +372,17 @@ class DashboardController extends Controller
     public function deleteService($serviceId)
     {
         try {
+            $user = auth()->user();
+            if ($user->role != 'propietario') {
+                return response()->json(['error' => 'No tienes permisos para realizar esta acción'], 403);
+            }
+
             //Se obtiene el servicio a eliminar.
             $service = Service::find($serviceId);
+
+            if (!$service) {
+                return response()->json(['error' => 'Servicio no encontrado'], 404);
+            }
 
             //Se elimina el servicio.
             $service->delete();
@@ -312,34 +392,44 @@ class DashboardController extends Controller
         } catch (Exception $e) {
             //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
             Log::error('Error al eliminar servicio: ' . $e->getMessage() . '--' . $e->getTraceAsString());
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     //Función que se encarga de registar una nueva alta en una peluqueria.
     public function signupHairdresser(Request $request)
     {
-        //Seleccionamos la peluqueria con la id del cliente, y que coincida con el id enviado en el request.
-        $signupSelect = Signup::where('client_id', auth()->user()->id)
-            ->where('hairdresser_id', $request->hairdresser_id)
-            ->first();
-
-        //Si el request viene vacio, se retorna un error.
-        if ($request->hairdresser_id == '' || $request->hairdresser_id == null) {
-            return response()->json(['error' => 'No se ha seleccionado ninguna peluquería'], 400);
-        };
-
-        if($signupSelect != null){
-        if ($request->hairdresser_id == $signupSelect->hairdresser_id) {
-            return response()->json(['error' => 'Ya te has dado de alta en la peluquería'], 400);
-        };
+        auth()->user();
+        if (auth()->user()->role != 'cliente') {
+            return response()->json(['error' => 'No tienes permisos para realizar esta acción'], 403);
         }
-        
 
         try {
+
+            //Si el request viene vacio, se retorna un error.
+            if ($request->hairdresser_id == '' || $request->hairdresser_id == null) {
+                return response()->json(['error' => 'No se ha seleccionado ninguna peluquería'], 400);
+            };
+
             $request->validate([
                 'hairdresser_id' => 'required|integer',
             ]);
+
+            //Seleccionamos la peluqueria con la id del cliente, y que coincida con el id enviado en el request.
+            $signupSelect = Signup::where('client_id', auth()->user()->id)
+                ->where('hairdresser_id', $request->hairdresser_id)
+                ->first();
+
+            $hairdresser = Hairdresser::find($request->hairdresser_id);
+            if (!$hairdresser) {
+                return response()->json(['error' => 'Peluquería no encontrada'], 404);
+            }
+
+            if ($signupSelect != null) {
+                if ($request->hairdresser_id == $signupSelect->hairdresser_id) {
+                    return response()->json(['error' => 'Ya te has dado de alta en la peluquería'], 400);
+                };
+            }
 
             //Se crea una nueva instancia del modelo Signup para añadir datos a la tabla.
             $signup = new Signup();
@@ -352,14 +442,13 @@ class DashboardController extends Controller
 
             //Se retorna una respuesta en formato JSON con un mensaje de éxito.
             return response()->json(['success' => 'Se ha dado de alta correctamente'], 200);
+        } catch (ValidationException $e) {
+            //Si ocurre un error, se devuelve una respuesta en formato JSON con el mensaje de error.
+            return response()->json(['error' => $e->getMessage()], 400);
         } catch (Exception $e) {
-            Log::info($request);
             Log::error('Error al realizar alta: ' . $e->getMessage() . '--' . $e->getTraceAsString());
             //Se retorna una respuesta en formato JSON con un mensaje de error.
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-
-    
 }

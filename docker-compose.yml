@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: hairbooker_web
+    ports:
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
+    networks:
+      - hairbooker_network
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    container_name: hairbooker_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: hairbooker
+      MYSQL_USER: adminrosado
+      MYSQL_PASSWORD: rosadoruiz
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - hairbooker_network
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_USER: adminrosado
+      PMA_PASSWORD: rosadoruiz
+    networks:
+      - hairbooker_network
+    depends_on:
+      - db
+
+networks:
+  hairbooker_network:
+    driver: bridge
+
+volumes:
+  db_data:

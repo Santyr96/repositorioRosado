@@ -3,7 +3,7 @@
         Inicio
     </x-slot>
 
-    <main">
+    <main>
         <section class="grid grid-rows-1  xl:grid-cols-[40%,60%]  max-lg:lg:ml-8  w-full xl:pt-12">
             <div class="mensaje flex flex-col gap-10 items-center py-20 font-noto font-bold">
                 <h1 class="text-center text-5xl/relaxed md:text-6xl/loose md:p-11 lg:text-6xl/relaxed">
