@@ -1,5 +1,5 @@
 @vite('resources/css/app.css')
-@vite('resources/js/components/layouts/flyout_menu.js')
+@vite('resources/js/app.js')
 
 <!DOCTYPE html>
 <html lang="es">
