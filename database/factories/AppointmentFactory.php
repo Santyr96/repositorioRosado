@@ -26,7 +26,6 @@ class AppointmentFactory extends Factory
         'hairdresser_id' => Hairdresser::factory(),
         'start' => $this->faker->dateTimeBetween('now', '+1 month'),
         'end' => function (array $attributes) {
-            // Convertimos $attributes['start'] a string con el formato adecuado
             $start = $attributes['start']->format('Y-m-d H:i:s');
             return date('Y-m-d H:i:s', strtotime('+1 hour', strtotime($start)));
         },

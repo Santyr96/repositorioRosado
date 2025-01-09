@@ -20,7 +20,6 @@ class AppointmentController extends Controller
         try {
             $user = auth()->user();
 
-
             if (auth()->user()->role == 'cliente') {
 
                 //Consulta para obtener las citas del usuario actual en peluqueria dada.
@@ -206,6 +205,7 @@ class AppointmentController extends Controller
             ]);
 
 
+            //Comprobamos si el usuario tiene el rol de propietario o cliente con el objetivo de enviar la notificación a uno u otro.
             if (auth()->user()->role == 'propietario') {
                 if ($appointment->client_id) {
                     $client = User::where('id', $appointment->client_id)->first();
@@ -242,6 +242,7 @@ class AppointmentController extends Controller
     {
         try {
 
+            //Buscamos la peluquería y la cita en la base de datos.
             $hairdresser = Hairdresser::find($request->hairdresser_id);
             $appointment = Appointment::find($request->id_appointment);
 
@@ -253,6 +254,7 @@ class AppointmentController extends Controller
                 'service' => 'required|exists:services,id',
             ]);
 
+            //Se pasan las fechas a un formato adecuado para FullCalendar.
             $start = Carbon::parse($request->start)->format('Y-m-d H:i:s');
             $end = Carbon::parse($request->end)->format('Y-m-d H:i:s');
 
@@ -296,6 +298,7 @@ class AppointmentController extends Controller
                 'service_id' => $request->input('service'),
             ]);
 
+            //Comprobamos si el usuario tiene el rol de propietario o cliente con el objetivo de enviar la notificación a uno u otro.
             if (auth()->user()->role == 'propietario') {
                 if ($appointment->client_id) {
                     if ($request->input('status') == 'cancelado') {
@@ -325,6 +328,7 @@ class AppointmentController extends Controller
             //Si todo va bien, se envía un mensaje de exito al usuario.
             Log::info('Cita actualizada correctamente.');
             return response()->json(['message' => 'Cita actualizada correctamente']);
+
         } catch (ValidationException $e) {
             Log::error('Error al actualizar la cita: ' . $e->getMessage());
             return response()->json(['error' => 'Ha ocurrido un error en la validación de los datos'], 400);
@@ -349,6 +353,7 @@ class AppointmentController extends Controller
             }
             $appointment->delete();
 
+            //Comprobamos si el usuario tiene el rol de propietario o cliente con el objetivo de enviar la notificación a uno u otro.
             if (auth()->user()->role == 'propietario') {
                 if ($appointment->client_id) {
                     $client = User::where('id', $appointment->client_id)->first();

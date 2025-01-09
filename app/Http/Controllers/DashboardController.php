@@ -143,64 +143,64 @@ class DashboardController extends Controller
     }
 
     //Función que se encarga de actualizar el perfil del usuario.
-public function updateProfile(Request $request)
-{
-    /** @var \App\Models\User $user */
-    $user = auth()->user();
-    $changesMade = false;
+    public function updateProfile(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $changesMade = false;
 
-    if (!$user) {
-        return response()->json(['error' => 'Usuario no autenticado'], 401);
-    }
-
-    try {
-        $request->validate([
-            'name' => 'nullable|string',
-            'dni' => 'nullable|regex:/^\d{8}[A-Za-z]$/',
-            'phone' => 'nullable|numeric|digits:9',
-            'password' => ['nullable', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
-        ]);
-
-        if ($request->filled('name') && $request->name !== $user->name) {
-            $user->name = $request->name;
-            $changesMade = true;
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no autenticado'], 401);
         }
 
-        if ($request->filled('dni') && $request->dni !== $user->dni) {
-            Log::info("Hola");
-            $user->dni = $request->dni;
-            $changesMade = true;
-        }
+        try {
+            $request->validate([
+                'name' => 'nullable|string',
+                'dni' => 'nullable|regex:/^\d{8}[A-Za-z]$/',
+                'phone' => 'nullable|numeric|digits:9',
+                'password' => ['nullable', 'confirmed', Password::min(8)->letters()->mixedCase()->numbers()->symbols()],
+            ]);
 
-        if ($request->filled('phone') && $request->phone !== $user->phone) {
-            $user->phone = $request->phone;
-            $changesMade = true;
-        }
-
-        if ($request->filled('password')) {
-            if (!password_verify($request->password, $user->password)) {
-                $user->password = bcrypt($request->password);
+            if ($request->filled('name') && $request->name !== $user->name) {
+                $user->name = $request->name;
                 $changesMade = true;
             }
+
+            if ($request->filled('dni') && $request->dni !== $user->dni) {
+                Log::info("Hola");
+                $user->dni = $request->dni;
+                $changesMade = true;
+            }
+
+            if ($request->filled('phone') && $request->phone !== $user->phone) {
+                $user->phone = $request->phone;
+                $changesMade = true;
+            }
+
+            if ($request->filled('password')) {
+                if (!password_verify($request->password, $user->password)) {
+                    $user->password = bcrypt($request->password);
+                    $changesMade = true;
+                }
+            }
+
+
+            if (!$changesMade) {
+                return response()->json(['error' => 'No se realizaron cambios en el perfil'], 400);
+            }
+
+            $user->save();
+
+
+            return response()->json(['success' => 'Perfil actualizado correctamente'], 200);
+        } catch (ValidationException $e) {
+
+            return response()->json(['error' => $e->validator->errors()->first()], 400);
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar: ' . $e->getMessage() . '--' . $e->getTraceAsString());
+            return response()->json(['error' => 'Ocurrió un error inesperado.'], 500);
         }
-
-        
-        if (!$changesMade) {
-            return response()->json(['error' => 'No se realizaron cambios en el perfil'], 400);
-        }  
-
-        $user->save();
-
-       
-        return response()->json(['success' => 'Perfil actualizado correctamente'], 200);
-    } catch (ValidationException $e) {
-        
-        return response()->json(['error' => $e->validator->errors()->first()], 400);
-    } catch (\Exception $e) {
-        Log::error('Error al actualizar: ' . $e->getMessage() . '--' . $e->getTraceAsString());
-        return response()->json(['error' => 'Ocurrió un error inesperado.'], 500);
     }
-}
 
 
     //Función que se encarga de añadir una peluquería en nuestra base de datos.
@@ -251,16 +251,17 @@ public function updateProfile(Request $request)
     }
 
     //Función para eliminar una peluquería.
-    public function deleteHairdresser(Request $request){
-        try{
+    public function deleteHairdresser(Request $request)
+    {
+        try {
             if (empty($request->hairdresser_id)) {
-                return response()->json(['error' => 'No has seleccionado ninguna peluquería'], 400); 
+                return response()->json(['error' => 'No has seleccionado ninguna peluquería'], 400);
             }
-            
+
 
             $hairdresser = Hairdresser::find($request->hairdresser_id);
 
-            if(!$hairdresser){
+            if (!$hairdresser) {
                 return response()->json(['error' => 'Peluquería no encontrada'], 404);
             }
 
@@ -269,8 +270,7 @@ public function updateProfile(Request $request)
 
             //Se retorna una respuesta en formato JSON con un mensaje de éxito.
             return response()->json(['success' => 'Peluquería eliminada correctamente'], 200);
-
-        }catch(Exception $e){
+        } catch (Exception $e) {
             Log::error('Error al eliminar la peluquería -> ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }

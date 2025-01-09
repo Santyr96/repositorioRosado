@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services:
   web:
@@ -7,27 +7,38 @@ services:
       dockerfile: Dockerfile
     container_name: hairbooker_web
     ports:
-      - "8081:80"
+      - "8080:80"        # Puerto para Apache
+      - "3000:3000"      # Puerto para Vite (si usas este puerto)
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html   # Montar el código fuente
+      - ./public/build:/var/www/html/public/build # Montar solo la carpeta build
     networks:
       - hairbooker_network
     depends_on:
       - db
+    environment:
+      APP_ENV: development
+      APP_DEBUG: "true"
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: hairbooker
+      DB_USERNAME: adminrosado
+      DB_PASSWORD: rosadoruiz
+    
 
   db:
-    image: mysql:5.7
+    image: mysql:8.0
     container_name: hairbooker_db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: hairbooker
-      MYSQL_USER: adminrosado
-      MYSQL_PASSWORD: rosadoruiz
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-hairbooker}
+      MYSQL_USER: ${MYSQL_USER:-adminrosado}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-rosadoruiz}
     volumes:
       - db_data:/var/lib/mysql
     networks:
       - hairbooker_network
-  
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpmyadmin

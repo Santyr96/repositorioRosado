@@ -16,6 +16,16 @@ export default defineConfig({
             '@': '/resources/js', 
         },
     },
+    server: {
+        host: '0.0.0.0', 
+        port: 3000,  
+        strictPort: true,
+        hmr: {
+            protocol: 'ws',
+            host: 'localhost',
+        }
+    },
+
     build: {
         onError: (error) => {
             console.error('Error de construcción:', error);
