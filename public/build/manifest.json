@@ -1,0 +1,17 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-DIM8zxxu.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-vuYRVwt6.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "storage/app/public/images/hola.svg": {
+    "file": "assets/hola-jW1Bfb8A.svg",
+    "src": "storage/app/public/images/hola.svg"
+  }
+}
