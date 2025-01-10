@@ -1,7 +1,9 @@
 # Usa una imagen oficial de PHP con Apache
 FROM php:8.1-apache
 
+# Copiar la configuración de Apache personalizada
 COPY ./apache-default.conf /etc/apache2/sites-available/000-default.conf
+
 # Instalación de dependencias necesarias (como root)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
@@ -10,9 +12,10 @@ RUN apt-get update && apt-get install -y \
     zip \
     git \
     curl \
+    libpq-dev \  
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Habilitar la extensión bcmath
+# Habilitar las extensiones necesarias
 RUN docker-php-ext-install bcmath pdo pdo_pgsql
 
 # Crear y dar permisos al directorio de build
@@ -50,20 +53,16 @@ COPY . /var/www/html
 RUN composer install
 RUN npm install --legacy-peer-deps
 
-
 # Cambiar los permisos del directorio para que Apache tenga acceso
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-RUN php artisan storage:link
 
 # Exponer el puerto 80 para que Apache esté accesible
 EXPOSE 80
 
+# Copiar el script de inicio
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-
+# Ejecutar el script de inicio
 CMD ["/start.sh"]
-
-
-
