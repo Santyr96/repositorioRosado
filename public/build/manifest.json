@@ -1,17 +1,214 @@
 {
-  "resources/css/app.css": {
-    "file": "assets/app-CSWfI0kk.css",
-    "src": "resources/css/app.css",
+  "resources/js/auth/auth.js": {
+    "file": "assets/auth-vsXZqHT0.js",
+    "name": "auth",
+    "src": "resources/js/auth/auth.js",
     "isEntry": true
   },
-  "resources/js/app.js": {
-    "file": "assets/app-vuYRVwt6.js",
-    "name": "app",
-    "src": "resources/js/app.js",
+  "resources/js/auth/validate-hairdresser.js": {
+    "file": "assets/validate-hairdresser-CuEMv4KU.js",
+    "name": "validate-hairdresser",
+    "src": "resources/js/auth/validate-hairdresser.js",
     "isEntry": true
   },
-  "storage/app/public/images/hola.svg": {
-    "file": "assets/hola-jW1Bfb8A.svg",
-    "src": "storage/app/public/images/hola.svg"
+  "resources/js/auth/validate-profile.js": {
+    "file": "assets/validate-profile-DZd83V3K.js",
+    "name": "validate-profile",
+    "src": "resources/js/auth/validate-profile.js",
+    "isEntry": true
+  },
+  "resources/js/auth/validate-reset-password.js": {
+    "file": "assets/validate-reset-password-R-HjPe0T.js",
+    "name": "validate-reset-password",
+    "src": "resources/js/auth/validate-reset-password.js",
+    "isEntry": true
+  },
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap-l0sNRNKZ.js",
+    "name": "bootstrap",
+    "src": "resources/js/bootstrap.js",
+    "isEntry": true
+  },
+  "resources/js/components/dashboards/admin-panel-extend.js": {
+    "file": "assets/admin-panel-extend-CKiK_n9g.js",
+    "name": "admin-panel-extend",
+    "src": "resources/js/components/dashboards/admin-panel-extend.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/auth/validate-hairdresser.js",
+      "resources/js/auth/validate-profile.js",
+      "resources/js/components/passwords/show-password.js",
+      "resources/js/components/dashboards/profile/update-profile.js",
+      "resources/js/components/dashboards/hairdresser/insert-hairdresser.js",
+      "resources/js/components/dashboards/profile/update-avatar.js",
+      "resources/js/components/dashboards/services-hair/create-service.js",
+      "resources/js/components/dashboards/signup/signup-hairdresser.js",
+      "resources/js/components/dashboards/calendar/modal-appointment-edit-and-delete.js",
+      "resources/js/components/dashboards/hairdresser/reload-select-hairdresser-view.js",
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/calendar/modal-appointment-create.js": {
+    "file": "assets/modal-appointment-create-DI61lk6d.js",
+    "name": "modal-appointment-create",
+    "src": "resources/js/components/dashboards/calendar/modal-appointment-create.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/dashboards/calendar/modal-appointment-edit-and-delete.js",
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/calendar/modal-appointment-edit-and-delete.js": {
+    "file": "assets/modal-appointment-edit-and-delete-CSPJEa_t.js",
+    "name": "modal-appointment-edit-and-delete",
+    "src": "resources/js/components/dashboards/calendar/modal-appointment-edit-and-delete.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/calendar/show-calendar.js": {
+    "file": "assets/show-calendar-DEjsAZeQ.js",
+    "name": "show-calendar",
+    "src": "resources/js/components/dashboards/calendar/show-calendar.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js",
+      "resources/js/components/dashboards/calendar/modal-appointment-edit-and-delete.js"
+    ]
+  },
+  "resources/js/components/dashboards/hairdresser/delete-hairdresser.js": {
+    "file": "assets/delete-hairdresser-BsB58LJd.js",
+    "name": "delete-hairdresser",
+    "src": "resources/js/components/dashboards/hairdresser/delete-hairdresser.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js",
+      "resources/js/components/dashboards/hairdresser/reload-select-hairdresser-view.js"
+    ]
+  },
+  "resources/js/components/dashboards/hairdresser/insert-hairdresser.js": {
+    "file": "assets/insert-hairdresser-CR8onO0i.js",
+    "name": "insert-hairdresser",
+    "src": "resources/js/components/dashboards/hairdresser/insert-hairdresser.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/hairdresser/reload-select-hairdresser-view.js": {
+    "file": "assets/reload-select-hairdresser-view-B3X4SF2-.js",
+    "name": "reload-select-hairdresser-view",
+    "src": "resources/js/components/dashboards/hairdresser/reload-select-hairdresser-view.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/load-view.js": {
+    "file": "assets/load-view-CIKt5dkW.js",
+    "name": "load-view",
+    "src": "resources/js/components/dashboards/load-view.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/passwords/show-password.js",
+      "resources/js/components/dashboards/calendar/modal-appointment-edit-and-delete.js",
+      "resources/js/components/dashboards/services-hair/create-service.js",
+      "resources/js/components/dashboards/signup/signup-hairdresser.js",
+      "resources/js/components/dashboards/profile/update-avatar.js",
+      "resources/js/components/dashboards/profile/update-profile.js",
+      "resources/js/auth/validate-hairdresser.js",
+      "resources/js/auth/validate-profile.js",
+      "resources/js/components/dashboards/hairdresser/insert-hairdresser.js",
+      "resources/js/components/dashboards/hairdresser/reload-select-hairdresser-view.js",
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/notification-extend.js": {
+    "file": "assets/notification-extend-DTiB1js8.js",
+    "name": "notification-extend",
+    "src": "resources/js/components/dashboards/notification-extend.js",
+    "isEntry": true
+  },
+  "resources/js/components/dashboards/profile/update-avatar.js": {
+    "file": "assets/update-avatar-DE5GLSMa.js",
+    "name": "update-avatar",
+    "src": "resources/js/components/dashboards/profile/update-avatar.js",
+    "isEntry": true
+  },
+  "resources/js/components/dashboards/profile/update-profile.js": {
+    "file": "assets/update-profile-Cu-JfX9n.js",
+    "name": "update-profile",
+    "src": "resources/js/components/dashboards/profile/update-profile.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/services-hair/create-service.js": {
+    "file": "assets/create-service-BuKEk_Os.js",
+    "name": "create-service",
+    "src": "resources/js/components/dashboards/services-hair/create-service.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/dashboards/services-hair/delete-service.js": {
+    "file": "assets/delete-service-D8Ewpvwx.js",
+    "name": "delete-service",
+    "src": "resources/js/components/dashboards/services-hair/delete-service.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js",
+      "resources/js/components/dashboards/services-hair/create-service.js"
+    ]
+  },
+  "resources/js/components/dashboards/services-hair/services-manage.js": {
+    "file": "assets/services-manage-BuCAUSd6.js",
+    "name": "services-manage",
+    "src": "resources/js/components/dashboards/services-hair/services-manage.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js",
+      "resources/js/components/dashboards/services-hair/create-service.js"
+    ]
+  },
+  "resources/js/components/dashboards/services-hair/update-service.js": {
+    "file": "assets/update-service-DDXbid0z.js",
+    "name": "update-service",
+    "src": "resources/js/components/dashboards/services-hair/update-service.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js",
+      "resources/js/components/dashboards/services-hair/create-service.js"
+    ]
+  },
+  "resources/js/components/dashboards/signup/signup-hairdresser.js": {
+    "file": "assets/signup-hairdresser-BK85KPrE.js",
+    "name": "signup-hairdresser",
+    "src": "resources/js/components/dashboards/signup/signup-hairdresser.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/modals/close-modal.js"
+    ]
+  },
+  "resources/js/components/layouts/flyout_menu.js": {
+    "file": "assets/flyout_menu-BhYDKrLr.js",
+    "name": "flyout_menu",
+    "src": "resources/js/components/layouts/flyout_menu.js",
+    "isEntry": true
+  },
+  "resources/js/components/modals/close-modal.js": {
+    "file": "assets/close-modal-McXQp2uh.js",
+    "name": "close-modal",
+    "src": "resources/js/components/modals/close-modal.js",
+    "isEntry": true
+  },
+  "resources/js/components/passwords/show-password.js": {
+    "file": "assets/show-password-B1FKdX_E.js",
+    "name": "show-password",
+    "src": "resources/js/components/passwords/show-password.js",
+    "isEntry": true
   }
 }

@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",function(){e()});function e(){document.querySelectorAll('input[type="password"]').forEach(t=>{t.nextElementSibling.querySelector("button").addEventListener("click",()=>{t.type==="password"?t.type="text":t.type="password"})})}export{e as t};
