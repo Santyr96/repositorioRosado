@@ -56,8 +56,6 @@ RUN npm install --legacy-peer-deps
 # Cambiar los permisos del directorio para que Apache tenga acceso
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-
-
 # Exponer el puerto 80 para que Apache esté accesible
 EXPOSE 80
 
@@ -65,5 +63,4 @@ EXPOSE 80
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Ejecutar el script de inicio
-CMD ["/start.sh"]
+
