@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+echo "Caching config..."
+php artisan config:cache
 
-# Iniciar Apache en segundo plano
-apache2-foreground &
+echo "Caching routes..."
+php artisan route:cache
 
-# Iniciar Vite (npm run dev)
-npm list vite
-npm run dev
+echo "Running migrations..."
+php artisan migrate --force
