@@ -19,8 +19,13 @@ services:
     environment:
       APP_ENV: development
       APP_DEBUG: "true"
-      DATABASE_URL: postgresql://adminrosador:XJH6wMpyJuIH2AcOTCmw8uzofN4oV5Rm@dpg-cu0joa8gph6c73follng-a/hairbooker
+      DB_HOST: dpg-cu0joa8gph6c73follng-a
+      DB_PORT: 5432
+      DB_DATABASE: hairbooker
+      DB_USERNAME: adminrosado
+      DB_PASSWORD: XJH6wMpyJuIH2AcOTCmw8uzofN4oV5Rm
     
+
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
