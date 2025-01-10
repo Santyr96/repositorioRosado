@@ -56,8 +56,12 @@ RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
 RUN php artisan storage:link
 
-
 # Exponer el puerto 80 para que Apache esté accesible
 EXPOSE 80
+
+
+
+CMD ["/start.sh"]
+
 
 
