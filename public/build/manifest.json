@@ -1,4 +1,34 @@
 {
+  "resources/css/app.css": {
+    "file": "assets/app-CSWfI0kk.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-D6HH3FuU.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/components/dashboards/admin-panel-extend.js",
+      "resources/js/components/dashboards/load-view.js",
+      "resources/js/components/dashboards/notification-extend.js",
+      "resources/js/auth/auth.js",
+      "resources/js/auth/validate-reset-password.js",
+      "resources/js/components/modals/close-modal.js",
+      "resources/js/components/dashboards/calendar/modal-appointment-edit-and-delete.js",
+      "resources/js/components/layouts/flyout_menu.js",
+      "resources/js/components/passwords/show-password.js",
+      "resources/js/auth/validate-hairdresser.js",
+      "resources/js/auth/validate-profile.js",
+      "resources/js/components/dashboards/profile/update-profile.js",
+      "resources/js/components/dashboards/hairdresser/insert-hairdresser.js",
+      "resources/js/components/dashboards/profile/update-avatar.js",
+      "resources/js/components/dashboards/services-hair/create-service.js",
+      "resources/js/components/dashboards/signup/signup-hairdresser.js",
+      "resources/js/components/dashboards/hairdresser/reload-select-hairdresser-view.js"
+    ]
+  },
   "resources/js/auth/auth.js": {
     "file": "assets/auth-vsXZqHT0.js",
     "name": "auth",
@@ -210,5 +240,9 @@
     "name": "show-password",
     "src": "resources/js/components/passwords/show-password.js",
     "isEntry": true
+  },
+  "storage/app/public/images/hola.svg": {
+    "file": "assets/hola-jW1Bfb8A.svg",
+    "src": "storage/app/public/images/hola.svg"
   }
 }
