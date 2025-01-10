@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Habilitar la extensión bcmath
-RUN docker-php-ext-install bcmath pdo_mysql
+RUN docker-php-ext-install bcmath pdo pdo_pgsql
 
 # Crear y dar permisos al directorio de build
 RUN mkdir -p /var/www/html/public/build && \
