@@ -1,4 +1,4 @@
 
     <span class="{{$class}}" >
-        {{$message}}
+        {{$message ?? ""}}
     </span>
