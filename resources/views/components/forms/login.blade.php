@@ -91,7 +91,6 @@
                     </div>
 
                     <x-forms.span-validate class="w-10/12">
-
                     </x-forms.span-validate>
 
                     <div class="flex justify-end text-sm md:text-lg hover:text-purple-600">
