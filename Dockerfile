@@ -59,6 +59,8 @@ RUN php artisan storage:link
 # Exponer el puerto 80 para que Apache esté accesible
 EXPOSE 80
 
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 
 CMD ["/start.sh"]
