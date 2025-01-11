@@ -26,6 +26,10 @@ Route::middleware('guest', 'web')->group(function () {
     Route::get('/reset-password/{token}', [UserController::class, 'resetPasswordForm'])->name('password.reset');
     Route::post('/forgot-password', [UserController::class, 'sendResetPasswordLink'])->name('users.sendResetLink');
     Route::post('/reset-password', [UserController::class, 'resetPassword'])->name('users.resetPassword');
+
+    Route::get('/email', function(){
+        return view('auth.verify-email');
+    });
 });
 
 //Utilización de un middleware para comprobar si el usuario ha verificado su correo electrónico.
@@ -76,9 +80,7 @@ Route::get('/email/verify', function(){
 })->middleware('auth')->name('verification.notice');
 
 
-Route::get('/email', function(){
-    return view('auth.verify-email');
-});
+
 
 Route::get('/email/verifiy/{id}/{hash}', function(EmailVerificationRequest $request){
     $request->fulfill();
