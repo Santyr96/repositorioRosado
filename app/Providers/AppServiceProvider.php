@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use DragonCode\Support\Facades\Http\Url;
 use Illuminate\Foundation\Vite;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite as FacadesVite;
 use Illuminate\Support\ServiceProvider;
 
