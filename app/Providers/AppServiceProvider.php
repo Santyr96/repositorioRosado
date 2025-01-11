@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use DragonCode\Support\Facades\Http\Url;
 use Illuminate\Foundation\Vite;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Vite as FacadesVite;
@@ -24,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
     {
         if (App::environment('production')) {
             FacadesVite::useBuildDirectory('build');
+        }
+
+        if(config('app.env') === 'production'){
+            URL::forceScheme('https');
         }
     }
 }
