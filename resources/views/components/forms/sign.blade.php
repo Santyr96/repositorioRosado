@@ -243,7 +243,7 @@
 
                     <div class="flex justify-center text-center font-work pt-2 md:text-xl">
                         <p>¿Ya tienes una cuenta? <a class="underline font-bold hover:text-purple-600"
-                                href="#">Iniciar sesión</a></p>
+                            href="{{ route('users.login') }}">Iniciar sesión</a></p>
 
                     </div>
 
