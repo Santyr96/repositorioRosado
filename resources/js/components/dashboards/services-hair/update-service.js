@@ -86,9 +86,8 @@ export function updateService(urlView) {
         const priceValue = parseFloat(
             String(dataMap.get("tdPrice")).replace(/\s+/g, "").replace("€", "")
         );
-        let formattedPrice = priceValue.toFixed(2); // Formatea a 2 decimales siempre
+        let formattedPrice = priceValue.toFixed(2); 
 
-       
         if (formattedPrice.endsWith(".00")) {
             formattedPrice = ".00";
         } else if (formattedPrice.endsWith("0")) {
