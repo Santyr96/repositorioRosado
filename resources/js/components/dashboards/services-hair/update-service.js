@@ -88,7 +88,7 @@ export function updateService(urlView) {
         );
         let formattedPrice = priceValue.toFixed(2); // Formatea a 2 decimales siempre
 
-        // Verificar si termina con un solo '0' o '00'
+       
         if (formattedPrice.endsWith(".00")) {
             formattedPrice = ".00";
         } else if (formattedPrice.endsWith("0")) {
