@@ -192,7 +192,7 @@ class DashboardController extends Controller
             $user->save();
 
 
-            return response()->json(['success' => 'Perfil actualizado correctamente'], 200);
+            return response()->json(['success' => 'Perfil actualizado correctamente', 'username' => $user->name], 200);
         } catch (ValidationException $e) {
 
             return response()->json(['error' => $e->validator->errors()->first()], 400);
