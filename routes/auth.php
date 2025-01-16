@@ -79,10 +79,17 @@ Route::get('/email/verify', function(){
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
-Route::get('/email/verifiy/{id}/{hash}', function(EmailVerificationRequest $request){
-    $request->fulfill();
+Route::get('/email/verify/{id}/{hash}', function(EmailVerificationRequest $request) {
+    // Obtener el usuario
+    $user = $request->user();
+
+    // Establecer manualmente la fecha de verificación
+    $user->email_verified_at = now(); // Usamos la hora actual
+    $user->save(); // Guardar el usuario con la nueva marca de tiempo
+
+    // Redirigir al dashboard
     return redirect('/dashboard');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+})->middleware(['auth'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
