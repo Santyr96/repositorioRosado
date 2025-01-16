@@ -1,4 +1,4 @@
-@vite('resources/js/components/dashboards/calendar/calendar.js')
+
 
 <div id="container" class="w-full flex flex-col items-center">
     <x-modals.error-modal class="hidden xl:left-40" modalTitle="Error al enviar el formulario"

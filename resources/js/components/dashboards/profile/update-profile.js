@@ -5,6 +5,7 @@ import { closeModal } from "../../modals/close-modal";
 export function updateProfile() {
     const profileForm = document.forms["fForm"];
     const spans = document.querySelectorAll(".validate-span");
+    const welcomeMessage = document.getElementById("welcomeMessage")
 
     //Se envía las respuestas del formulario al servidor.
     profileForm.addEventListener("submit", async function (e) {
@@ -51,6 +52,7 @@ export function updateProfile() {
                 spans.forEach((span) => {
                     span.textContent = "";
                 });
+                welcomeMessage.textContent = "Hola, " + data.username
             } else {
                 showErrorMessage("Error al actualizar el perfil.");
             }
