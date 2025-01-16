@@ -86,8 +86,7 @@ Route::get('/email/verify/{id}/{hash}', function(EmailVerificationRequest $reque
     // Establecer manualmente la fecha de verificación
     $user->email_verified_at = now(); // Usamos la hora actual
     $user->save(); // Guardar el usuario con la nueva marca de tiempo
-
-    // Redirigir al dashboard
+    
     return redirect('/dashboard');
 })->middleware(['auth'])->name('verification.verify');
 
