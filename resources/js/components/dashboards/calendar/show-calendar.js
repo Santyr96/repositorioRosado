@@ -59,7 +59,7 @@ export function showCalendar() {
 export function renderCalendar(f) {
     console.log("http://hairbooker/dashboard/calendar/appointments/"  + globalHairdresserId);
     const eventSourceConfig = {
-        url: "https://hairbooker-b4b3513484f2.herokuapp.com/dashboard/calendar/appointments/" + globalHairdresserId,
+        url: "http://hairbooker/dashboard/calendar/appointments/" + globalHairdresserId,
         method: "GET",
         extraParams: function () {
             return {
