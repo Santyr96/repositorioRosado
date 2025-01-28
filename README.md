@@ -6,5 +6,13 @@ HairBooker es una plataforma web diseñada para facilitar la gestión de citas e
 
 Accede desde aqui: <a href="https://hairbooker-b4b3513484f2.herokuapp.com/">Visitar HairBooker</a>
 
+Para utilizar el servicio de mail falso de Mailtrap:
+Usuario: hbookercompany@gmail.com
+Contraseña: hairbooker
+
+Si manda código de verificación al Gmail, para acceder al Gmail:
+Usuario: hbookercompany@gmail.com
+Contraseña: Tomelloso96
+
 
 
